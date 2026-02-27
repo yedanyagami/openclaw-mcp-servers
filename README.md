@@ -16,6 +16,7 @@ Real-time data on Claude Code, Cursor, Devin, OpenHands, Windsurf. GitHub stars,
 | `list_reports` | List available reports | Yes |
 | `get_market_stats` | Platform statistics | Yes |
 | `purchase_api_key` | Get Pro API key ($9) | Yes |
+| `validate_api_key` | Check API key status + quota | Yes |
 
 ### OpenClaw Fortune — Daily Horoscope + Tarot
 12 zodiac signs, tarot card readings, category scores, lucky items.
@@ -105,8 +106,8 @@ Unlock full AI market intelligence reports with a Pro API key ($9).
 
 Both servers run on Cloudflare Workers with Streamable HTTP transport (MCP 2025-03-26 spec).
 
-- **Intel MCP** — D1 database for reports, Stripe for payments
-- **Fortune MCP** — Pure computation, no external dependencies
+- **Intel MCP v3** — D1 database, 6 tools, AI-native upgrade signals, PayPal + Crypto payments
+- **Fortune MCP v2** — Pure computation, cross-promotion ecosystem, no external dependencies
 
 ## License
 
