@@ -15,8 +15,10 @@ const CAPABILITIES = { tools: {} };
 const PROMO = {
   intel_mcp: 'https://openclaw-intel-mcp.yagami8095.workers.dev/mcp',
   fortune_mcp: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
+  moltbook_mcp: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
+  agentforge_mcp: 'https://agentforge-compare-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
-  github: 'https://github.com/yagami8095/openclaw-mcp-servers',
+  github: 'https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers',
 };
 
 // ============================================================
@@ -261,6 +263,14 @@ function ecosystem() {
         url: PROMO.intel_mcp,
         description: 'AI market intelligence — track Claude Code, Cursor, Devin growth trends. Free tier + Pro API key ($9).',
         tools: ['get_ai_market_report', 'get_market_stats', 'purchase_api_key'],
+      },
+      moltbook_mcp: {
+        url: PROMO.moltbook_mcp,
+        description: 'Japanese content publishing toolkit — MD to HTML, SEO, EN→JP translation for note.com, Zenn, Qiita.',
+      },
+      agentforge_mcp: {
+        url: PROMO.agentforge_mcp,
+        description: 'AI coding tool comparison engine — Claude Code vs Cursor vs Devin side-by-side analysis.',
       },
       store: {
         url: PROMO.store,

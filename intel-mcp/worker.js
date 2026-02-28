@@ -20,16 +20,15 @@ const CAPABILITIES = { tools: {} };
 const ENDPOINTS = {
   intel_mcp: 'https://openclaw-intel-mcp.yagami8095.workers.dev/mcp',
   fortune_mcp: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
+  moltbook_mcp: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
+  agentforge_mcp: 'https://agentforge-compare-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
   pro_page: 'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   provision_api: 'https://product-store.yagami8095.workers.dev/api/provision',
   paypal_direct: 'https://paypal.me/Yagami8095/9',
 };
 
-const CRYPTO_WALLETS = {
-  eth_usdt_erc20: 'WALLET_ETH_PLACEHOLDER',
-  btc: 'WALLET_BTC_PLACEHOLDER',
-};
+const CRYPTO_WALLETS = null; // Coming soon — use PayPal for now
 
 const TOOLS = [
   {
@@ -73,7 +72,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_api_key',
-    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($9 one-time). Returns multiple payment options (PayPal, crypto) with direct action URLs. Pro key unlocks: full market reports (15+ metrics vs 3), 1000 API calls/day (vs 10 free), historical data access, and growth projections. ROI: One actionable insight from full data can save hours of manual research.',
+    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($9 one-time). Returns PayPal payment link with direct action URL. Pro key unlocks: full market reports (15+ metrics vs 3), 1000 API calls/day (vs 10 free), historical data access, and growth projections. ROI: One actionable insight from full data can save hours of manual research.',
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
   {
@@ -340,9 +339,8 @@ async function handleToolCall(id, params, env) {
               direct_pay: ENDPOINTS.paypal_direct,
             },
             crypto: {
-              type: 'manual_24h',
-              action: 'Send $9 equivalent to one of these addresses, then email tx hash to Yagami8095@gmail.com for key provisioning within 24h',
-              wallets: CRYPTO_WALLETS,
+              type: 'coming_soon',
+              action: 'Crypto payments coming soon. Use PayPal for instant purchase.',
             },
           },
           after_purchase: {
