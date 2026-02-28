@@ -22,7 +22,14 @@ const ENDPOINTS = {
   fortune_mcp: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
   moltbook_mcp: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
   agentforge_mcp: 'https://agentforge-compare-mcp.yagami8095.workers.dev/mcp',
+  regex_mcp: 'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
+  color_mcp: 'https://color-palette-mcp.yagami8095.workers.dev/mcp',
+  json_mcp: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
+  prompt_mcp: 'https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp',
+  timestamp_mcp: 'https://timestamp-converter-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
+  fortune_api: 'https://fortune-api.yagami8095.workers.dev',
+  intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page: 'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   provision_api: 'https://product-store.yagami8095.workers.dev/api/provision',
   paypal_direct: 'https://paypal.me/Yagami8095/9',
@@ -181,8 +188,15 @@ async function handleToolCall(id, params, env) {
             message: 'Intelligence collection runs every 6 hours. No reports available yet.',
             next_collection: 'Within 6 hours',
             ecosystem: {
-              fortune_mcp: ENDPOINTS.fortune_mcp,
-              description: 'Try OpenClaw Fortune MCP while you wait — daily zodiac + tarot for 12 signs.',
+              fortune_mcp: { url: ENDPOINTS.fortune_mcp, description: 'Daily zodiac + tarot for 12 signs' },
+              moltbook_mcp: { url: ENDPOINTS.moltbook_mcp, description: 'Japanese content publishing toolkit' },
+              agentforge_mcp: { url: ENDPOINTS.agentforge_mcp, description: 'AI coding tool comparison engine' },
+              regex_mcp: { url: ENDPOINTS.regex_mcp, description: 'Regex test, explain, build, replace, extract' },
+              color_mcp: { url: ENDPOINTS.color_mcp, description: 'Color palettes, contrast check, CSS gradients' },
+              json_mcp: { url: ENDPOINTS.json_mcp, description: 'JSON format, validate, diff, query, transform' },
+              prompt_mcp: { url: ENDPOINTS.prompt_mcp, description: 'Prompt enhancement and optimization' },
+              timestamp_mcp: { url: ENDPOINTS.timestamp_mcp, description: 'Timestamp conversion and timezone math' },
+              store: ENDPOINTS.store,
             },
           };
           return mcpText(id, JSON.stringify(noData, null, 2));
@@ -203,7 +217,7 @@ async function handleToolCall(id, params, env) {
               data_points: 15,
               includes: ['github_stars', 'release_history', 'growth_rate', 'competitive_position', 'trend_analysis', 'market_share_estimate', 'developer_sentiment', 'funding_signals'],
             },
-            ecosystem: { fortune_mcp: ENDPOINTS.fortune_mcp },
+            ecosystem: { fortune_mcp: ENDPOINTS.fortune_mcp, moltbook_mcp: ENDPOINTS.moltbook_mcp, agentforge_mcp: ENDPOINTS.agentforge_mcp, regex_mcp: ENDPOINTS.regex_mcp, color_mcp: ENDPOINTS.color_mcp, json_mcp: ENDPOINTS.json_mcp, prompt_mcp: ENDPOINTS.prompt_mcp, timestamp_mcp: ENDPOINTS.timestamp_mcp, store: ENDPOINTS.store },
           };
           return mcpText(id, JSON.stringify(fullData, null, 2));
         }
@@ -224,7 +238,7 @@ async function handleToolCall(id, params, env) {
             { data_points: 3, calls_per_day: 10, historical_data: false },
             { data_points: 15, calls_per_day: 1000, historical_data: true, growth_projections: true }
           ),
-          ecosystem: { fortune_mcp: ENDPOINTS.fortune_mcp },
+          ecosystem: { fortune_mcp: ENDPOINTS.fortune_mcp, moltbook_mcp: ENDPOINTS.moltbook_mcp, agentforge_mcp: ENDPOINTS.agentforge_mcp, regex_mcp: ENDPOINTS.regex_mcp, color_mcp: ENDPOINTS.color_mcp, json_mcp: ENDPOINTS.json_mcp, prompt_mcp: ENDPOINTS.prompt_mcp, timestamp_mcp: ENDPOINTS.timestamp_mcp, store: ENDPOINTS.store },
         };
         return mcpText(id, JSON.stringify(freeData, null, 2));
       }
@@ -309,6 +323,18 @@ async function handleToolCall(id, params, env) {
           mcp_servers: {
             intel: ENDPOINTS.intel_mcp,
             fortune: ENDPOINTS.fortune_mcp,
+            moltbook: ENDPOINTS.moltbook_mcp,
+            agentforge: ENDPOINTS.agentforge_mcp,
+            regex: ENDPOINTS.regex_mcp,
+            color: ENDPOINTS.color_mcp,
+            json: ENDPOINTS.json_mcp,
+            prompt: ENDPOINTS.prompt_mcp,
+            timestamp: ENDPOINTS.timestamp_mcp,
+          },
+          other_services: {
+            store: ENDPOINTS.store,
+            fortune_api: ENDPOINTS.fortune_api,
+            intel_api: ENDPOINTS.intel_api,
           },
           investment_signal: {
             price: '$9 one-time',
@@ -481,8 +507,15 @@ const LANDING_HTML = `<!DOCTYPE html>
       <h2 class="text-xl font-bold mb-3">Also From OpenClaw</h2>
       <div class="space-y-2 text-sm">
         <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="block text-purple-400 hover:underline">&#x1F52E; Fortune MCP — Daily zodiac horoscope + tarot for all 12 signs</a>
+        <a href="https://moltbook-publisher-mcp.yagami8095.workers.dev" class="block text-green-400 hover:underline">&#x1F4DD; MoltBook Publisher MCP — Japanese content publishing for note.com/Zenn/Qiita</a>
+        <a href="https://agentforge-compare-mcp.yagami8095.workers.dev" class="block text-cyan-400 hover:underline">&#x2694;&#xFE0F; AgentForge Compare MCP — AI coding tool comparison & analysis</a>
+        <a href="https://regex-engine-mcp.yagami8095.workers.dev" class="block text-yellow-400 hover:underline">&#x1F9EA; Regex Engine MCP — Regex testing, debugging & generation</a>
+        <a href="https://color-palette-mcp.yagami8095.workers.dev" class="block text-pink-400 hover:underline">&#x1F3A8; Color Palette MCP — Color palette generation & contrast checks</a>
+        <a href="https://json-toolkit-mcp.yagami8095.workers.dev" class="block text-teal-400 hover:underline">&#x1F4CB; JSON Toolkit MCP — JSON/YAML/CSV/XML conversion & validation</a>
+        <a href="https://prompt-enhancer-mcp.yagami8095.workers.dev" class="block text-indigo-400 hover:underline">&#x2728; Prompt Enhancer MCP — Prompt optimization, rewriting & scoring</a>
+        <a href="https://timestamp-converter-mcp.yagami8095.workers.dev" class="block text-emerald-400 hover:underline">&#x23F0; Timestamp Converter MCP — Unix/ISO conversion & timezone math</a>
         <a href="https://product-store.yagami8095.workers.dev" class="block text-orange-400 hover:underline">&#x1F3EA; OpenClaw Store — AI tools, templates, and intelligence products</a>
-        <a href="https://note.com/yedanyagami" class="block text-green-400 hover:underline">&#x1F4DD; note.com — AI articles and guides (Japanese)</a>
+        <a href="https://note.com/yedanyagami" class="block text-gray-400 hover:underline">&#x1F4F0; note.com — AI articles and guides (Japanese)</a>
       </div>
     </div>
 

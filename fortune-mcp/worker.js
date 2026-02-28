@@ -17,7 +17,14 @@ const PROMO = {
   fortune_mcp: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
   moltbook_mcp: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
   agentforge_mcp: 'https://agentforge-compare-mcp.yagami8095.workers.dev/mcp',
+  regex_mcp: 'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
+  color_mcp: 'https://color-palette-mcp.yagami8095.workers.dev/mcp',
+  json_mcp: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
+  prompt_mcp: 'https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp',
+  timestamp_mcp: 'https://timestamp-converter-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
+  fortune_api: 'https://fortune-api.yagami8095.workers.dev',
+  intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   github: 'https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers',
 };
 
@@ -266,15 +273,43 @@ function ecosystem() {
       },
       moltbook_mcp: {
         url: PROMO.moltbook_mcp,
-        description: 'Japanese content publishing toolkit — MD to HTML, SEO, EN→JP translation for note.com, Zenn, Qiita.',
+        description: 'Japanese content publishing toolkit — MD to HTML, SEO, EN to JP translation for note.com, Zenn, Qiita.',
       },
       agentforge_mcp: {
         url: PROMO.agentforge_mcp,
         description: 'AI coding tool comparison engine — Claude Code vs Cursor vs Devin side-by-side analysis.',
       },
+      regex_mcp: {
+        url: PROMO.regex_mcp,
+        description: 'Regex test, explain, build from natural language, replace, and extract — 20+ built-in patterns.',
+      },
+      color_mcp: {
+        url: PROMO.color_mcp,
+        description: 'Color palette generator, WCAG contrast checker, CSS gradients, Tailwind color lookup.',
+      },
+      json_mcp: {
+        url: PROMO.json_mcp,
+        description: 'JSON format, validate, diff, query, transform, and schema generation.',
+      },
+      prompt_mcp: {
+        url: PROMO.prompt_mcp,
+        description: 'Prompt enhancement, analysis, format conversion, and system prompt generation.',
+      },
+      timestamp_mcp: {
+        url: PROMO.timestamp_mcp,
+        description: 'Timestamp conversion, timezone math, cron parsing, time diff, and duration formatting.',
+      },
       store: {
         url: PROMO.store,
         description: 'AI tools, prompts, and intelligence products. Multi-payment (PayPal, crypto, card).',
+      },
+      fortune_api: {
+        url: PROMO.fortune_api,
+        description: 'REST API for fortune data — daily zodiac rankings and tarot readings.',
+      },
+      intel_api: {
+        url: PROMO.intel_api,
+        description: 'REST API for AI market intelligence data and reports.',
       },
     },
   };
@@ -380,6 +415,13 @@ const LANDING_HTML = `<!DOCTYPE html>
       <h2 class="text-xl font-bold mb-3">Also Try</h2>
       <ul class="space-y-2 text-sm">
         <li><a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="text-blue-400 hover:underline">OpenClaw Intel MCP</a> — AI agent market intelligence reports</li>
+        <li><a href="https://moltbook-publisher-mcp.yagami8095.workers.dev" class="text-green-400 hover:underline">MoltBook Publisher MCP</a> — Japanese content publishing for note.com/Zenn/Qiita</li>
+        <li><a href="https://agentforge-compare-mcp.yagami8095.workers.dev" class="text-cyan-400 hover:underline">AgentForge Compare MCP</a> — AI coding tool comparison & analysis</li>
+        <li><a href="https://regex-engine-mcp.yagami8095.workers.dev" class="text-yellow-400 hover:underline">Regex Engine MCP</a> — Regex testing, debugging & generation</li>
+        <li><a href="https://color-palette-mcp.yagami8095.workers.dev" class="text-pink-400 hover:underline">Color Palette MCP</a> — Color palette generation & contrast checks</li>
+        <li><a href="https://json-toolkit-mcp.yagami8095.workers.dev" class="text-teal-400 hover:underline">JSON Toolkit MCP</a> — JSON/YAML/CSV/XML conversion & validation</li>
+        <li><a href="https://prompt-enhancer-mcp.yagami8095.workers.dev" class="text-indigo-400 hover:underline">Prompt Enhancer MCP</a> — Prompt optimization, rewriting & scoring</li>
+        <li><a href="https://timestamp-converter-mcp.yagami8095.workers.dev" class="text-emerald-400 hover:underline">Timestamp Converter MCP</a> — Unix/ISO conversion & timezone math</li>
         <li><a href="https://product-store.yagami8095.workers.dev" class="text-orange-400 hover:underline">OpenClaw Store</a> — AI tools and templates</li>
       </ul>
     </div>

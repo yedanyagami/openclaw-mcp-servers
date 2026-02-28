@@ -21,7 +21,14 @@ const ENDPOINTS = {
   intel_mcp: 'https://openclaw-intel-mcp.yagami8095.workers.dev/mcp',
   fortune_mcp: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
   moltbook_mcp: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
+  regex_mcp: 'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
+  color_mcp: 'https://color-palette-mcp.yagami8095.workers.dev/mcp',
+  json_mcp: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
+  prompt_mcp: 'https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp',
+  timestamp_mcp: 'https://timestamp-converter-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
+  fortune_api: 'https://fortune-api.yagami8095.workers.dev',
+  intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page: 'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   provision_api: 'https://product-store.yagami8095.workers.dev/api/provision',
   paypal_direct: 'https://paypal.me/Yagami8095/9',
@@ -546,9 +553,14 @@ function getEcosystem() {
     intel: ENDPOINTS.intel_mcp,
     fortune: ENDPOINTS.fortune_mcp,
     moltbook: ENDPOINTS.moltbook_mcp,
+    regex: ENDPOINTS.regex_mcp,
+    color: ENDPOINTS.color_mcp,
+    json: ENDPOINTS.json_mcp,
+    prompt: ENDPOINTS.prompt_mcp,
+    timestamp: ENDPOINTS.timestamp_mcp,
     store: ENDPOINTS.store,
-    smithery_intel: 'https://smithery.ai/servers/openclaw-ai/intel',
-    smithery_fortune: 'https://smithery.ai/servers/openclaw-ai/fortune',
+    fortune_api: ENDPOINTS.fortune_api,
+    intel_api: ENDPOINTS.intel_api,
   };
 }
 
@@ -625,10 +637,15 @@ function landingPage() {
 
     <div class="text-center text-gray-500 text-sm">
       <p>Part of the <strong class="text-blue-400">OpenClaw Intelligence</strong> ecosystem</p>
-      <div class="flex justify-center gap-4 mt-2">
+      <div class="flex flex-wrap justify-center gap-4 mt-2">
         <a href="${ENDPOINTS.intel_mcp}" class="hover:text-blue-300">&#x1F4CA; Intel MCP</a>
         <a href="${ENDPOINTS.fortune_mcp}" class="hover:text-purple-300">&#x1F52E; Fortune MCP</a>
         <a href="${ENDPOINTS.moltbook_mcp}" class="hover:text-green-300">&#x1F4DD; MoltBook MCP</a>
+        <a href="${ENDPOINTS.regex_mcp}" class="hover:text-yellow-300">&#x1F9EA; Regex MCP</a>
+        <a href="${ENDPOINTS.color_mcp}" class="hover:text-pink-300">&#x1F3A8; Color MCP</a>
+        <a href="${ENDPOINTS.json_mcp}" class="hover:text-teal-300">&#x1F4CB; JSON MCP</a>
+        <a href="${ENDPOINTS.prompt_mcp}" class="hover:text-indigo-300">&#x2728; Prompt MCP</a>
+        <a href="${ENDPOINTS.timestamp_mcp}" class="hover:text-emerald-300">&#x23F0; Timestamp MCP</a>
         <a href="${ENDPOINTS.store}" class="hover:text-yellow-300">&#x1F6D2; Digital Store</a>
       </div>
     </div>

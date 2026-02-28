@@ -5,6 +5,27 @@
     },
     "openclaw-fortune": {
       "url": "https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp"
+    },
+    "agentforge-compare": {
+      "url": "https://agentforge-compare-mcp.yagami8095.workers.dev/mcp"
+    },
+    "moltbook-publisher": {
+      "url": "https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp"
+    },
+    "color-palette": {
+      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp"
+    },
+    "json-toolkit": {
+      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"
+    },
+    "prompt-enhancer": {
+      "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp"
+    },
+    "regex-engine": {
+      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp"
+    },
+    "timestamp-converter": {
+      "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp"
     }
   }
 }

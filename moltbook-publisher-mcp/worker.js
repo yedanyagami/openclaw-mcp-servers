@@ -18,7 +18,15 @@ const ECOSYSTEM = {
   moltbook: 'https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp',
   intel: 'https://openclaw-intel-mcp.yagami8095.workers.dev/mcp',
   fortune: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
+  agentforge: 'https://agentforge-compare-mcp.yagami8095.workers.dev/mcp',
+  regex: 'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
+  color: 'https://color-palette-mcp.yagami8095.workers.dev/mcp',
+  json: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
+  prompt: 'https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp',
+  timestamp: 'https://timestamp-converter-mcp.yagami8095.workers.dev/mcp',
   store: 'https://product-store.yagami8095.workers.dev',
+  fortune_api: 'https://fortune-api.yagami8095.workers.dev',
+  intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   smithery_intel: 'https://smithery.ai/servers/openclaw-ai/intel',
   smithery_fortune: 'https://smithery.ai/servers/openclaw-ai/fortune',
 };
@@ -790,6 +798,12 @@ function landingPage() {
       <p>\uD83C\uDF10 OpenClaw Ecosystem:
         <a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="underline hover:text-white">Intel MCP</a> \u00B7
         <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="underline hover:text-white">Fortune MCP</a> \u00B7
+        <a href="https://agentforge-compare-mcp.yagami8095.workers.dev" class="underline hover:text-white">AgentForge MCP</a> \u00B7
+        <a href="https://regex-engine-mcp.yagami8095.workers.dev" class="underline hover:text-white">Regex MCP</a> \u00B7
+        <a href="https://color-palette-mcp.yagami8095.workers.dev" class="underline hover:text-white">Color MCP</a> \u00B7
+        <a href="https://json-toolkit-mcp.yagami8095.workers.dev" class="underline hover:text-white">JSON MCP</a> \u00B7
+        <a href="https://prompt-enhancer-mcp.yagami8095.workers.dev" class="underline hover:text-white">Prompt MCP</a> \u00B7
+        <a href="https://timestamp-converter-mcp.yagami8095.workers.dev" class="underline hover:text-white">Timestamp MCP</a> \u00B7
         <a href="https://product-store.yagami8095.workers.dev" class="underline hover:text-white">Digital Store</a>
       </p>
       <p class="mt-2">MoltBook Labs \u00A9 2026 \u2014 Part of OpenClaw Intelligence</p>
