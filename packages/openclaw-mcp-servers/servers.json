@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    "openclaw-json": {
+      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp",
+      "description": "Parse, validate, format, diff, query (JSONPath), transform, and generate JSON Schema. 6 tools.",
+      "tools": ["json_format", "json_validate", "json_diff", "json_query", "json_transform", "json_schema_generate"]
+    },
+    "openclaw-regex": {
+      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp",
+      "description": "Test, explain, build from natural language, find-replace, and extract with regex. 25+ built-in patterns. 5 tools.",
+      "tools": ["regex_test", "regex_explain", "regex_build", "regex_replace", "regex_extract"]
+    },
+    "openclaw-colors": {
+      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp",
+      "description": "Generate color palettes, check WCAG contrast, convert formats, create CSS gradients, lookup Tailwind colors. 5 tools.",
+      "tools": ["generate_palette", "contrast_check", "color_convert", "css_gradient", "tailwind_colors"]
+    },
+    "openclaw-timestamp": {
+      "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp",
+      "description": "Convert timestamps (unix/ISO/human/relative), timezone conversion, parse cron, time diff, format durations. 5 tools.",
+      "tools": ["convert_timestamp", "timezone_convert", "parse_cron", "time_diff", "format_duration"]
+    },
+    "openclaw-prompt": {
+      "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp",
+      "description": "Enhance, analyze, convert format, generate system prompts, browse 30+ templates. 6 tools.",
+      "tools": ["enhance_prompt", "analyze_prompt", "convert_prompt_format", "generate_system_prompt", "prompt_template_library", "purchase_pro_key"]
+    },
+    "openclaw-intel": {
+      "url": "https://openclaw-intel-mcp.yagami8095.workers.dev/mcp",
+      "description": "AI agent market intelligence: GitHub stars, releases, growth trends for Claude Code, Cursor, Devin, Windsurf. 6 tools.",
+      "tools": ["get_ai_market_report", "get_report_by_id", "list_reports", "get_market_stats", "purchase_api_key", "validate_api_key"]
+    },
+    "openclaw-fortune": {
+      "url": "https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp",
+      "description": "Daily horoscope and tarot for 12 zodiac signs. Scores, lucky items, rankings. 3 tools.",
+      "tools": ["get_daily_fortune", "get_fortune_ranking", "get_all_fortunes"]
+    },
+    "openclaw-moltbook": {
+      "url": "https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp",
+      "description": "Convert Markdown to HTML, SEO optimization, EN-JP translation, article outlines, trending topics for note.com/Zenn/Qiita. 8 tools.",
+      "tools": ["convert_markdown_to_html", "optimize_for_seo", "translate_en_to_jp", "generate_article_outline", "get_trending_topics", "cross_post_format", "analyze_article_performance", "purchase_pro_key"]
+    },
+    "openclaw-agentforge": {
+      "url": "https://agentforge-compare-mcp.yagami8095.workers.dev/mcp",
+      "description": "Compare AI coding tools (Claude Code, Cursor, Windsurf, Devin, etc.) side-by-side. Pricing, features, recommendations. 5 tools.",
+      "tools": ["compare_ai_tools", "get_tool_profile", "recommend_tool", "get_pricing_comparison", "purchase_pro_key"]
+    }
+  },
+  "totalTools": 49,
+  "pricing": {
+    "free": "3 calls/tool/day per IP",
+    "x402": "$0.05/call USDC on Base L2 (automatic, no signup)",
+    "pro": "$9 one-time PayPal — 1000 calls/day all tools"
+  },
+  "x402": {
+    "network": "base",
+    "currency": "USDC",
+    "amount": "0.05",
+    "recipient": "0x72aa56DAe3819c75C545c57778cc404092d60731"
+  }
+}

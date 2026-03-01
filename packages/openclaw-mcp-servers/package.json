@@ -1,0 +1,49 @@
+{
+  "name": "openclaw-mcp-servers",
+  "version": "1.0.0",
+  "description": "49 MCP tools on Cloudflare Workers: JSON toolkit, regex engine, color palettes, timestamps, prompt enhancer, AI market intel, fortune/tarot, content publishing, AI tool comparison. Free tier + x402 USDC micropay on Base L2.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "x402",
+    "ai-tools",
+    "json",
+    "regex",
+    "color-palette",
+    "timestamp",
+    "prompt-engineering",
+    "ai-market-intelligence",
+    "fortune",
+    "tarot",
+    "usdc",
+    "base-l2",
+    "micropayment",
+    "cloudflare-workers",
+    "streamable-http",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "cline"
+  ],
+  "bin": {
+    "openclaw-mcp": "./cli.js"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "author": "OpenClaw Intelligence <openclaw@yagami8095.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers"
+  },
+  "homepage": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#readme",
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "cli.js",
+    "index.js",
+    "servers.json",
+    "README.md"
+  ]
+}
