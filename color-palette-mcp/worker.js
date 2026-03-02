@@ -925,6 +925,36 @@ function memoryRateLimit(ip) {
 // ============================================================
 // RATE LIMITING
 // ============================================================
+
+// ============================================================
+// Pro API Key Validation (shared KV: prokey:{key})
+// ============================================================
+const PRO_DAILY_LIMIT = 1000;
+
+async function validateProKey(kv, apiKey) {
+  if (!apiKey || !kv) return null;
+  try {
+    const kd = await kv.get(`prokey:${apiKey}`, { type: 'json' });
+    if (!kd) return null;
+    if (kd.expires && new Date(kd.expires) < new Date()) return null;
+    if (kd.tier === 'pro' || kd.tier === 'pro_trial') {
+      return { valid: true, tier: kd.tier, daily_limit: kd.daily_limit || PRO_DAILY_LIMIT };
+    }
+    return null;
+  } catch { return null; }
+}
+
+async function proKeyRateLimit(kv, apiKey, limit) {
+  if (!kv) return { allowed: true, remaining: limit, total: limit, used: 0, pro: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `rl:pro:${apiKey.slice(0, 16)}:${today}`;
+  let count = 0;
+  try { const val = await kv.get(key); count = val ? parseInt(val, 10) : 0; } catch {}
+  if (count >= limit) return { allowed: false, remaining: 0, total: limit, used: count, pro: true };
+  try { await kv.put(key, String(count + 1), { expirationTtl: 86400 }); } catch {}
+  return { allowed: true, remaining: limit - count - 1, total: limit, used: count + 1, pro: true };
+}
+
 async function checkRateLimit(env, clientId) {
   const today = new Date().toISOString().slice(0, 10);
   const key = `color-palette:rate:${clientId}:${today}`;
@@ -1182,8 +1212,21 @@ async function handleMCPRequest(body, env, request) {
       || request.headers.get('cf-connecting-ip')
       || 'anon';
 
+    // Pro API Key validation
+    const apiKey = request.headers.get('X-API-Key');
+    let _proKeyInfo = null;
+    if (apiKey && env?.KV) {
+      _proKeyInfo = await validateProKey(env.KV, apiKey);
+    }
+
     // Rate limiting
-    const rateCheck = await checkRateLimit(env, clientId);
+    let rateCheck = await checkRateLimit(env, clientId);
+
+    // Pro key override: use higher limit
+    if (_proKeyInfo && _proKeyInfo.valid) {
+      rateCheck = await proKeyRateLimit(env?.KV, apiKey, _proKeyInfo.daily_limit);
+    }
+
     if (!rateCheck.allowed) {
       return {
         jsonrpc: '2.0', id,

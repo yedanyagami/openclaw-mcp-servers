@@ -1403,12 +1403,24 @@ function corsResponse(body, status = 200, extra = {}) {
 async function dispatchTool(toolName, params, env, request) {
   const identifier = getIdentifier(request);
 
+  // Pro API Key validation from header (cross-worker KV)
+  const headerApiKey = request ? request.headers.get('X-API-Key') : null;
+  let _headerPro = false;
+  if (headerApiKey && env?.KV) {
+    try {
+      const kd = await env.KV.get(`prokey:${headerApiKey}`, { type: 'json' });
+      if (kd && (!kd.expires || new Date(kd.expires) > new Date())) {
+        _headerPro = true;
+      }
+    } catch {}
+  }
+
   // ---- enhance_prompt (FREE) ----
   if (toolName === 'enhance_prompt') {
     if (!params?.prompt || typeof params.prompt !== 'string') {
       throw { code: INVALID_PARAMS, message: 'Missing required parameter: prompt (string)' };
     }
-    const rl = await checkRateLimit(env, identifier, false);
+    const rl = await checkRateLimit(env, identifier, _headerPro);
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
@@ -1431,7 +1443,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!params?.prompt || typeof params.prompt !== 'string') {
       throw { code: INVALID_PARAMS, message: 'Missing required parameter: prompt (string)' };
     }
-    const rl = await checkRateLimit(env, identifier, false);
+    const rl = await checkRateLimit(env, identifier, _headerPro);
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
@@ -1456,7 +1468,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!validFormats.includes(params.from_format)) throw { code: INVALID_PARAMS, message: `Invalid from_format. Must be one of: ${validFormats.join(', ')}` };
     if (!validFormats.includes(params.to_format))   throw { code: INVALID_PARAMS, message: `Invalid to_format. Must be one of: ${validFormats.join(', ')}` };
 
-    const rl = await checkRateLimit(env, identifier, false);
+    const rl = await checkRateLimit(env, identifier, _headerPro);
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
@@ -1473,7 +1485,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!params?.role) throw { code: INVALID_PARAMS, message: 'Missing required parameter: role' };
     if (!params?.task) throw { code: INVALID_PARAMS, message: 'Missing required parameter: task' };
 
-    const rl = await checkRateLimit(env, identifier, false);
+    const rl = await checkRateLimit(env, identifier, _headerPro);
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,

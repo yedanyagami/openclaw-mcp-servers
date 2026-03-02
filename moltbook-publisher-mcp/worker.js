@@ -485,6 +485,35 @@ function memoryRateLimit(ip) {
 // RATE LIMITING
 // ============================================================
 
+
+// ============================================================
+// Pro API Key Validation (shared KV: prokey:{key})
+// ============================================================
+
+async function validateProKey(kv, apiKey) {
+  if (!apiKey || !kv) return null;
+  try {
+    const kd = await kv.get(`prokey:${apiKey}`, { type: 'json' });
+    if (!kd) return null;
+    if (kd.expires && new Date(kd.expires) < new Date()) return null;
+    if (kd.tier === 'pro' || kd.tier === 'pro_trial') {
+      return { valid: true, tier: kd.tier, daily_limit: kd.daily_limit || PRO_DAILY_LIMIT };
+    }
+    return null;
+  } catch { return null; }
+}
+
+async function proKeyRateLimit(kv, apiKey, limit) {
+  if (!kv) return { allowed: true, remaining: limit, total: limit, used: 0, pro: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `rl:pro:${apiKey.slice(0, 16)}:${today}`;
+  let count = 0;
+  try { const val = await kv.get(key); count = val ? parseInt(val, 10) : 0; } catch {}
+  if (count >= limit) return { allowed: false, remaining: 0, total: limit, used: count, pro: true };
+  try { await kv.put(key, String(count + 1), { expirationTtl: 86400 }); } catch {}
+  return { allowed: true, remaining: limit - count - 1, total: limit, used: count + 1, pro: true };
+}
+
 async function checkRateLimit(toolName, clientIp, env) {
   const today = new Date().toISOString().slice(0, 10);
   const key = `ratelimit:${toolName}:${clientIp}:${today}`;
@@ -502,7 +531,7 @@ async function checkRateLimit(toolName, clientIp, env) {
 // TOOL EXECUTOR
 // ============================================================
 
-async function executeTool(name, args, env, clientIp) {
+async function executeTool(name, args, env, clientIp, _proKeyInfo, apiKey) {
   const proTools = ['get_trending_topics', 'cross_post_format', 'analyze_article_performance'];
   const isProTool = proTools.includes(name);
 
@@ -528,6 +557,12 @@ async function executeTool(name, args, env, clientIp) {
   let rateCheck = null;
   if (!isProTool) {
     rateCheck = await checkRateLimit(name, clientIp, env);
+
+      // Pro key override: use higher limit
+      if (_proKeyInfo && _proKeyInfo.valid) {
+        rateCheck = await proKeyRateLimit(env?.KV, apiKey, _proKeyInfo.daily_limit);
+      }
+
     if (!rateCheck.allowed) {
       return {
         content: [{
@@ -733,7 +768,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
   if (msg) c.text += msg;
 }
 
-async function handleMcpRequest(body, env, clientIp) {
+async function handleMcpRequest(body, env, clientIp, _proKeyInfo, apiKey) {
   const isBatch = Array.isArray(body);
   const requests = isBatch ? body : [body];
   const responses = [];
@@ -764,7 +799,7 @@ async function handleMcpRequest(body, env, clientIp) {
           responses.push(jsonRpcError(id, -32602, 'Missing tool name'));
           break;
         }
-        const result = await executeTool(name, args || {}, env, clientIp);
+        const result = await executeTool(name, args || {}, env, clientIp, _proKeyInfo, apiKey);
         const rpcResponse = jsonRpcResponse(id, result);
         // Read current usage for upgrade prompt (non-incrementing)
         try {
@@ -992,6 +1027,13 @@ export default {
     const url = new URL(request.url);
     const clientIp = request.headers.get('CF-Connecting-IP') || 'unknown';
 
+    // Pro API Key validation
+    const apiKey = request.headers.get('X-API-Key');
+    let _proKeyInfo = null;
+    if (apiKey && env?.KV) {
+      _proKeyInfo = await validateProKey(env.KV, apiKey);
+    }
+
     // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
@@ -1020,7 +1062,7 @@ export default {
       if (request.method === 'POST') {
         try {
           const body = await request.json();
-          const result = await handleMcpRequest(body, env, clientIp);
+          const result = await handleMcpRequest(body, env, clientIp, _proKeyInfo, apiKey);
           // x402: Detect rate limit → HTTP 402 with payment headers
           const first402 = Array.isArray(result) ? result[0] : result;
           const isRateLimited402 = first402?.error?.code === -32029;

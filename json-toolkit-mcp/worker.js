@@ -63,6 +63,36 @@ const ECOSYSTEM = {
 // Rate Limiting (KV-backed, per IP, 20 req/day)
 // ============================================================
 
+
+// ============================================================
+// Pro API Key Validation (shared KV: prokey:{key})
+// ============================================================
+const PRO_DAILY_LIMIT = 1000;
+
+async function validateProKey(kv, apiKey) {
+  if (!apiKey || !kv) return null;
+  try {
+    const kd = await kv.get(`prokey:${apiKey}`, { type: 'json' });
+    if (!kd) return null;
+    if (kd.expires && new Date(kd.expires) < new Date()) return null;
+    if (kd.tier === 'pro' || kd.tier === 'pro_trial') {
+      return { valid: true, tier: kd.tier, daily_limit: kd.daily_limit || PRO_DAILY_LIMIT };
+    }
+    return null;
+  } catch { return null; }
+}
+
+async function proKeyRateLimit(kv, apiKey, limit) {
+  if (!kv) return { allowed: true, remaining: limit, total: limit, used: 0, pro: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `rl:pro:${apiKey.slice(0, 16)}:${today}`;
+  let count = 0;
+  try { const val = await kv.get(key); count = val ? parseInt(val, 10) : 0; } catch {}
+  if (count >= limit) return { allowed: false, remaining: 0, total: limit, used: count, pro: true };
+  try { await kv.put(key, String(count + 1), { expirationTtl: 86400 }); } catch {}
+  return { allowed: true, remaining: limit - count - 1, total: limit, used: count + 1, pro: true };
+}
+
 async function checkRateLimit(kv, ip) {
   if (!kv) return memoryRateLimit(ip);
 
@@ -1078,7 +1108,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 // MCP Protocol dispatcher
 // ============================================================
 
-async function handleMcpRequest(req, kv, clientIp) {
+async function handleMcpRequest(req, kv, clientIp, _proKeyInfo, apiKey) {
   const isBatch = Array.isArray(req);
   const requests = isBatch ? req : [req];
   const responses = [];
@@ -1088,6 +1118,12 @@ async function handleMcpRequest(req, kv, clientIp) {
   let rateLimitInfo = null;
   if (hasToolCall) {
     rateLimitInfo = await checkRateLimit(kv, clientIp);
+
+      // Pro key override: use higher limit
+      if (_proKeyInfo && _proKeyInfo.valid) {
+        rateLimitInfo = await proKeyRateLimit(kv || env?.KV, apiKey, _proKeyInfo.daily_limit);
+      }
+
     if (!rateLimitInfo.allowed) {
       const rl = jsonRpcError(
         requests.find(r => r.method === 'tools/call')?.id ?? null,
@@ -1623,8 +1659,15 @@ export default {
         request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
         'unknown';
 
+      // Pro API Key validation
+      const apiKey = request.headers.get('X-API-Key');
       const kv = env?.KV ?? null;
-      const response = await handleMcpRequest(body, kv, clientIp);
+      let _proKeyInfo = null;
+      if (apiKey && kv) {
+        _proKeyInfo = await validateProKey(kv, apiKey);
+      }
+
+      const response = await handleMcpRequest(body, kv, clientIp, _proKeyInfo, apiKey);
 
       if (response === null) {
         return corsResponse('', 204);

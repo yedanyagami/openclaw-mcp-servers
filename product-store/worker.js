@@ -693,7 +693,18 @@ async function handleSuccess(request, env) {
       ).bind(orderId, productId, product.name, product.price_usd * 100, 'USD', method || 'direct', sessionId || '', verified ? 'paid' : 'pending', apiKey).run();
     } catch (e) { /* non-fatal */ }
 
-    return htmlResponse(apiKeySuccessPage(product, apiKey));
+
+    // Store Pro key in shared KV for cross-worker validation
+    try {
+      await env.KV.put(`prokey:${apiKey}`, JSON.stringify({
+        tier: 'pro',
+        daily_limit: 1000,
+        product_id: productId,
+        created: new Date().toISOString(),
+      }), { expirationTtl: 365 * 86400 }); // 1 year
+    } catch (_) { /* non-fatal — D1 is source of truth */ }
+
+        return htmlResponse(apiKeySuccessPage(product, apiKey));
   }
 
   // Generate download token (for digital products)
@@ -858,6 +869,25 @@ async function handlePayPalIPN(request, env) {
   } catch (e) {
     await logIPN('db_error', `DB update failed: ${e.message}`);
     return new Response('OK', { status: 200 });
+  }
+
+  // 5b. If this is an API key product, activate the key in KV for cross-worker auth
+  if (product && product.type === 'api_key') {
+    try {
+      // Find the most recent order's API key for this product
+      const orderRow = await env.DB.prepare(
+        "SELECT download_token FROM orders WHERE product_id = ? AND status = 'paid' ORDER BY paid_at DESC LIMIT 1"
+      ).bind(itemNumber).first();
+      if (orderRow?.download_token) {
+        await env.KV.put(`prokey:${orderRow.download_token}`, JSON.stringify({
+          tier: 'pro',
+          daily_limit: 1000,
+          product_id: itemNumber,
+          payment_id: txnId,
+          created: new Date().toISOString(),
+        }), { expirationTtl: 365 * 86400 });
+      }
+    } catch (_) { /* non-fatal */ }
   }
 
   // 6. First payment detection — milestone flag
@@ -1352,8 +1382,9 @@ export default {
           const body = await request.json();
           const { product_id, payment_method, payment_id, email } = body;
 
-          if (product_id !== 'intel-api-pro') {
-            return jsonResponse({ error: 'Only intel-api-pro supports API provisioning' }, 400);
+          const provisionableProducts = ['intel-api-pro', 'ecosystem-pro'];
+          if (!provisionableProducts.includes(product_id)) {
+            return jsonResponse({ error: `Only these products support API provisioning: ${provisionableProducts.join(', ')}`, available: provisionableProducts }, 400);
           }
 
           if (!payment_method || !payment_id) {
@@ -1373,16 +1404,19 @@ export default {
             "INSERT INTO api_keys (key, tier, status, daily_limit, owner_email, payment_method, payment_id, created_at) VALUES (?, 'pro', 'pending_verification', 1000, ?, ?, ?, datetime('now'))"
           ).bind(apiKey, email || null, payment_method, payment_id).run();
 
+          const productNames = { 'intel-api-pro': 'OpenClaw Intel Pro API Key', 'ecosystem-pro': 'OpenClaw Ecosystem Pro (All 9 MCP Servers)' };
+          const productAmounts = { 'intel-api-pro': 900, 'ecosystem-pro': 900 };
+
           await env.DB.prepare(
-            "INSERT INTO orders (order_id, product_id, product_name, amount, currency, payment_method, payment_id, status, download_token) VALUES (?, 'intel-api-pro', 'OpenClaw Intel Pro API Key', 900, 'USD', ?, ?, 'pending_verification', ?)"
-          ).bind(orderId, payment_method, payment_id, apiKey).run();
+            "INSERT INTO orders (order_id, product_id, product_name, amount, currency, payment_method, payment_id, status, download_token) VALUES (?, ?, ?, ?, 'USD', ?, ?, 'pending_verification', ?)"
+          ).bind(orderId, product_id, productNames[product_id] || product_id, productAmounts[product_id] || 900, payment_method, payment_id, apiKey).run();
 
           return jsonResponse({
             status: 'pending_verification',
             message: 'Payment recorded. Your API key will be activated after payment verification (usually within 24 hours for crypto, instant for PayPal redirect flow).',
             order_id: orderId,
             key_preview: apiKey.slice(0, 12) + '...',
-            tip: 'For INSTANT key provisioning, use the PayPal checkout at https://product-store.yagami8095.workers.dev/products/intel-api-pro',
+            tip: `For INSTANT key provisioning, use the PayPal checkout at https://product-store.yagami8095.workers.dev/products/${product_id}`,
             support: 'Yagami8095@gmail.com',
           });
         } catch (e) {

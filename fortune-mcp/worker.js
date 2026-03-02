@@ -35,6 +35,36 @@ function memoryRateLimit(ip) {
   return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
 }
 
+
+// ============================================================
+// Pro API Key Validation (shared KV: prokey:{key})
+// ============================================================
+const PRO_DAILY_LIMIT = 1000;
+
+async function validateProKey(kv, apiKey) {
+  if (!apiKey || !kv) return null;
+  try {
+    const kd = await kv.get(`prokey:${apiKey}`, { type: 'json' });
+    if (!kd) return null;
+    if (kd.expires && new Date(kd.expires) < new Date()) return null;
+    if (kd.tier === 'pro' || kd.tier === 'pro_trial') {
+      return { valid: true, tier: kd.tier, daily_limit: kd.daily_limit || PRO_DAILY_LIMIT };
+    }
+    return null;
+  } catch { return null; }
+}
+
+async function proKeyRateLimit(kv, apiKey, limit) {
+  if (!kv) return { allowed: true, remaining: limit, total: limit, used: 0, pro: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `rl:pro:${apiKey.slice(0, 16)}:${today}`;
+  let count = 0;
+  try { const val = await kv.get(key); count = val ? parseInt(val, 10) : 0; } catch {}
+  if (count >= limit) return { allowed: false, remaining: 0, total: limit, used: count, pro: true };
+  try { await kv.put(key, String(count + 1), { expirationTtl: 86400 }); } catch {}
+  return { allowed: true, remaining: limit - count - 1, total: limit, used: count + 1, pro: true };
+}
+
 async function checkRateLimit(kv, ip) {
   if (!kv) return memoryRateLimit('no-kv');
   const today = new Date().toISOString().slice(0, 10);
@@ -630,7 +660,21 @@ export default {
     let rl;
     if (path === '/mcp') {
       const clientIp = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() || 'unknown';
+
+      // Pro API Key validation
+      const apiKey = request.headers.get('X-API-Key');
+      let _proKeyInfo = null;
+      if (apiKey && env?.KV) {
+        _proKeyInfo = await validateProKey(env.KV, apiKey);
+      }
+
       rl = await checkRateLimit(env.KV, clientIp);
+
+      // Pro key override
+      if (_proKeyInfo && _proKeyInfo.valid) {
+        rl = await proKeyRateLimit(env.KV, apiKey, _proKeyInfo.daily_limit);
+      }
+
       if (!rl.allowed) {
         return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${FORTUNE_RATE_LIMIT}/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`)), {
           status: 402, headers: {
