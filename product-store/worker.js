@@ -113,6 +113,27 @@ const PRODUCTS = {
     badge: 'NEW',
     emoji: '🛠️',
   },
+  'ecosystem-pro': {
+    id: 'ecosystem-pro',
+    name: 'OpenClaw Ecosystem Pro',
+    tagline: 'All 9 MCP servers, 1000 calls/day — one-time $9',
+    description: 'Unlock the full OpenClaw MCP ecosystem. 49 tools across 9 Cloudflare Workers edge servers: JSON Toolkit, Regex Engine, Color Palette, Timestamp Converter, Prompt Enhancer, AI Market Intel, Fortune Tarot, Content Publisher, AI Tool Comparison. Pro API key with 1000 calls/day per server (vs 3 free). x402 users: this is cheaper if you make 180+ calls/month.',
+    features: [
+      '🔓 All 9 MCP servers unlocked (49 tools)',
+      '📊 1000 calls/day per server (vs 3 free)',
+      '⚡ Edge-deployed on Cloudflare Workers (<50ms)',
+      '🔑 Single Pro API key works across all servers',
+      '💰 One-time $9 (no subscription, no recurring)',
+      '🤖 Works with Claude Code, Cursor, Windsurf, Cline',
+    ],
+    price_usd: 9,
+    price_jpy: 1380,
+    currency: 'USD',
+    format: 'API_KEY',
+    type: 'api_key',
+    badge: 'MOST POPULAR',
+    emoji: '🦞',
+  },
   'intel-annual-pass': {
     id: 'intel-annual-pass',
     name: 'OpenClaw Intel Pro 年間パス',
@@ -967,6 +988,14 @@ export default {
       // Routes
       if (path === '/' && method === 'GET') {
         return handleCatalog(env);
+      }
+
+      // Quick-buy routes — direct redirect to PayPal
+      if (path === '/buy/pro' && method === 'GET') {
+        return new Response(null, {
+          status: 302,
+          headers: { ...CORS, 'Location': 'https://paypal.me/Yagami8095/9' }
+        });
       }
 
       if (path.startsWith('/products/') && method === 'GET') {

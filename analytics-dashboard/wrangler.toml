@@ -1,0 +1,15 @@
+name = "openclaw-analytics"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+DASHBOARD_TITLE = "OpenClaw Analytics"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "412eb1678043499eb34f0e7f211176b9"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gumroad-sales"
+database_id = "1353b53e-000c-4646-ac24-d15cd3fd29ad"

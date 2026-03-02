@@ -1600,6 +1600,7 @@ async function handleMCPMethod(method, params, id, env, request) {
   if (method === 'tools/call') {
     const toolName = params?.name;
     const toolArgs = params?.arguments || {};
+    Object.keys(toolArgs).forEach(k => { if (typeof toolArgs[k] === 'string') toolArgs[k] = sanitizeInput(toolArgs[k]); });
     if (!toolName) return rpcError(id, INVALID_PARAMS, 'Missing tool name');
 
     try {

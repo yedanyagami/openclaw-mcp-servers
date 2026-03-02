@@ -821,6 +821,7 @@ function handleMCPRequest(req) {
 
     case 'tools/call': {
       const { name, arguments: args = {} } = params || {};
+      if (args) Object.keys(args).forEach(k => { if (typeof args[k] === 'string') args[k] = sanitizeInput(args[k]); });
 
       if (!name) {
         return mcpError(id, -32602, 'Invalid params: tool name is required');

@@ -1179,6 +1179,7 @@ async function handleMCPRequest(body, env, request) {
     // Semantic cache check
     const kv = env.KV;
     const toolArgs = args || {};
+    Object.keys(toolArgs).forEach(k => { if (typeof toolArgs[k] === 'string') toolArgs[k] = sanitizeInput(toolArgs[k]); });
     const cached = await getCached(kv, 'color', name, toolArgs);
     if (cached) {
       const cachedResp = { jsonrpc: '2.0', id, result: cached };

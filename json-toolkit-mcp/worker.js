@@ -1108,6 +1108,7 @@ async function handleMcpRequest(req, kv, clientIp) {
       case 'tools/call': {
         const toolName = r.params?.name;
         const toolArgs = r.params?.arguments || {};
+        Object.keys(toolArgs).forEach(k => { if (typeof toolArgs[k] === 'string') toolArgs[k] = sanitizeInput(toolArgs[k]); });
 
         // Semantic cache check — all json-toolkit tools are deterministic
         const cached = await getCached(kv, 'json', toolName, toolArgs);

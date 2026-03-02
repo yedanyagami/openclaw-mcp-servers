@@ -308,8 +308,15 @@ function addUpgradePrompt(response, rateLimitInfo) {
   if (msg) c.text += msg;
 }
 
+
+function sanitizeInput(str, maxLen = 2000) {
+  if (typeof str !== 'string') return str;
+  return str.replace(/[<>]/g, '').slice(0, maxLen);
+}
+
 async function handleToolCall(id, params) {
   const { name, arguments: args } = params;
+  if (args) Object.keys(args).forEach(k => { if (typeof args[k] === 'string') args[k] = sanitizeInput(args[k]); });
   const today = getTodayJST();
 
   try {

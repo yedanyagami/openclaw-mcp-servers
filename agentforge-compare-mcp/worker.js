@@ -867,6 +867,7 @@ async function handleMCPRequest(body, env, request) {
 
   if (method === 'tools/call') {
     const { name, arguments: args } = params || {};
+    if (args) Object.keys(args).forEach(k => { if (typeof args[k] === 'string') args[k] = sanitizeInput(args[k]); });
     const clientId = request.headers.get('x-client-id') || request.headers.get('cf-connecting-ip') || 'anon';
     const apiKey = args?.api_key;
     const isPro = await validateApiKey(env, apiKey);

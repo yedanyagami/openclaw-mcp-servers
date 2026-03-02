@@ -221,6 +221,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
 async function handleToolCall(id, params, env) {
   const { name, arguments: args } = params;
+  if (args) Object.keys(args).forEach(k => { if (typeof args[k] === 'string') args[k] = sanitizeInput(args[k]); });
 
   // Extract API key from args or Authorization header (checked at router level)
   const apiKey = args?.api_key || null;

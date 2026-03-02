@@ -737,6 +737,7 @@ async function handleMcpRequest(body, env, clientIp) {
 
       case 'tools/call': {
         const { name, arguments: args } = params || {};
+        if (args) Object.keys(args).forEach(k => { if (typeof args[k] === 'string') args[k] = sanitizeInput(args[k]); });
         if (!name) {
           responses.push(jsonRpcError(id, -32602, 'Missing tool name'));
           break;
