@@ -1,11 +1,18 @@
 /**
- * product-store Worker — Digital Product Store with PayPal + Stripe
+ * product-store Worker — Digital Product Store with PayPal + Stripe + GitHub OAuth
  * Cloudflare Workers + D1 + KV
  *
  * ENV VARS (set via wrangler secret):
- *   PAYPAL_BUSINESS_EMAIL - PayPal business email for Buy Now buttons
- *   STRIPE_SECRET_KEY     - Stripe secret key for Checkout Sessions
- *   STRIPE_WEBHOOK_SECRET - Stripe webhook signing secret
+ *   PAYPAL_BUSINESS_EMAIL  - PayPal business email for Buy Now buttons
+ *   STRIPE_SECRET_KEY      - Stripe secret key for Checkout Sessions
+ *   STRIPE_WEBHOOK_SECRET  - Stripe webhook signing secret
+ *   GITHUB_CLIENT_ID       - GitHub OAuth App client ID
+ *   GITHUB_CLIENT_SECRET   - GitHub OAuth App client secret
+ *
+ * OAuth Flow:
+ *   GET /auth/login       → redirect to GitHub OAuth
+ *   GET /auth/callback    → exchange code for token → issue Pro API key
+ *   GET /auth/status      → check if user has Pro key (via KV)
  */
 
 // ============================================================
@@ -958,6 +965,165 @@ async function trackRef(request, env, serverName) {
 }
 
 // ============================================================
+// GitHub OAuth Pro Authentication
+// ============================================================
+const OAUTH_SCOPES = 'read:user user:email';
+const GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize';
+const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token';
+const GITHUB_USER_URL = 'https://api.github.com/user';
+
+// GET /auth/login → redirect to GitHub
+function handleOAuthLogin(env, url) {
+  if (!env.GITHUB_CLIENT_ID) {
+    return jsonResponse({ error: 'OAuth not configured' }, 500);
+  }
+  const state = crypto.randomUUID();
+  const params = new URLSearchParams({
+    client_id: env.GITHUB_CLIENT_ID,
+    redirect_uri: `${url.origin}/auth/callback`,
+    scope: OAUTH_SCOPES,
+    state,
+  });
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: `${GITHUB_AUTH_URL}?${params}`,
+      'Set-Cookie': `oauth_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`,
+    },
+  });
+}
+
+// GET /auth/callback → exchange code → generate Pro key → show result
+async function handleOAuthCallback(env, url) {
+  const code = url.searchParams.get('code');
+  if (!code) {
+    return jsonResponse({ error: 'Missing authorization code' }, 400);
+  }
+
+  // Exchange code for access token
+  const tokenRes = await fetch(GITHUB_TOKEN_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      client_id: env.GITHUB_CLIENT_ID,
+      client_secret: env.GITHUB_CLIENT_SECRET,
+      code,
+    }),
+  });
+
+  const tokenData = await tokenRes.json();
+  if (tokenData.error) {
+    return jsonResponse({ error: tokenData.error, description: tokenData.error_description }, 400);
+  }
+
+  const accessToken = tokenData.access_token;
+
+  // Get GitHub user info
+  const userRes = await fetch(GITHUB_USER_URL, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'User-Agent': 'OpenClaw-ProductStore/1.0',
+      Accept: 'application/json',
+    },
+  });
+  const user = await userRes.json();
+
+  // Generate Pro API key
+  const proKey = `ocpro_${crypto.randomUUID().replace(/-/g, '')}`;
+  const keyData = {
+    key: proKey,
+    github_id: user.id,
+    github_login: user.login,
+    github_name: user.name || user.login,
+    tier: 'pro_trial',
+    daily_limit: 100,
+    created: new Date().toISOString(),
+    expires: new Date(Date.now() + 7 * 86400000).toISOString(), // 7 day trial
+  };
+
+  // Store in KV
+  if (env.KV) {
+    await env.KV.put(`prokey:${proKey}`, JSON.stringify(keyData), { expirationTtl: 7 * 86400 });
+    await env.KV.put(`github:${user.id}`, proKey, { expirationTtl: 7 * 86400 });
+  }
+
+  // Return success page
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenClaw Pro — Activated</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.card{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:32px;max-width:520px;width:100%}
+h1{color:#ff6b35;font-size:1.5em;margin-bottom:16px}
+.key-box{background:#0d1117;border:1px solid #ff6b35;border-radius:8px;padding:16px;margin:16px 0;font-family:monospace;font-size:0.9em;word-break:break-all;color:#fff;cursor:pointer}
+.key-box:hover{background:#161b22}
+.info{color:#888;font-size:0.85em;line-height:1.6;margin-top:12px}
+.badge{display:inline-block;background:#ff6b35;color:#000;padding:2px 8px;border-radius:4px;font-size:0.75em;font-weight:bold}
+.user{display:flex;align-items:center;gap:12px;margin:16px 0;padding:12px;background:#161b22;border-radius:8px}
+.user img{width:40px;height:40px;border-radius:50%}
+.usage{margin-top:16px;font-size:0.85em;color:#aaa}
+code{background:#222;padding:2px 6px;border-radius:3px;font-size:0.85em}
+</style></head>
+<body>
+<div class="card">
+  <h1>OpenClaw Pro <span class="badge">7-DAY TRIAL</span></h1>
+  <div class="user">
+    <img src="${user.avatar_url}" alt="${user.login}">
+    <div><strong>${user.name || user.login}</strong><br><span style="color:#888">@${user.login}</span></div>
+  </div>
+  <p>Your Pro API key (click to copy):</p>
+  <div class="key-box" onclick="navigator.clipboard.writeText(this.textContent.trim()).then(()=>this.style.borderColor='#0f0')">${proKey}</div>
+  <div class="usage">
+    <strong>Usage:</strong> Add header <code>X-API-Key: ${proKey}</code> to any OpenClaw MCP request.<br>
+    <strong>Limit:</strong> 100 calls/day (vs 10-50 free)<br>
+    <strong>Expires:</strong> ${keyData.expires.split('T')[0]}<br>
+    <strong>Upgrade:</strong> <a href="https://paypal.me/Yagami8095/9" style="color:#ff6b35">Pay $9 for unlimited Pro</a>
+  </div>
+  <div class="info">
+    After trial, upgrade to permanent Pro ($9 one-time) for 1000 calls/day across all 9 MCP servers.<br>
+    Servers: json-toolkit, regex-engine, color-palette, timestamp-converter, prompt-enhancer, agentforge, moltbook, fortune, intel
+  </div>
+</div>
+</body></html>`;
+
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+  });
+}
+
+// GET /auth/status → check Pro key status
+async function handleOAuthStatus(request, env) {
+  const apiKey = request.headers.get('X-API-Key') || new URL(request.url).searchParams.get('key');
+  if (!apiKey) {
+    return jsonResponse({ error: 'Provide X-API-Key header or ?key= param', authenticated: false }, 401);
+  }
+
+  if (!env.KV) {
+    return jsonResponse({ error: 'KV not available', authenticated: false }, 503);
+  }
+
+  const raw = await env.KV.get(`prokey:${apiKey}`);
+  if (!raw) {
+    return jsonResponse({ error: 'Invalid or expired key', authenticated: false }, 401);
+  }
+
+  const data = JSON.parse(raw);
+  return jsonResponse({
+    authenticated: true,
+    github_login: data.github_login,
+    tier: data.tier,
+    daily_limit: data.daily_limit,
+    expires: data.expires,
+    created: data.created,
+  });
+}
+
+// ============================================================
 // MAIN ROUTER
 // ============================================================
 export default {
@@ -988,6 +1154,17 @@ export default {
       // Routes
       if (path === '/' && method === 'GET') {
         return handleCatalog(env);
+      }
+
+      // === GitHub OAuth Pro Authentication ===
+      if (path === '/auth/login' && method === 'GET') {
+        return handleOAuthLogin(env, url);
+      }
+      if (path === '/auth/callback' && method === 'GET') {
+        return handleOAuthCallback(env, url);
+      }
+      if (path === '/auth/status' && method === 'GET') {
+        return handleOAuthStatus(request, env);
       }
 
       // Quick-buy routes — direct redirect to PayPal
