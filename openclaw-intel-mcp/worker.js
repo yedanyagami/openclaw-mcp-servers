@@ -167,8 +167,30 @@ async function validateKey(env, apiKey) {
 
 const INTEL_RATE_LIMIT = 20; // 20 requests/day free
 
+// ============================================================
+// In-Memory Fallback Rate Limiter (KV Safe Mode)
+// When KV/D1 is unavailable, degrade to 5 req/min/IP instead of unlimited
+// ============================================================
+const _memRL = new Map();
+const MEM_RL_LIMIT = 5;
+const MEM_RL_WINDOW = 60000; // 1 minute
+
+function memoryRateLimit(ip) {
+  const now = Date.now();
+  const entry = _memRL.get(ip);
+  if (!entry || now - entry.ts > MEM_RL_WINDOW) {
+    _memRL.set(ip, { ts: now, count: 1 });
+    return { allowed: true, remaining: MEM_RL_LIMIT - 1, safeMode: true };
+  }
+  if (entry.count >= MEM_RL_LIMIT) {
+    return { allowed: false, remaining: 0, safeMode: true };
+  }
+  entry.count++;
+  return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
+}
+
 async function checkRateLimit(db, ip) {
-  if (!db) return { allowed: true, remaining: INTEL_RATE_LIMIT, used: 0 };
+  if (!db) return memoryRateLimit(ip);
   const today = new Date().toISOString().slice(0, 10);
   const ipHash = await sha256Short(ip + '-openclaw-intel-rl');
   const endpoint = 'mcp:' + today;
@@ -191,7 +213,7 @@ async function checkRateLimit(db, ip) {
     }
     return { allowed: true, remaining: INTEL_RATE_LIMIT - count - 1, used: count + 1 };
   } catch {
-    return { allowed: true, remaining: INTEL_RATE_LIMIT, used: 0 };
+    return memoryRateLimit(ip);
   }
 }
 

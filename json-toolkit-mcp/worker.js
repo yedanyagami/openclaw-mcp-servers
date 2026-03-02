@@ -22,6 +22,28 @@ const MCP_PROTOCOL_VERSION = '2025-03-26';
 const RATE_LIMIT_MAX = 20;           // requests per day
 const RATE_LIMIT_WINDOW = 86400;     // 24 hours in seconds
 
+// ============================================================
+// In-Memory Fallback Rate Limiter (KV Safe Mode)
+// When KV is unavailable, degrade to 5 req/min/IP instead of unlimited
+// ============================================================
+const _memRL = new Map();
+const MEM_RL_LIMIT = 5;
+const MEM_RL_WINDOW = 60000; // 1 minute
+
+function memoryRateLimit(ip) {
+  const now = Date.now();
+  const entry = _memRL.get(ip);
+  if (!entry || now - entry.ts > MEM_RL_WINDOW) {
+    _memRL.set(ip, { ts: now, count: 1 });
+    return { allowed: true, remaining: MEM_RL_LIMIT - 1, safeMode: true };
+  }
+  if (entry.count >= MEM_RL_LIMIT) {
+    return { allowed: false, remaining: 0, safeMode: true };
+  }
+  entry.count++;
+  return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
+}
+
 const ECOSYSTEM = {
   json_toolkit: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
   regex:        'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
@@ -42,7 +64,7 @@ const ECOSYSTEM = {
 // ============================================================
 
 async function checkRateLimit(kv, ip) {
-  if (!kv) return { allowed: true, remaining: RATE_LIMIT_MAX, total: RATE_LIMIT_MAX };
+  if (!kv) return memoryRateLimit(ip);
 
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const key = `rl:json:${ip}:${today}`;
@@ -52,8 +74,7 @@ async function checkRateLimit(kv, ip) {
     const val = await kv.get(key);
     count = val ? parseInt(val, 10) : 0;
   } catch {
-    // KV unavailable — allow the request
-    return { allowed: true, remaining: RATE_LIMIT_MAX, total: RATE_LIMIT_MAX };
+    return memoryRateLimit(ip);
   }
 
   if (count >= RATE_LIMIT_MAX) {

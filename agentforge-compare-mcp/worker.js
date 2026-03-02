@@ -262,16 +262,42 @@ const TOOLS = [
 ];
 
 // ============================================================
+// In-Memory Fallback Rate Limiter (KV Safe Mode)
+// When KV is unavailable, degrade to 5 req/min/IP instead of unlimited
+// ============================================================
+const _memRL = new Map();
+const MEM_RL_LIMIT = 5;
+const MEM_RL_WINDOW = 60000; // 1 minute
+
+function memoryRateLimit(ip) {
+  const now = Date.now();
+  const entry = _memRL.get(ip);
+  if (!entry || now - entry.ts > MEM_RL_WINDOW) {
+    _memRL.set(ip, { ts: now, count: 1 });
+    return { allowed: true, remaining: MEM_RL_LIMIT - 1, safeMode: true };
+  }
+  if (entry.count >= MEM_RL_LIMIT) {
+    return { allowed: false, remaining: 0, safeMode: true };
+  }
+  entry.count++;
+  return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
+}
+
+// ============================================================
 // RATE LIMITING
 // ============================================================
 async function checkRateLimit(env, clientId, isPro) {
   const today = new Date().toISOString().slice(0, 10);
   const key = `agentforge:rate:${clientId}:${today}`;
-  const current = parseInt(await env.KV.get(key) || '0');
   const limit = isPro ? 100 : 10;
-  if (current >= limit) return { allowed: false, remaining: 0, limit };
-  await env.KV.put(key, String(current + 1), { expirationTtl: 86400 });
-  return { allowed: true, remaining: limit - current - 1, limit };
+  try {
+    const current = parseInt(await env.KV.get(key) || '0');
+    if (current >= limit) return { allowed: false, remaining: 0, limit };
+    await env.KV.put(key, String(current + 1), { expirationTtl: 86400 });
+    return { allowed: true, remaining: limit - current - 1, limit };
+  } catch {
+    return memoryRateLimit(clientId);
+  }
 }
 
 async function validateApiKey(env, apiKey) {

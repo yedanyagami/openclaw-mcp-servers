@@ -37,33 +37,59 @@ const CORS_HEADERS = {
 
 const RATE_LIMIT = 20;
 
+// ============================================================
+// In-Memory Fallback Rate Limiter (KV Safe Mode)
+// When KV is unavailable, degrade to 5 req/min/IP instead of unlimited
+// ============================================================
+const _memRL = new Map();
+const MEM_RL_LIMIT = 5;
+const MEM_RL_WINDOW = 60000; // 1 minute
+
+function memoryRateLimit(ip) {
+  const now = Date.now();
+  const entry = _memRL.get(ip);
+  if (!entry || now - entry.ts > MEM_RL_WINDOW) {
+    _memRL.set(ip, { ts: now, count: 1 });
+    return { allowed: true, remaining: MEM_RL_LIMIT - 1, safeMode: true };
+  }
+  if (entry.count >= MEM_RL_LIMIT) {
+    return { allowed: false, remaining: 0, safeMode: true };
+  }
+  entry.count++;
+  return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
+}
+
 async function checkRateLimit(env, ip) {
-  if (!env.KV) return { allowed: true, remaining: RATE_LIMIT, reset: 0 };
+  if (!env.KV) return memoryRateLimit(ip);
 
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const key = `rl:regex:${ip}:${today}`;
 
-  const raw = await env.KV.get(key);
-  const count = raw ? parseInt(raw, 10) : 0;
+  try {
+    const raw = await env.KV.get(key);
+    const count = raw ? parseInt(raw, 10) : 0;
 
-  if (count >= RATE_LIMIT) {
-    const midnight = new Date();
-    midnight.setUTCHours(24, 0, 0, 0);
+    if (count >= RATE_LIMIT) {
+      const midnight = new Date();
+      midnight.setUTCHours(24, 0, 0, 0);
+      return {
+        allowed: false,
+        remaining: 0,
+        reset: Math.floor(midnight.getTime() / 1000),
+      };
+    }
+
+    const ttl = 86400 - (Date.now() % 86400000) / 1000;
+    await env.KV.put(key, String(count + 1), { expirationTtl: Math.ceil(ttl) });
+
     return {
-      allowed: false,
-      remaining: 0,
-      reset: Math.floor(midnight.getTime() / 1000),
+      allowed: true,
+      remaining: RATE_LIMIT - count - 1,
+      reset: 0,
     };
+  } catch {
+    return memoryRateLimit(ip);
   }
-
-  const ttl = 86400 - (Date.now() % 86400000) / 1000;
-  await env.KV.put(key, String(count + 1), { expirationTtl: Math.ceil(ttl) });
-
-  return {
-    allowed: true,
-    remaining: RATE_LIMIT - count - 1,
-    reset: 0,
-  };
 }
 
 // ─── Regex Explain ────────────────────────────────────────────────────────────

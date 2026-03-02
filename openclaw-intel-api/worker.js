@@ -44,30 +44,56 @@ const RATE_LIMITS = {
   admin:      { daily: 999999, perMinute: 999 },
 };
 
+// ============================================================
+// In-Memory Fallback Rate Limiter (KV/D1 Safe Mode)
+// When D1 is unavailable, degrade to 5 req/min/IP instead of unlimited
+// ============================================================
+const _memRL = new Map();
+const MEM_RL_LIMIT = 5;
+const MEM_RL_WINDOW = 60000; // 1 minute
+
+function memoryRateLimit(ip) {
+  const now = Date.now();
+  const entry = _memRL.get(ip);
+  if (!entry || now - entry.ts > MEM_RL_WINDOW) {
+    _memRL.set(ip, { ts: now, count: 1 });
+    return { allowed: true, remaining: MEM_RL_LIMIT - 1, safeMode: true };
+  }
+  if (entry.count >= MEM_RL_LIMIT) {
+    return { allowed: false, remaining: 0, safeMode: true };
+  }
+  entry.count++;
+  return { allowed: true, remaining: MEM_RL_LIMIT - entry.count, safeMode: true };
+}
+
 async function checkRateLimit(ipH, tier, endpoint, env) {
   const today = getDateUTC();
   const limits = RATE_LIMITS[tier] || RATE_LIMITS.free;
 
-  // Check daily limit
-  const row = await env.DB.prepare(
-    'SELECT calls FROM rate_limits WHERE ip_hash = ? AND endpoint = ? AND date = ?'
-  ).bind(ipH, endpoint, today).first();
+  try {
+    // Check daily limit
+    const row = await env.DB.prepare(
+      'SELECT calls FROM rate_limits WHERE ip_hash = ? AND endpoint = ? AND date = ?'
+    ).bind(ipH, endpoint, today).first();
 
-  const currentCalls = row?.calls || 0;
-  if (currentCalls >= limits.daily) {
-    return { allowed: false, remaining: 0, limit: limits.daily, resetAt: today + 'T23:59:59Z' };
+    const currentCalls = row?.calls || 0;
+    if (currentCalls >= limits.daily) {
+      return { allowed: false, remaining: 0, limit: limits.daily, resetAt: today + 'T23:59:59Z' };
+    }
+
+    // Upsert rate limit counter
+    await env.DB.prepare(
+      `INSERT INTO rate_limits (ip_hash, endpoint, date, calls, last_call)
+       VALUES (?, ?, ?, 1, datetime('now'))
+       ON CONFLICT(ip_hash, endpoint, date) DO UPDATE SET
+         calls = calls + 1,
+         last_call = datetime('now')`
+    ).bind(ipH, endpoint, today).run();
+
+    return { allowed: true, remaining: limits.daily - currentCalls - 1, limit: limits.daily };
+  } catch {
+    return memoryRateLimit(ipH);
   }
-
-  // Upsert rate limit counter
-  await env.DB.prepare(
-    `INSERT INTO rate_limits (ip_hash, endpoint, date, calls, last_call)
-     VALUES (?, ?, ?, 1, datetime('now'))
-     ON CONFLICT(ip_hash, endpoint, date) DO UPDATE SET
-       calls = calls + 1,
-       last_call = datetime('now')`
-  ).bind(ipH, endpoint, today).run();
-
-  return { allowed: true, remaining: limits.daily - currentCalls - 1, limit: limits.daily };
 }
 
 // ============================================================
