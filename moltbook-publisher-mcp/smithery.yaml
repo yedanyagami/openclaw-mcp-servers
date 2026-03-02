@@ -3,5 +3,10 @@ startCommand:
   url: https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp
 configSchema:
   type: object
-  properties: {}
+  properties:
+    apiKey:
+      type: string
+      title: Pro API Key
+      description: Optional Pro API key for trending topics, cross-posting, and analytics. Get one at https://product-store.yagami8095.workers.dev/auth/login
   required: []
+exampleConfig: {}

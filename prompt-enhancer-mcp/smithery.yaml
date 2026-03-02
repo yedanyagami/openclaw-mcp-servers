@@ -3,5 +3,10 @@ startCommand:
   url: https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp
 configSchema:
   type: object
-  properties: {}
+  properties:
+    apiKey:
+      type: string
+      title: Pro API Key
+      description: Optional Pro API key for template library access and higher rate limits (1000 calls/day). Get one at https://product-store.yagami8095.workers.dev/auth/login
   required: []
+exampleConfig: {}
