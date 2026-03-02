@@ -772,32 +772,108 @@ async function handleDownload(token, env) {
 }
 
 async function handlePayPalIPN(request, env) {
-  // PayPal Instant Payment Notification handler
+  // PayPal Instant Payment Notification handler (hardened v2)
   const body = await request.text();
+  const params = new URLSearchParams(body);
+  const txnId = params.get('txn_id') || 'unknown';
+  const today = new Date().toISOString().split('T')[0];
+  const logKey = `ipn_log:${today}:${txnId}`;
 
-  // Verify with PayPal
-  const verifyResp = await fetch('https://ipnpb.paypal.com/cgi-bin/webscr', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `cmd=_notify-validate&${body}`,
-  });
-  const verifyResult = await verifyResp.text();
+  // Helper: log IPN event to KV for debugging
+  const logIPN = async (status, detail) => {
+    try {
+      const entry = JSON.stringify({
+        status,
+        detail,
+        txn_id: txnId,
+        item: params.get('item_number'),
+        gross: params.get('mc_gross'),
+        payer: params.get('payer_email'),
+        ts: new Date().toISOString(),
+      });
+      await env.KV.put(logKey, entry, { expirationTtl: 90 * 86400 });
+    } catch (_) { /* best-effort logging */ }
+  };
 
-  if (verifyResult === 'VERIFIED') {
-    const params = new URLSearchParams(body);
-    const paymentStatus = params.get('payment_status');
-    const itemNumber = params.get('item_number');
-    const txnId = params.get('txn_id');
-
-    if (paymentStatus === 'Completed') {
-      try {
-        await env.DB.prepare(
-          "UPDATE orders SET status = 'paid', payment_id = ?, paid_at = datetime('now') WHERE product_id = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1"
-        ).bind(txnId, itemNumber).run();
-      } catch (e) { /* log */ }
-    }
+  // 1. Verify with PayPal
+  let verifyResult;
+  try {
+    const verifyResp = await fetch('https://ipnpb.paypal.com/cgi-bin/webscr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `cmd=_notify-validate&${body}`,
+    });
+    verifyResult = await verifyResp.text();
+  } catch (e) {
+    await logIPN('error', `PayPal verify fetch failed: ${e.message}`);
+    return new Response('OK', { status: 200 });
   }
 
+  if (verifyResult !== 'VERIFIED') {
+    await logIPN('rejected', `PayPal verify returned: ${verifyResult}`);
+    return new Response('OK', { status: 200 });
+  }
+
+  const paymentStatus = params.get('payment_status');
+  const itemNumber = params.get('item_number');
+  const mcGross = parseFloat(params.get('mc_gross') || '0');
+  const mcCurrency = params.get('mc_currency') || 'USD';
+
+  if (paymentStatus !== 'Completed') {
+    await logIPN('skipped', `payment_status=${paymentStatus}`);
+    return new Response('OK', { status: 200 });
+  }
+
+  // 2. Txn dedup — prevent double-processing
+  const txnKey = `paypal_txn:${txnId}`;
+  const existingTxn = await env.KV.get(txnKey);
+  if (existingTxn) {
+    await logIPN('dedup', 'Transaction already processed');
+    return new Response('OK', { status: 200 });
+  }
+
+  // 3. Amount validation — verify payment matches product price
+  const product = PRODUCTS[itemNumber];
+  if (product) {
+    const expectedUSD = product.price_usd;
+    const expectedJPY = product.price_jpy;
+    const isValidAmount =
+      (mcCurrency === 'USD' && mcGross >= expectedUSD) ||
+      (mcCurrency === 'JPY' && mcGross >= expectedJPY);
+    if (!isValidAmount) {
+      await logIPN('amount_mismatch', `Expected $${expectedUSD}/¥${expectedJPY}, got ${mcGross} ${mcCurrency}`);
+      return new Response('OK', { status: 200 });
+    }
+  }
+  // If product not found in PRODUCTS, still process (may be a custom payment)
+
+  // 4. Mark txn as processed (365-day TTL)
+  await env.KV.put(txnKey, JSON.stringify({ item: itemNumber, amount: mcGross, currency: mcCurrency, ts: new Date().toISOString() }), { expirationTtl: 365 * 86400 });
+
+  // 5. Update order in DB
+  try {
+    await env.DB.prepare(
+      "UPDATE orders SET status = 'paid', payment_id = ?, paid_at = datetime('now') WHERE product_id = ? AND status = 'pending' ORDER BY created_at DESC LIMIT 1"
+    ).bind(txnId, itemNumber).run();
+  } catch (e) {
+    await logIPN('db_error', `DB update failed: ${e.message}`);
+    return new Response('OK', { status: 200 });
+  }
+
+  // 6. First payment detection — milestone flag
+  const firstPayment = await env.KV.get('revenue:first_payment');
+  if (!firstPayment) {
+    await env.KV.put('revenue:first_payment', JSON.stringify({
+      txn_id: txnId,
+      amount: mcGross,
+      currency: mcCurrency,
+      product: itemNumber,
+      payer: params.get('payer_email'),
+      ts: new Date().toISOString(),
+    }));
+  }
+
+  await logIPN('success', `Payment processed: ${mcGross} ${mcCurrency} for ${itemNumber}`);
   return new Response('OK', { status: 200 });
 }
 
