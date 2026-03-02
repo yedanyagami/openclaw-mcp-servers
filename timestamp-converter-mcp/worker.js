@@ -1395,6 +1395,33 @@ function sanitizeInput(str, maxLen = 2000) {
 }
 
 // ============================================================
+// FinOps Circuit Breaker
+// ============================================================
+
+const FINOPS_DAILY_WARN = 50000;
+const FINOPS_DAILY_SLOW = 80000;
+const FINOPS_DAILY_STOP = 95000;
+
+async function finopsTrack(env, serverName) {
+  const kv = env.KV;
+  if (!kv) return { ok: true };
+  const today = new Date().toISOString().slice(0, 10);
+  const key = `finops:${today}`;
+  try {
+    const raw = await kv.get(key, { type: 'json' }) || { total: 0, by: {} };
+    raw.total++;
+    raw.by[serverName] = (raw.by[serverName] || 0) + 1;
+    kv.put(key, JSON.stringify(raw), { expirationTtl: 172800 });
+    if (raw.total >= FINOPS_DAILY_STOP) return { ok: false, reason: 'Daily capacity reached. Try again tomorrow.', status: 503 };
+    if (raw.total >= FINOPS_DAILY_SLOW) return { ok: true, delay: 500 };
+    if (raw.total >= FINOPS_DAILY_WARN) return { ok: true, warn: true };
+    return { ok: true };
+  } catch {
+    return { ok: true };
+  }
+}
+
+// ============================================================
 // MAIN WORKER EXPORT
 // ============================================================
 export default {
@@ -1412,6 +1439,11 @@ export default {
     if (defense.action === 'honeypot') return new Response('Not Found', { status: 404 });
     if (defense.action === 'reject' || defense.action === 'block') return Response.json({ error: defense.reason }, { status: defense.status, headers: cors });
     if (defense.action === 'throttle' && defense.delay) await new Promise(r => setTimeout(r, defense.delay));
+
+    // FinOps Circuit Breaker
+    const finops = await finopsTrack(env, 'timestamp-converter');
+    if (!finops.ok) return Response.json({ error: finops.reason }, { status: 503, headers: cors });
+    if (finops.delay) await new Promise(r => setTimeout(r, finops.delay));
 
     // Landing page
     if ((url.pathname === '/' || url.pathname === '/index.html') && request.method === 'GET') {
