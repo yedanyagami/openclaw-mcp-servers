@@ -807,11 +807,21 @@ export default {
         // Batch support
         if (Array.isArray(body)) {
           const results = await Promise.all(body.map(req => handleMCPRequest(req, env, request)));
-          return jsonResponse(results);
+          // x402: Detect rate limit → HTTP 402 with payment headers
+          const first402b = results[0];
+          const isRL402b = first402b?.error?.code === -32029;
+          const headers402b = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
+          if (isRL402b) { headers402b['X-Payment-Required'] = 'true'; headers402b['X-Payment-Network'] = 'base'; headers402b['X-Payment-Currency'] = 'USDC'; headers402b['X-Payment-Amount'] = '0.05'; headers402b['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731'; }
+          return new Response(JSON.stringify(results), { status: isRL402b ? 402 : 200, headers: headers402b });
         }
 
         const result = await handleMCPRequest(body, env, request);
-        return jsonResponse(result);
+        // x402: Detect rate limit → HTTP 402 with payment headers
+        const first402s = Array.isArray(result) ? result[0] : result;
+        const isRL402s = first402s?.error?.code === -32029;
+        const headers402s = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
+        if (isRL402s) { headers402s['X-Payment-Required'] = 'true'; headers402s['X-Payment-Network'] = 'base'; headers402s['X-Payment-Currency'] = 'USDC'; headers402s['X-Payment-Amount'] = '0.05'; headers402s['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731'; }
+        return new Response(JSON.stringify(result), { status: isRL402s ? 402 : 200, headers: headers402s });
       } catch (e) {
         return jsonResponse({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }, 400);
       }

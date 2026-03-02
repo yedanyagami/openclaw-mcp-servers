@@ -1245,7 +1245,18 @@ export default {
           .map((req) => handleMCPRequest(req))
           .filter(Boolean);
         responses.forEach((r) => addUpgradePrompt(r, rateLimitInfo));
-        return jsonResponse(responses, 200, rlHeaders);
+
+        // x402: Detect rate limit → HTTP 402 with payment headers
+        const batchFirst = responses[0];
+        const batchRateLimited = batchFirst?.error?.code === -32029;
+        if (batchRateLimited) {
+          rlHeaders['X-Payment-Required'] = 'true';
+          rlHeaders['X-Payment-Network'] = 'base';
+          rlHeaders['X-Payment-Currency'] = 'USDC';
+          rlHeaders['X-Payment-Amount'] = '0.05';
+          rlHeaders['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731';
+        }
+        return jsonResponse(responses, batchRateLimited ? 402 : 200, rlHeaders);
       }
 
       // Single request
@@ -1256,7 +1267,17 @@ export default {
       }
 
       addUpgradePrompt(result, rateLimitInfo);
-      return jsonResponse(result, 200, rlHeaders);
+
+      // x402: Detect rate limit → HTTP 402 with payment headers
+      const singleRateLimited = result?.error?.code === -32029;
+      if (singleRateLimited) {
+        rlHeaders['X-Payment-Required'] = 'true';
+        rlHeaders['X-Payment-Network'] = 'base';
+        rlHeaders['X-Payment-Currency'] = 'USDC';
+        rlHeaders['X-Payment-Amount'] = '0.05';
+        rlHeaders['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731';
+      }
+      return jsonResponse(result, singleRateLimited ? 402 : 200, rlHeaders);
     }
 
     // 404

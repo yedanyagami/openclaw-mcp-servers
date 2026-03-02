@@ -2111,7 +2111,11 @@ export default {
             return handleMCPMethod(item.method, item.params, item.id ?? null, env, request);
           })
         );
-        return corsResponse(JSON.stringify(responses));
+        // x402: Detect rate limit → HTTP 402 with payment headers
+        const first402 = responses[0];
+        const isRateLimited402 = first402?.error?.code === -32029;
+        const x402Extra = isRateLimited402 ? { 'X-Payment-Required': 'true', 'X-Payment-Network': 'base', 'X-Payment-Currency': 'USDC', 'X-Payment-Amount': '0.05', 'X-Payment-Address': '0x72aa56DAe3819c75C545c57778cc404092d60731' } : {};
+        return corsResponse(JSON.stringify(responses), isRateLimited402 ? 402 : 200, x402Extra);
       }
 
       // Single request
@@ -2120,7 +2124,11 @@ export default {
       }
 
       const response = await handleMCPMethod(body.method, body.params, body.id ?? null, env, request);
-      return corsResponse(JSON.stringify(response));
+      // x402: Detect rate limit → HTTP 402 with payment headers
+      const first402s = Array.isArray(response) ? response[0] : response;
+      const isRateLimited402s = first402s?.error?.code === -32029;
+      const x402Extras = isRateLimited402s ? { 'X-Payment-Required': 'true', 'X-Payment-Network': 'base', 'X-Payment-Currency': 'USDC', 'X-Payment-Amount': '0.05', 'X-Payment-Address': '0x72aa56DAe3819c75C545c57778cc404092d60731' } : {};
+      return corsResponse(JSON.stringify(response), isRateLimited402s ? 402 : 200, x402Extras);
     }
 
     // ---- 404 ----

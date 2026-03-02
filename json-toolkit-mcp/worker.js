@@ -1566,15 +1566,20 @@ export default {
         return corsResponse('', 204);
       }
 
-      // Add rate limit headers if we have info
-      const extra = { 'Content-Type': 'application/json' };
-      // Note: rateLimitInfo is not threaded back here; it's consumed inside handleMcpRequest
-      // For simplicity, headers are added but counts aren't surfaced per request
+      // x402: Detect rate limit → HTTP 402 with payment headers
+      const first = Array.isArray(response) ? response[0] : response;
+      const isRateLimited = first?.error?.code === -32029;
+      const httpStatus = isRateLimited ? 402 : 200;
+      const headers = { ...CORS_HEADERS, 'Content-Type': 'application/json' };
+      if (isRateLimited) {
+        headers['X-Payment-Required'] = 'true';
+        headers['X-Payment-Network'] = 'base';
+        headers['X-Payment-Currency'] = 'USDC';
+        headers['X-Payment-Amount'] = '0.05';
+        headers['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731';
+      }
 
-      return new Response(JSON.stringify(response), {
-        status: 200,
-        headers: { ...CORS_HEADERS, ...extra },
-      });
+      return new Response(JSON.stringify(response), { status: httpStatus, headers });
     }
 
     // MCP endpoint — DELETE (session termination, MCP spec)

@@ -998,8 +998,15 @@ export default {
         try {
           const body = await request.json();
           const result = await handleMcpRequest(body, env, clientIp);
+          // x402: Detect rate limit → HTTP 402 with payment headers
+          const first402 = Array.isArray(result) ? result[0] : result;
+          const isRateLimited402 = first402?.error?.code === -32029;
+          const httpStatus402 = isRateLimited402 ? 402 : 200;
+          const headers402 = { ...CORS_HEADERS, 'Content-Type': 'application/json' };
+          if (isRateLimited402) { headers402['X-Payment-Required'] = 'true'; headers402['X-Payment-Network'] = 'base'; headers402['X-Payment-Currency'] = 'USDC'; headers402['X-Payment-Amount'] = '0.05'; headers402['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731'; }
           return new Response(JSON.stringify(result), {
-            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+            status: httpStatus402,
+            headers: headers402,
           });
         } catch (err) {
           return new Response(JSON.stringify(jsonRpcError(null, -32700, 'Parse error: ' + err.message)), {

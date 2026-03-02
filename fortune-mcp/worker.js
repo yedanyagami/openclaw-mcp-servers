@@ -604,7 +604,14 @@ export default {
       rl = await checkRateLimit(env.KV, clientIp);
       if (!rl.allowed) {
         return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${FORTUNE_RATE_LIMIT}/day). Upgrade to Pro: $9 → 1000 calls/day\n\nPayPal: paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`)), {
-          status: 429, headers: { ...cors, 'Content-Type': 'application/json' }
+          status: 402, headers: {
+            ...cors, 'Content-Type': 'application/json',
+            'X-Payment-Required': 'true',
+            'X-Payment-Network': 'base',
+            'X-Payment-Currency': 'USDC',
+            'X-Payment-Amount': '0.05',
+            'X-Payment-Address': '0x72aa56DAe3819c75C545c57778cc404092d60731',
+          }
         });
       }
     }
@@ -667,9 +674,22 @@ export default {
           return new Response('', { status: 204, headers: cors });
         }
 
+        // x402: Detect rate limit → HTTP 402 with payment headers
+        const first = Array.isArray(responseBody) ? responseBody[0] : responseBody;
+        const isRateLimited = first?.error?.code === -32029;
+        const httpStatus = isRateLimited ? 402 : 200;
+        const responseHeaders = { ...cors, 'Content-Type': 'application/json' };
+        if (isRateLimited) {
+          responseHeaders['X-Payment-Required'] = 'true';
+          responseHeaders['X-Payment-Network'] = 'base';
+          responseHeaders['X-Payment-Currency'] = 'USDC';
+          responseHeaders['X-Payment-Amount'] = '0.05';
+          responseHeaders['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731';
+        }
+
         return new Response(JSON.stringify(responseBody), {
-          status: 200,
-          headers: { ...cors, 'Content-Type': 'application/json' },
+          status: httpStatus,
+          headers: responseHeaders,
         });
       }
 

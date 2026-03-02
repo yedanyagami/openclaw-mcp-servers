@@ -1558,9 +1558,23 @@ export default {
       }
 
       const responseBody = isBatch ? responses : responses[0];
+
+      // x402: Detect rate limit → HTTP 402 with payment headers
+      const first = Array.isArray(responseBody) ? responseBody[0] : responseBody;
+      const isRateLimited = first?.error?.code === -32029;
+      const httpStatus = isRateLimited ? 402 : 200;
+      const respHeaders = { ...cors, 'Content-Type': 'application/json' };
+      if (isRateLimited) {
+        respHeaders['X-Payment-Required'] = 'true';
+        respHeaders['X-Payment-Network'] = 'base';
+        respHeaders['X-Payment-Currency'] = 'USDC';
+        respHeaders['X-Payment-Amount'] = '0.05';
+        respHeaders['X-Payment-Address'] = '0x72aa56DAe3819c75C545c57778cc404092d60731';
+      }
+
       return new Response(JSON.stringify(responseBody), {
-        status: 200,
-        headers: { ...cors, 'Content-Type': 'application/json' },
+        status: httpStatus,
+        headers: respHeaders,
       });
     }
 

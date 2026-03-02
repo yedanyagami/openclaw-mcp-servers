@@ -1357,14 +1357,49 @@ export default {
 
         // Batch support
         if (Array.isArray(body)) {
-          const results = await Promise.all(
+          const results = (await Promise.all(
             body.map(req => handleMCPRequest(req, env, request))
-          );
-          return jsonResponse(results.filter(r => r !== undefined));
+          )).filter(r => r !== undefined);
+
+          // x402: Detect rate limit → HTTP 402 with payment headers
+          const batchFirst = results[0];
+          const batchRateLimited = batchFirst?.error?.code === -32029;
+          if (batchRateLimited) return new Response(JSON.stringify(results), {
+            status: 402,
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+              'X-Payment-Required': 'true',
+              'X-Payment-Network': 'base',
+              'X-Payment-Currency': 'USDC',
+              'X-Payment-Amount': '0.05',
+              'X-Payment-Address': '0x72aa56DAe3819c75C545c57778cc404092d60731',
+            },
+          });
+          return jsonResponse(results);
         }
 
         const result = await handleMCPRequest(body, env, request);
         if (result === undefined) return new Response(null, { status: 204 });
+
+        // x402: Detect rate limit → HTTP 402 with payment headers
+        const singleRateLimited = result?.error?.code === -32029;
+        if (singleRateLimited) return new Response(JSON.stringify(result), {
+          status: 402,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'X-Payment-Required': 'true',
+            'X-Payment-Network': 'base',
+            'X-Payment-Currency': 'USDC',
+            'X-Payment-Amount': '0.05',
+            'X-Payment-Address': '0x72aa56DAe3819c75C545c57778cc404092d60731',
+          },
+        });
         return jsonResponse(result);
 
       } catch (e) {
