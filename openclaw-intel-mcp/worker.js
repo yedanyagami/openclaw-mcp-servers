@@ -528,6 +528,45 @@ const LANDING_HTML = `<!DOCTYPE html>
 </html>`;
 
 // ============================================================
+// Edge Defense Layer
+// ============================================================
+
+const HONEYPOT_PATHS = ['/admin', '/wp-login.php', '/.env', '/config.json', '/.git/config', '/wp-admin', '/phpinfo.php'];
+const PAYLOAD_MAX_BYTES = 102400;
+
+async function sha256Short(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getRequestFingerprint(request) {
+  const ua = request.headers.get('User-Agent') || '';
+  const lang = request.headers.get('Accept-Language') || '';
+  const isSuspicious = (/^(curl|wget|python|httpie|go-http|java)/i.test(ua) && lang.length > 5);
+  return { ua: ua.slice(0, 80), lang: lang.slice(0, 20), isSuspicious };
+}
+
+async function edgeDefenseHoneypot(request, env) {
+  const path = new URL(request.url).pathname.toLowerCase();
+  if (!HONEYPOT_PATHS.includes(path)) return false;
+  // Flag IP in D1 if available
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const ipH = await sha256Short(ip + '-openclaw-defense');
+    if (env.DB) {
+      await env.DB.prepare("INSERT OR REPLACE INTO rate_limits (ip_hash, endpoint, requests, last_request) VALUES (?, 'honeypot', 999, datetime('now'))").bind(ipH).run();
+    }
+  } catch {}
+  return true;
+}
+
+function sanitizeInput(str, maxLen = 2000) {
+  if (!str) return '';
+  if (typeof str !== 'string') return String(str).slice(0, maxLen);
+  return str.slice(0, maxLen).replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<[^>]*>/g, '');
+}
+
+// ============================================================
 // Main Worker
 // ============================================================
 
@@ -545,6 +584,11 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: cors });
     }
+
+    // Edge Defense: Honeypot + Payload
+    if (await edgeDefenseHoneypot(request, env)) return new Response('Not Found', { status: 404 });
+    const cl = parseInt(request.headers.get('Content-Length') || '0', 10);
+    if (cl > PAYLOAD_MAX_BYTES) return new Response(JSON.stringify({ error: 'Payload too large' }), { status: 413, headers: { ...cors, 'Content-Type': 'application/json' } });
 
     // Landing page
     if ((path === '/' || path === '/index.html') && request.method === 'GET') {

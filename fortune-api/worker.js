@@ -336,6 +336,68 @@ signs.forEach(s => {
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }
 
+// ============================================================
+// Edge Defense Layer
+// ============================================================
+
+const HONEYPOT_PATHS = ['/admin', '/wp-login.php', '/.env', '/config.json', '/.git/config', '/wp-admin', '/phpinfo.php'];
+const PAYLOAD_MAX_BYTES = 51200;
+
+async function sha256Short(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getRequestFingerprint(request) {
+  const ua = request.headers.get('User-Agent') || '';
+  const lang = request.headers.get('Accept-Language') || '';
+  const isSuspicious = (/^(curl|wget|python|httpie|go-http|java)/i.test(ua) && lang.length > 5);
+  return { ua: ua.slice(0, 80), lang: lang.slice(0, 20), isSuspicious };
+}
+
+async function edgeDefense(request, env, serverPrefix) {
+  const kv = env.KV;
+  if (!kv) return { action: 'allow' };
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const ipHash = await sha256Short(ip + '-openclaw-defense');
+  const today = new Date().toISOString().slice(0, 10);
+  const defenseKey = `defense:${ipHash}:${today}`;
+  const path = new URL(request.url).pathname;
+
+  if (HONEYPOT_PATHS.includes(path.toLowerCase())) {
+    try {
+      const raw = await kv.get(defenseKey, { type: 'json' }) || { score: 100, hits: 0, flags: [] };
+      raw.score = Math.max(0, raw.score - 30);
+      raw.hits++;
+      raw.flags.push('honeypot:' + path);
+      await kv.put(defenseKey, JSON.stringify(raw), { expirationTtl: 86400 });
+    } catch {}
+    return { action: 'honeypot', status: 404 };
+  }
+
+  const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
+  if (contentLength > PAYLOAD_MAX_BYTES) return { action: 'reject', reason: 'Payload too large', status: 413 };
+
+  try {
+    const raw = await kv.get(defenseKey, { type: 'json' });
+    if (raw && raw.score < 10) return { action: 'block', reason: 'IP blocked', status: 403 };
+    if (raw && raw.score < 30) return { action: 'throttle', delay: 200 };
+  } catch {}
+
+  const fp = getRequestFingerprint(request);
+  if (fp.isSuspicious) {
+    try {
+      const raw = await kv.get(defenseKey, { type: 'json' }) || { score: 100, hits: 0, flags: [] };
+      if (!raw.flags.includes('suspicious-fp')) {
+        raw.score = Math.max(0, raw.score - 10);
+        raw.flags.push('suspicious-fp');
+        await kv.put(defenseKey, JSON.stringify(raw), { expirationTtl: 86400 });
+      }
+    } catch {}
+  }
+  return { action: 'allow' };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -351,6 +413,12 @@ export default {
         },
       });
     }
+
+    // Edge Defense
+    const defense = await edgeDefense(request, env, 'fortune-api');
+    if (defense.action === 'honeypot') return new Response('Not Found', { status: 404 });
+    if (defense.action === 'reject' || defense.action === 'block') return new Response(JSON.stringify({ error: defense.reason }), { status: defense.status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } });
+    if (defense.action === 'throttle' && defense.delay) await new Promise(r => setTimeout(r, defense.delay));
 
     // Routes
     if (path === '/' || path === '') {

@@ -279,6 +279,12 @@ const LANDING_HTML = `<!DOCTYPE html>
 </html>`;
 
 // ============================================================
+// Edge Defense: Honeypot Layer (intel-api already has abuse detection)
+// ============================================================
+
+const HONEYPOT_PATHS_DEFENSE = ['/admin', '/wp-login.php', '/.env', '/config.json', '/.git/config', '/wp-admin', '/phpinfo.php'];
+
+// ============================================================
 // MAIN WORKER
 // ============================================================
 
@@ -294,6 +300,15 @@ export default {
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: cors });
+    }
+
+    // Edge Defense: Honeypot (intel-api already has robust abuse detection)
+    if (HONEYPOT_PATHS_DEFENSE.includes(path.toLowerCase())) {
+      try {
+        const ipH = await ipHash(request);
+        await env.DB.prepare("UPDATE rate_limits SET requests = 999 WHERE ip_hash = ?").bind(ipH).run();
+      } catch {}
+      return new Response('Not Found', { status: 404 });
     }
 
     // --- Landing page (no auth, no rate limit) ---

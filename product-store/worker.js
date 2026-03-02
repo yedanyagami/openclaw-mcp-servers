@@ -852,6 +852,48 @@ function generatePromptCollectionHTML() {
 }
 
 // ============================================================
+// Edge Defense Layer
+// ============================================================
+
+const HONEYPOT_PATHS = ['/admin', '/wp-login.php', '/.env', '/config.json', '/.git/config', '/wp-admin', '/phpinfo.php'];
+
+async function sha256Short(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function edgeDefense(request, env) {
+  const kv = env.KV;
+  if (!kv) return { action: 'allow' };
+  const path = new URL(request.url).pathname.toLowerCase();
+
+  if (HONEYPOT_PATHS.includes(path)) {
+    try {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const ipHash = await sha256Short(ip + '-openclaw-defense');
+      const today = new Date().toISOString().slice(0, 10);
+      const defenseKey = `defense:${ipHash}:${today}`;
+      const raw = await kv.get(defenseKey, { type: 'json' }) || { score: 100, hits: 0, flags: [] };
+      raw.score = Math.max(0, raw.score - 30);
+      raw.hits++;
+      raw.flags.push('honeypot:' + path);
+      await kv.put(defenseKey, JSON.stringify(raw), { expirationTtl: 86400 });
+    } catch {}
+    return { action: 'honeypot' };
+  }
+
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const ipHash = await sha256Short(ip + '-openclaw-defense');
+    const today = new Date().toISOString().slice(0, 10);
+    const raw = await kv.get(`defense:${ipHash}:${today}`, { type: 'json' });
+    if (raw && raw.score < 10) return { action: 'block' };
+  } catch {}
+
+  return { action: 'allow' };
+}
+
+// ============================================================
 // MAIN ROUTER
 // ============================================================
 export default {
@@ -864,6 +906,11 @@ export default {
     if (method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS });
     }
+
+    // Edge Defense
+    const defense = await edgeDefense(request, env);
+    if (defense.action === 'honeypot') return new Response('Not Found', { status: 404 });
+    if (defense.action === 'block') return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403, headers: { ...CORS, 'Content-Type': 'application/json' } });
 
     try {
       // Routes
