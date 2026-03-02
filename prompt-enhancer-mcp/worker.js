@@ -1614,6 +1614,18 @@ function landingPageHTML() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt Enhancer MCP — OpenClaw Intelligence</title>
+  <meta name="description" content="Free MCP server for prompt optimization, rewriting, scoring, and multilingual enhancement. Improve AI prompt quality automatically for Claude, GPT, and other LLMs.">
+  <meta name="keywords" content="prompt engineering, prompt optimizer, AI prompts, MCP server, prompt scoring, LLM tools">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://prompt-enhancer-mcp.yagami8095.workers.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Prompt Enhancer MCP Server - Optimize & Score AI Prompts | OpenClaw">
+  <meta property="og:description" content="Free MCP server for prompt optimization, rewriting, scoring, and multilingual enhancement. Improve AI prompt quality automatically for Claude, GPT, and other LLMs.">
+  <meta property="og:url" content="https://prompt-enhancer-mcp.yagami8095.workers.dev">
+  <meta property="og:site_name" content="OpenClaw Intelligence">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Prompt Enhancer MCP Server - Optimize & Score AI Prompts | OpenClaw">
+  <meta name="twitter:description" content="Free MCP server for prompt optimization, rewriting, scoring, and multilingual enhancement. Improve AI prompt quality automatically for Claude, GPT, and other LLMs.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -1749,6 +1761,28 @@ function landingPageHTML() {
       border-top: 1px solid rgba(251,146,60,0.08);
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Prompt Enhancer MCP Server",
+  "description": "Free MCP server for prompt optimization, rewriting, scoring, and multilingual enhancement. Improve AI prompt quality automatically for Claude, GPT, and other LLMs.",
+  "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "OpenClaw Intelligence",
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers"
+  }
+}
+  <\/script>
 </head>
 <body>
   <div class="hero">

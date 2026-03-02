@@ -338,7 +338,41 @@ const LANDING_HTML = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenClaw Fortune MCP Server</title>
+  <meta name="description" content="Free MCP server delivering daily horoscopes and tarot card readings for all 12 zodiac signs. Love, work, health scores and lucky items for AI-powered personal assistants.">
+  <meta name="keywords" content="horoscope API, tarot reading, zodiac fortune, MCP server, AI assistant, daily horoscope">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://fortune-mcp.yagami8095.workers.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Fortune MCP Server - Daily Horoscope & Tarot for AI Agents | OpenClaw">
+  <meta property="og:description" content="Free MCP server delivering daily horoscopes and tarot card readings for all 12 zodiac signs. Love, work, health scores and lucky items for AI-powered personal assistants.">
+  <meta property="og:url" content="https://fortune-mcp.yagami8095.workers.dev">
+  <meta property="og:site_name" content="OpenClaw Intelligence">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Fortune MCP Server - Daily Horoscope & Tarot for AI Agents | OpenClaw">
+  <meta name="twitter:description" content="Free MCP server delivering daily horoscopes and tarot card readings for all 12 zodiac signs. Love, work, health scores and lucky items for AI-powered personal assistants.">
   <script src="https://cdn.tailwindcss.com"><\/script>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Fortune MCP Server",
+  "description": "Free MCP server delivering daily horoscopes and tarot card readings for all 12 zodiac signs. Love, work, health scores and lucky items for AI-powered personal assistants.",
+  "url": "https://fortune-mcp.yagami8095.workers.dev",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "OpenClaw Intelligence",
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers"
+  }
+}
+  <\/script>
 </head>
 <body class="bg-purple-950 text-gray-100 min-h-screen">
   <div class="max-w-3xl mx-auto px-6 py-16">

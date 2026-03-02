@@ -1117,6 +1117,18 @@ function buildLandingHtml() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JSON Toolkit MCP — OpenClaw Intelligence</title>
+  <meta name="description" content="Free MCP server with 6 JSON utilities for AI agents: format, validate, diff, query with JSONPath, transform, and generate JSON Schema. Works with Claude Code, Cursor, Windsurf.">
+  <meta name="keywords" content="JSON formatter, JSON validator, JSON diff, JSONPath query, MCP server, AI tools, Claude Code">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://json-toolkit-mcp.yagami8095.workers.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JSON Toolkit MCP Server - Format, Validate, Diff & Query JSON | OpenClaw">
+  <meta property="og:description" content="Free MCP server with 6 JSON utilities for AI agents: format, validate, diff, query with JSONPath, transform, and generate JSON Schema. Works with Claude Code, Cursor, Windsurf.">
+  <meta property="og:url" content="https://json-toolkit-mcp.yagami8095.workers.dev">
+  <meta property="og:site_name" content="OpenClaw Intelligence">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JSON Toolkit MCP Server - Format, Validate, Diff & Query JSON | OpenClaw">
+  <meta name="twitter:description" content="Free MCP server with 6 JSON utilities for AI agents: format, validate, diff, query with JSONPath, transform, and generate JSON Schema. Works with Claude Code, Cursor, Windsurf.">
   <script src="https://cdn.tailwindcss.com"><\/script>
   <style>
     pre { scrollbar-width: thin; scrollbar-color: #0891b2 #083344; }
@@ -1124,6 +1136,28 @@ function buildLandingHtml() {
     pre::-webkit-scrollbar-track { background: #083344; }
     pre::-webkit-scrollbar-thumb { background: #0891b2; border-radius: 3px; }
   </style>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Toolkit MCP Server",
+  "description": "Free MCP server with 6 JSON utilities for AI agents: format, validate, diff, query with JSONPath, transform, and generate JSON Schema. Works with Claude Code, Cursor, Windsurf.",
+  "url": "https://json-toolkit-mcp.yagami8095.workers.dev",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "OpenClaw Intelligence",
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers"
+  }
+}
+  <\/script>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
 

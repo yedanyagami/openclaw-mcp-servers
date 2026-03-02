@@ -834,6 +834,18 @@ function landingPage() {
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Regex Engine MCP — OpenClaw Intelligence</title>
+  <meta name="description" content="Free MCP server for regex testing, debugging, and generation. Get explanations, examples, and multi-pattern matching for AI coding agents. Claude Code and Cursor compatible.">
+  <meta name="keywords" content="regex tester, regular expression, regex debugger, MCP server, AI tools, pattern matching">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://regex-engine-mcp.yagami8095.workers.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Regex Engine MCP Server - Test, Debug & Generate Regular Expressions | OpenClaw">
+  <meta property="og:description" content="Free MCP server for regex testing, debugging, and generation. Get explanations, examples, and multi-pattern matching for AI coding agents. Claude Code and Cursor compatible.">
+  <meta property="og:url" content="https://regex-engine-mcp.yagami8095.workers.dev">
+  <meta property="og:site_name" content="OpenClaw Intelligence">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Regex Engine MCP Server - Test, Debug & Generate Regular Expressions | OpenClaw">
+  <meta name="twitter:description" content="Free MCP server for regex testing, debugging, and generation. Get explanations, examples, and multi-pattern matching for AI coding agents. Claude Code and Cursor compatible.">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .gradient-bg { background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 70%, #059669 100%); }
@@ -841,6 +853,28 @@ function landingPage() {
     .code-block { background: rgba(0,0,0,0.4); border: 1px solid rgba(16,185,129,0.3); }
     .tool-badge { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); }
   </style>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Regex Engine MCP Server",
+  "description": "Free MCP server for regex testing, debugging, and generation. Get explanations, examples, and multi-pattern matching for AI coding agents. Claude Code and Cursor compatible.",
+  "url": "https://regex-engine-mcp.yagami8095.workers.dev",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "OpenClaw Intelligence",
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers"
+  }
+}
+  <\/script>
 </head>
 <body class="gradient-bg min-h-screen text-white font-sans">
   <div class="max-w-4xl mx-auto px-4 py-12">
