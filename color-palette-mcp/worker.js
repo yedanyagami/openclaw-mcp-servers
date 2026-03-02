@@ -1077,6 +1077,30 @@ function toolIcon(name) {
   return icons[name] || '&#x1F527;';
 }
 
+// Semantic Cache — deterministic tool results cached in KV (24h TTL)
+async function cacheHash(str) {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getCached(kv, server, tool, args) {
+  if (!kv) return null;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    const val = await kv.get(`cache:${server}:${tool}:${h}`);
+    return val ? JSON.parse(val) : null;
+  } catch { return null; }
+}
+
+async function setCache(kv, server, tool, args, result, ttl = 86400) {
+  if (!kv) return;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    await kv.put(`cache:${server}:${tool}:${h}`, JSON.stringify(result), { expirationTtl: ttl });
+  } catch {}
+}
+
 // Dynamic Upgrade Prompt — progressive messaging based on usage
 function addUpgradePrompt(response, rateLimitInfo) {
   if (!rateLimitInfo || !response?.result?.content?.[0]) return;
@@ -1152,13 +1176,23 @@ async function handleMCPRequest(body, env, request) {
       };
     }
 
+    // Semantic cache check
+    const kv = env.KV;
+    const toolArgs = args || {};
+    const cached = await getCached(kv, 'color', name, toolArgs);
+    if (cached) {
+      const cachedResp = { jsonrpc: '2.0', id, result: cached };
+      addUpgradePrompt(cachedResp, { used: rateCheck.limit - rateCheck.remaining - 1, remaining: rateCheck.remaining });
+      return cachedResp;
+    }
+
     let result;
     switch (name) {
-      case 'generate_palette':   result = handleGeneratePalette(args  || {}); break;
-      case 'contrast_check':     result = handleContrastCheck(args    || {}); break;
-      case 'color_convert':      result = handleColorConvert(args     || {}); break;
-      case 'css_gradient':       result = handleCssGradient(args      || {}); break;
-      case 'tailwind_colors':    result = handleTailwindColors(args   || {}); break;
+      case 'generate_palette':   result = handleGeneratePalette(toolArgs); break;
+      case 'contrast_check':     result = handleContrastCheck(toolArgs); break;
+      case 'color_convert':      result = handleColorConvert(toolArgs); break;
+      case 'css_gradient':       result = handleCssGradient(toolArgs); break;
+      case 'tailwind_colors':    result = handleTailwindColors(toolArgs); break;
       default:
         return { jsonrpc: '2.0', id, error: { code: -32601, message: `Unknown tool: ${name}. Available: ${TOOLS.map(t => t.name).join(', ')}` } };
     }
@@ -1170,6 +1204,12 @@ async function handleMCPRequest(body, env, request) {
         _rate_limit: { remaining: rateCheck.remaining, limit: rateCheck.limit, reset: 'Daily at 00:00 UTC' },
       },
     };
+
+    // Cache successful results (24h)
+    if (toolResp.result && !toolResp.result.isError) {
+      await setCache(kv, 'color', name, toolArgs, toolResp.result);
+    }
+
     addUpgradePrompt(toolResp, { used: rateCheck.limit - rateCheck.remaining - 1, remaining: rateCheck.remaining });
     return toolResp;
   }

@@ -746,6 +746,30 @@ function mcpError(id, code, message, data) {
   };
 }
 
+// Semantic Cache — deterministic tool results cached in KV (24h TTL)
+async function cacheHash(str) {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getCached(kv, server, tool, args) {
+  if (!kv) return null;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    const val = await kv.get(`cache:${server}:${tool}:${h}`);
+    return val ? JSON.parse(val) : null;
+  } catch { return null; }
+}
+
+async function setCache(kv, server, tool, args, result, ttl = 86400) {
+  if (!kv) return;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    await kv.put(`cache:${server}:${tool}:${h}`, JSON.stringify(result), { expirationTtl: ttl });
+  } catch {}
+}
+
 // Dynamic Upgrade Prompt — progressive messaging based on usage
 function addUpgradePrompt(response, rateLimitInfo) {
   if (!rateLimitInfo || !response?.result?.content?.[0]) return;
@@ -1241,9 +1265,28 @@ export default {
 
       // Batch support
       if (Array.isArray(body)) {
-        const responses = body
-          .map((req) => handleMCPRequest(req))
-          .filter(Boolean);
+        const batchKv = env.KV;
+        const responses = [];
+        for (const req of body) {
+          // Semantic cache for tools/call in batch
+          if (req.method === 'tools/call') {
+            const bToolName = req.params?.name;
+            const bToolArgs = req.params?.arguments || {};
+            const bCached = await getCached(batchKv, 'regex', bToolName, bToolArgs);
+            if (bCached) {
+              responses.push(mcpResponse(req.id, bCached));
+              continue;
+            }
+          }
+          const resp = handleMCPRequest(req);
+          if (resp) {
+            // Cache successful tool results (24h)
+            if (req.method === 'tools/call' && resp?.result && !resp.result.isError) {
+              await setCache(batchKv, 'regex', req.params?.name, req.params?.arguments || {}, resp.result);
+            }
+            responses.push(resp);
+          }
+        }
         responses.forEach((r) => addUpgradePrompt(r, rateLimitInfo));
 
         // x402: Detect rate limit → HTTP 402 with payment headers
@@ -1259,11 +1302,28 @@ export default {
         return jsonResponse(responses, batchRateLimited ? 402 : 200, rlHeaders);
       }
 
-      // Single request
+      // Single request — semantic cache for tools/call
+      const kv = env.KV;
+      if (body.method === 'tools/call') {
+        const toolName = body.params?.name;
+        const toolArgs = body.params?.arguments || {};
+        const cached = await getCached(kv, 'regex', toolName, toolArgs);
+        if (cached) {
+          const cachedResp = mcpResponse(body.id, cached);
+          addUpgradePrompt(cachedResp, rateLimitInfo);
+          return jsonResponse(cachedResp, 200, rlHeaders);
+        }
+      }
+
       const result = handleMCPRequest(body);
       if (result === null) {
         // Notification — respond with 204
         return new Response(null, { status: 204, headers: { ...CORS_HEADERS, ...rlHeaders } });
+      }
+
+      // Cache successful tool results (24h)
+      if (body.method === 'tools/call' && result?.result && !result.result.isError) {
+        await setCache(kv, 'regex', body.params?.name, body.params?.arguments || {}, result.result);
       }
 
       addUpgradePrompt(result, rateLimitInfo);

@@ -1103,6 +1103,30 @@ async function checkRateLimit(env, clientId) {
   return { allowed: true, remaining: limit - current - 1, limit };
 }
 
+// Semantic Cache — deterministic tool results cached in KV (24h TTL)
+async function cacheHash(str) {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(buf)].slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getCached(kv, server, tool, args) {
+  if (!kv) return null;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    const val = await kv.get(`cache:${server}:${tool}:${h}`);
+    return val ? JSON.parse(val) : null;
+  } catch { return null; }
+}
+
+async function setCache(kv, server, tool, args, result, ttl = 86400) {
+  if (!kv) return;
+  try {
+    const h = await cacheHash(JSON.stringify(args));
+    await kv.put(`cache:${server}:${tool}:${h}`, JSON.stringify(result), { expirationTtl: ttl });
+  } catch {}
+}
+
 // Dynamic Upgrade Prompt — progressive messaging based on usage
 function addUpgradePrompt(response, rateLimitInfo) {
   if (!rateLimitInfo || !response?.result?.content?.[0]) return;
@@ -1169,14 +1193,24 @@ async function handleMCPRequest(req, env, request) {
       });
     }
 
+    // Semantic cache check
+    const kv = env.KV;
+    const toolArgs = args || {};
+    const cached = await getCached(kv, 'timestamp', name, toolArgs);
+    if (cached) {
+      const cachedResp = jsonRpcOk(id, cached);
+      addUpgradePrompt(cachedResp, rateCheck);
+      return cachedResp;
+    }
+
     let result;
     try {
       switch (name) {
-        case 'convert_timestamp': result = handleConvertTimestamp(args || {}); break;
-        case 'timezone_convert':  result = handleTimezoneConvert(args || {});  break;
-        case 'parse_cron':        result = handleParseCron(args || {});        break;
-        case 'time_diff':         result = handleTimeDiff(args || {});         break;
-        case 'format_duration':   result = handleFormatDuration(args || {});   break;
+        case 'convert_timestamp': result = handleConvertTimestamp(toolArgs); break;
+        case 'timezone_convert':  result = handleTimezoneConvert(toolArgs);  break;
+        case 'parse_cron':        result = handleParseCron(toolArgs);        break;
+        case 'time_diff':         result = handleTimeDiff(toolArgs);         break;
+        case 'format_duration':   result = handleFormatDuration(toolArgs);   break;
         default:
           return jsonRpcError(id, -32601, `Unknown tool: "${name}". Available tools: ${TOOLS.map(t => t.name).join(', ')}`);
       }
@@ -1185,6 +1219,13 @@ async function handleMCPRequest(req, env, request) {
     }
 
     const response = jsonRpcOk(id, result);
+
+    // Cache successful results (parse_cron: 1h, others: 24h)
+    if (response?.result && !response.result.isError) {
+      const cacheTtl = name === 'parse_cron' ? 3600 : 86400;
+      await setCache(kv, 'timestamp', name, toolArgs, response.result, cacheTtl);
+    }
+
     addUpgradePrompt(response, rateCheck);
     return response;
   }
