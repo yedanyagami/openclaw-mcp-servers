@@ -1,5 +1,12 @@
 # OpenClaw MCP Servers
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MCP](https://img.shields.io/badge/MCP-Streamable_HTTP-blue)](https://modelcontextprotocol.io)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
+[![Servers](https://img.shields.io/badge/Servers-9-green)]()
+[![Tools](https://img.shields.io/badge/Tools-49-green)]()
+[![Smithery](https://img.shields.io/badge/Smithery-Published-purple)](https://smithery.ai)
+
 **49 tools** across **9 servers** on Cloudflare Workers. Streamable HTTP transport — connect in seconds.
 
 **Pro API: $9/mo** = 1000 calls/day across ALL 9 servers with one key.
@@ -29,6 +36,40 @@ Click any badge to install directly into [Cursor](https://cursor.com):
 | AI Tool Compare | [![Install](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=agentforge-compare&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vYWdlbnRmb3JnZS1jb21wYXJlLW1jcC55YWdhbWk4MDk1LndvcmtlcnMuZGV2L21jcCJ9) | 5 |
 
 Also available on [Smithery](https://smithery.ai/server/openclaw-ai/json-toolkit) — install via `npx @smithery/cli install`
+
+
+## Install in Claude Desktop
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "openclaw-json": {
+      "type": "streamable-http",
+      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"
+    },
+    "openclaw-regex": {
+      "type": "streamable-http",
+      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp"
+    },
+    "openclaw-colors": {
+      "type": "streamable-http",
+      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp"
+    },
+    "openclaw-timestamp": {
+      "type": "streamable-http",
+      "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp"
+    },
+    "openclaw-prompt": {
+      "type": "streamable-http",
+      "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp"
+    }
+  }
+}
+```
+
+> Top 5 most useful servers. Add all 9 from the Quick Connect section below.
 
 ## Quick Connect
 
