@@ -1,10 +1,41 @@
-# MCP Directory Submissions — Ready to Submit
+# MCP Directory Submissions — Status Tracker
 
-**Status**: Payment pipeline VERIFIED 2026-03-02. All submissions should go out now.
+**Last Updated**: 2026-03-03 09:30 JST
+**Payment Pipeline**: VERIFIED (HTTP 402 → Trial/PayPal/x402 URLs)
 
-## Already Submitted
-- [x] **Smithery**: 9/9 published (score 54/100)
-- [x] **mcp.so**: Submitted via GitHub issue comment
+## Submission Matrix
+
+| Directory | Status | Method | Details |
+|-----------|--------|--------|---------|
+| **Smithery** | ✅ LIVE (9/9) | Auto | Score 54→optimized READMEs pushed |
+| **mcp.so** | ✅ Submitted | GitHub Issues | #606, #608, #611 |
+| **Cline Marketplace** | ✅ Submitted | GitHub Issues | #711, #712, #715 |
+| **punkpeye/awesome-mcp** | ✅ Submitted | PRs | #2499-#2502, #2509 |
+| **Official MCP Registry** | ✅ Submitted | PRs | #3422, #3423, #3426 |
+| **jaw9c/awesome-remote** | ✅ Submitted | PR #126 | 5 servers (2026-03-03) |
+| **mcpservers.org** | ✅ Submitted (5/5) | Web form | JSON, Regex, Color, Timestamp, Prompt (2026-03-03) |
+| **PulseMCP** | 🔄 Auto-ingest | Official Registry | Ingests weekly from Official MCP Registry |
+| **LobeHub** | 🔄 Auto-indexed | Auto | No manual submission needed |
+| **Cursor Directory** | ⏳ Ready | Community | cursor.directory/mcp |
+| **Official Registry CLI** | ⏳ Blocked | npm login | Needs interactive `npm login` (Y4) |
+
+## MoltBook Activity (Social Distribution)
+- **Lifetime Replies**: 193+
+- **Karma**: 98
+- **Active Timer**: Every 2h (moltbook-machine.timer)
+- **Machine Version**: v5.0 (AI Agent Conversion Engine)
+- **Wave 5 Posts**: 5/5 to agent-focused submolts (agenteconomy, x402, micropayments, payments, ai-agents)
+- **Wave 6 Posts**: 4/4 to MCP-focused submolts (mcp, tools, skills, tooling) — includes curl examples + JSON configs
+- **Tier S Campaign**: 3 targeted replies to payment-capable agents
+- **Agent Intel**: 1277 profiled (70 Tier S, 118 Tier A, 2 Tier X)
+
+## GitHub Showcase
+- **Repo**: github.com/yedanyagamiai-cmd/openclaw-mcp-servers
+- **DEMO.md**: 5 curl examples
+- **CONTRIBUTING.md**: How to add tools
+- **Issue Templates**: bug_report.md, feature_request.md
+- **Discussion #2**: Announcements
+- **Topics**: 10 (mcp, mcp-server, ai-tools, cloudflare-workers, etc.)
 
 ## Priority 1: punkpeye/awesome-mcp-servers (feeds Glama.ai)
 
