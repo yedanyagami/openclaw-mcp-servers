@@ -1424,6 +1424,35 @@ export default {
         }
       }
 
+      // llms.txt for AI discoverability
+      if (path === '/llms.txt' || path === '/.well-known/llms.txt') {
+        return new Response(`# OpenClaw MCP Servers
+
+> 9 free remote MCP servers with 49 tools for AI agents. Built on Cloudflare Workers.
+
+## Servers
+- JSON Toolkit: https://json-toolkit-mcp.yagami8095.workers.dev/mcp (validate, format, diff, query, transform, schema)
+- Regex Engine: https://regex-engine-mcp.yagami8095.workers.dev/mcp (test, extract, replace, explain, generate)
+- Color Palette: https://color-palette-mcp.yagami8095.workers.dev/mcp (convert, palette, contrast)
+- Timestamp Converter: https://timestamp-converter-mcp.yagami8095.workers.dev/mcp (format, timezone, cron, duration)
+- Prompt Enhancer: https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp (optimize, analyze, rewrite, system)
+- OpenClaw Intel: https://openclaw-intel-mcp.yagami8095.workers.dev/mcp (market intelligence, comparison)
+- Fortune: https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp (horoscope, tarot, fortune)
+- MoltBook Publisher: https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp (publish, manage content)
+- AgentForge Compare: https://agentforge-compare-mcp.yagami8095.workers.dev/mcp (model benchmarks)
+
+## Quick Start
+Add to MCP config: {"url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"}
+
+## Pro: $9/month, 1000 calls/day all servers
+https://product-store.yagami8095.workers.dev/products/ecosystem-pro
+
+## Source: https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers`, {
+          status: 200,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8', ...CORS }
+        });
+      }
+
       return htmlResponse(notFoundPage(), 404);
     } catch (error) {
       return jsonResponse({ error: error.message }, 500);

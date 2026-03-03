@@ -2088,6 +2088,29 @@ export default {
     if (finops.delay) await new Promise(r => setTimeout(r, finops.delay));
     await trackRef(request, env, 'prompt-enhancer');
 
+    // llms.txt for AI discoverability
+    if (url.pathname === '/llms.txt' || url.pathname === '/.well-known/llms.txt') {
+      const lines = [
+        "# OpenClaw MCP Servers",
+        "",
+        "> 9 free remote MCP servers with 49 tools for AI agents.",
+        "",
+        "## Servers",
+        "- JSON Toolkit: https://json-toolkit-mcp.yagami8095.workers.dev/mcp",
+        "- Regex Engine: https://regex-engine-mcp.yagami8095.workers.dev/mcp",
+        "- Color Palette: https://color-palette-mcp.yagami8095.workers.dev/mcp",
+        "- Timestamp Converter: https://timestamp-converter-mcp.yagami8095.workers.dev/mcp",
+        "- Prompt Enhancer: https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp",
+        "- OpenClaw Intel: https://openclaw-intel-mcp.yagami8095.workers.dev/mcp",
+        "- Fortune: https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp",
+        "- MoltBook Publisher: https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp",
+        "- AgentForge Compare: https://agentforge-compare-mcp.yagami8095.workers.dev/mcp",
+        "",
+        "## Pro: $9, 1000 calls/day - https://product-store.yagami8095.workers.dev/products/ecosystem-pro",
+      ];
+      return corsResponse(lines.join("\n"), 200, 'text/plain; charset=utf-8');
+    }
+
     // ---- Health check ----
     if (url.pathname === '/health') {
       return corsResponse(JSON.stringify({

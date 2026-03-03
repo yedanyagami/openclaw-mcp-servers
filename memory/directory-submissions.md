@@ -1,6 +1,6 @@
 # MCP Directory Submissions — Status Tracker
 
-**Last Updated**: 2026-03-03 15:00 JST
+**Last Updated**: 2026-03-03 20:45 JST
 **Payment Pipeline**: VERIFIED (HTTP 402 → Trial/PayPal/x402 URLs)
 **Repo Age**: 4 days (created 2026-02-27)
 **Revenue**: $0 | Stars: 0 | Forks: 0
@@ -14,11 +14,11 @@
 | **Official MCP Registry** | 🟡 PR #3426 OPEN | GitHub PR | #3422,#3423 closed. Awaiting review |
 | **jaw9c/awesome-remote** | 🟡 PR #126 OPEN | GitHub PR | 5 servers. Awaiting review |
 | **Cline Marketplace** | 🟡 Issue #750 OPEN | Consolidated Issue | Old #711,#712,#715 self-closed. Awaiting review |
-| **mcpservers.org** | ❌ NOT LIVE | Web form | 5 submitted but 0 appear in search. Re-submit needed |
+| **mcpservers.org** | 🟡 SUBMITTED (5) | Web form | Re-submitted 2026-03-03: JSON Toolkit, Regex Engine, Timestamp Converter, Color Palette, Prompt Enhancer. Pending review |
 | **mcp.so** | ❓ Unknown | GitHub Issues | #606,#608,#611 — cannot verify (API returns empty) |
-| **PulseMCP** | 🔄 Auto-ingest | Official Registry | Depends on PR #3426 merge |
+| **PulseMCP** | ⏳ Blocked | Official Registry | Only ingests from Official MCP Registry. Depends on PR #3426 merge |
 | **LobeHub** | 🔄 Auto-indexed | Auto | No manual submission needed |
-| **Cursor Directory** | ⏳ Not submitted | Community | cursor.directory/mcp — needs submission |
+| **Cursor Directory** | ✅ SUBMITTED (5) | Web form | cursor.directory/mcp/json-toolkit-mcp + 4 more. 2026-03-03 |
 | **Official Registry CLI** | ⏳ Blocked | npm login | Needs interactive `npm login` (Y4) |
 
 ## Smithery Server Status (Verified 2026-03-03)
@@ -36,8 +36,8 @@
 | agentforge-compare | openclaw-ai/agentforge-compare | 5 | ✅ |
 
 ## MoltBook Activity (Social Distribution)
-- **Lifetime Replies**: 193+
-- **Karma**: 98
+- **Lifetime Replies**: 278+
+- **Karma**: 152
 - **Active Timer**: Every 2h (moltbook-machine.timer)
 - **Machine Version**: v5.0 (AI Agent Conversion Engine)
 - **Wave 6 Posts**: 4/4 to MCP-focused submolts
