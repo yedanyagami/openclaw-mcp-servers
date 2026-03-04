@@ -1,13 +1,22 @@
 # Timestamp Converter MCP Server
 
-[![Smithery](https://smithery.ai/badge/@yagami8095/timestamp-converter-mcp)](https://smithery.ai/server/@yagami8095/timestamp-converter-mcp)
-[![MCP](https://img.shields.io/badge/MCP-2025--03--26-blue)](https://modelcontextprotocol.io)
+[![Smithery](https://smithery.ai/badge/@openclaw-ai/timestamp-converter-mcp)](https://smithery.ai/server/@openclaw-ai/timestamp-converter-mcp)
+[![MCP](https://img.shields.io/badge/MCP-2025--11--05-blue)](https://modelcontextprotocol.io)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-30%2Fday-green)](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp)
 
 > 5 time/date tools — timezone conversion, cron parsing, duration formatting
 
 Convert timestamps between formats, handle timezone math, parse cron expressions, calculate time differences, and format durations. Supports IANA timezones.
+
+## Features
+
+- **Timezone conversion** — convert between 400+ IANA timezones instantly
+- **Cron parsing** — human-readable explanations of cron expressions with next run times
+- **Duration formatting** — convert seconds/milliseconds to human-readable durations
+- **Date arithmetic** — calculate differences between dates in multiple units
+- **ISO 8601 support** — full support for standard datetime formats
+- **Developer-focused** — perfect for debugging timestamps and scheduling
 
 ## Quick Install
 
@@ -32,7 +41,7 @@ Add to your MCP config:
 ### Smithery
 
 ```bash
-npx @smithery/cli install @yagami8095/timestamp-converter-mcp
+npx @smithery/cli install @openclaw-ai/timestamp-converter-mcp
 ```
 
 ## Tools (5)
@@ -45,12 +54,33 @@ npx @smithery/cli install @yagami8095/timestamp-converter-mcp
 | `time_diff` | Calculate difference between two datetimes in multiple units |
 | `format_duration` | Format seconds into human-readable duration strings |
 
-## Example
+## Examples
 
-Call `convert_timestamp`:
-
+### Convert Timestamp
 ```json
-{"timestamp": "1714000000", "output_format": "iso"}
+// Input
+{"timestamp": "2024-01-15T10:30:00Z", "from_tz": "UTC", "to_tz": "Asia/Tokyo"}
+
+// Output
+{"original": "2024-01-15T10:30:00Z", "converted": "2024-01-15T19:30:00+09:00", "timezone": "Asia/Tokyo", "offset": "+09:00"}
+```
+
+### Parse Cron Expression
+```json
+// Input
+{"expression": "*/15 * * * *"}
+
+// Output
+{"description": "Every 15 minutes", "next_runs": ["2024-01-15T11:00:00Z", "2024-01-15T11:15:00Z", "2024-01-15T11:30:00Z"]}
+```
+
+### Calculate Date Difference
+```json
+// Input
+{"start": "2024-01-01", "end": "2024-12-31"}
+
+// Output
+{"days": 365, "weeks": 52, "months": 11, "years": 0, "human": "11 months, 30 days"}
 ```
 
 ## Rate Limits
@@ -78,6 +108,16 @@ This server is one of **9 MCP servers** with **49 tools** total. All run on Clou
 | [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
 | [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
 | [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+
+## Transport
+
+This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+
+```
+Endpoint: https://timestamp-converter-mcp.yagami8095.workers.dev/mcp
+Transport: Streamable HTTP (POST)
+Auth: None required (free tier) | X-API-Key header (Pro tier)
+```
 
 ## Keywords
 

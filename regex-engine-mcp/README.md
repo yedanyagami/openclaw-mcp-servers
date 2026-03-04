@@ -1,13 +1,22 @@
 # Regex Engine MCP Server
 
-[![Smithery](https://smithery.ai/badge/@yagami8095/regex-engine-mcp)](https://smithery.ai/server/@yagami8095/regex-engine-mcp)
-[![MCP](https://img.shields.io/badge/MCP-2025--03--26-blue)](https://modelcontextprotocol.io)
+[![Smithery](https://smithery.ai/badge/@openclaw-ai/regex-engine-mcp)](https://smithery.ai/server/@openclaw-ai/regex-engine-mcp)
+[![MCP](https://img.shields.io/badge/MCP-2025--11--05-blue)](https://modelcontextprotocol.io)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-20%2Fday-green)](https://regex-engine-mcp.yagami8095.workers.dev/mcp)
 
 > 5 regex tools + 15 built-in patterns for AI agents
 
 Test, explain, build, replace, and extract with regular expressions. Includes 15 pre-built patterns for emails, URLs, IPs, dates, and more.
+
+## Features
+
+- **Natural language to regex** — describe what you want, get a working pattern
+- **Human-readable explanations** — understand any regex in plain English
+- **Full match details** — groups, indices, named captures, and flags
+- **Find & replace** — regex-powered search and replace with back-references
+- **Data extraction** — pull structured data from text using capture groups
+- **All standard flags** — global, case-insensitive, multiline, dotAll, unicode
 
 ## Quick Install
 
@@ -32,7 +41,7 @@ Add to your MCP config:
 ### Smithery
 
 ```bash
-npx @smithery/cli install @yagami8095/regex-engine-mcp
+npx @smithery/cli install @openclaw-ai/regex-engine-mcp
 ```
 
 ## Tools (5)
@@ -45,12 +54,33 @@ npx @smithery/cli install @yagami8095/regex-engine-mcp
 | `regex_replace` | Find and replace using regex patterns with capture groups |
 | `regex_extract` | Extract all matches from text using a regex pattern |
 
-## Example
+## Examples
 
-Call `regex_test`:
-
+### Test a Pattern
 ```json
-{"pattern": "\\d{4}-\\d{2}-\\d{2}", "text": "Date: 2026-03-03"}
+// Input
+{"pattern": "\\d{3}-\\d{4}", "test_string": "Call 555-1234 today", "flags": "g"}
+
+// Output
+{"matches": ["555-1234"], "count": 1, "groups": [], "indices": [[5, 13]]}
+```
+
+### Explain a Pattern
+```json
+// Input
+{"pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"}
+
+// Output
+{"explanation": "Email validation pattern: starts with alphanumeric/special chars, followed by @, domain name, dot, and 2+ letter TLD"}
+```
+
+### Build from Description
+```json
+// Input
+{"description": "Match US phone numbers like (555) 123-4567 or 555-123-4567"}
+
+// Output
+{"pattern": "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}", "flags": "g", "explanation": "Matches US phone formats with optional parentheses"}
 ```
 
 ## Rate Limits
@@ -78,6 +108,16 @@ This server is one of **9 MCP servers** with **49 tools** total. All run on Clou
 | [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
 | [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
 | [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+
+## Transport
+
+This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+
+```
+Endpoint: https://regex-engine-mcp.yagami8095.workers.dev/mcp
+Transport: Streamable HTTP (POST)
+Auth: None required (free tier) | X-API-Key header (Pro tier)
+```
 
 ## Keywords
 

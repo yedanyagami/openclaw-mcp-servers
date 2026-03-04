@@ -1,13 +1,22 @@
 # Prompt Enhancer MCP Server
 
-[![Smithery](https://smithery.ai/badge/@yagami8095/prompt-enhancer-mcp)](https://smithery.ai/server/@yagami8095/prompt-enhancer-mcp)
-[![MCP](https://img.shields.io/badge/MCP-2025--03--26-blue)](https://modelcontextprotocol.io)
+[![Smithery](https://smithery.ai/badge/@openclaw-ai/prompt-enhancer-mcp)](https://smithery.ai/server/@openclaw-ai/prompt-enhancer-mcp)
+[![MCP](https://img.shields.io/badge/MCP-2025--11--05-blue)](https://modelcontextprotocol.io)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday free, 100 Pro-green)](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp)
 
 > 6 prompt engineering tools — enhance, analyze, convert, generate, 30+ templates
 
 Optimize prompts for AI models. Enhance basic prompts, analyze quality scores, convert between formats, generate system prompts, and browse 30+ curated templates.
+
+## Features
+
+- **Prompt scoring** — rate prompt quality 0-100 with specific improvement suggestions
+- **One-click enhance** — transform vague prompts into detailed, effective instructions
+- **Format conversion** — switch between plain text, XML, markdown, and JSON prompt formats
+- **System prompt generator** — create role-specific system prompts for any use case
+- **30+ templates** — production-ready prompt templates organized by category
+- **Before/after scores** — see exactly how much your prompt improved
 
 ## Quick Install
 
@@ -32,7 +41,7 @@ Add to your MCP config:
 ### Smithery
 
 ```bash
-npx @smithery/cli install @yagami8095/prompt-enhancer-mcp
+npx @smithery/cli install @openclaw-ai/prompt-enhancer-mcp
 ```
 
 ## Tools (6)
@@ -46,12 +55,38 @@ npx @smithery/cli install @yagami8095/prompt-enhancer-mcp
 | `prompt_template_library` | Browse 30+ production-ready templates by category |
 | `purchase_pro_key` | Get Pro API key for higher rate limits |
 
-## Example
+## Examples
 
-Call `enhance_prompt`:
-
+### Enhance a Prompt
 ```json
+// Input
 {"prompt": "Write a blog post about AI", "style": "structured"}
+
+// Output
+{
+  "enhanced": "Write a comprehensive 1500-word blog post about artificial intelligence...",
+  "improvements": ["Added specific word count", "Defined target audience", "Structured with sections", "Added tone guidance"],
+  "score_before": 25,
+  "score_after": 82
+}
+```
+
+### Analyze Prompt Quality
+```json
+// Input
+{"prompt": "Tell me about dogs"}
+
+// Output
+{"score": 18, "clarity": 30, "specificity": 10, "issues": ["Too vague", "No context", "No format specified"], "suggestions": ["Specify breed or topic", "Add desired length", "Define target audience"]}
+```
+
+### Generate System Prompt
+```json
+// Input
+{"role": "customer support agent", "task": "Handle refund requests", "tone": "professional"}
+
+// Output
+{"system_prompt": "You are a professional customer support agent specialized in handling refund requests...", "tokens": 156}
 ```
 
 ## Rate Limits
@@ -79,6 +114,16 @@ This server is one of **9 MCP servers** with **49 tools** total. All run on Clou
 | [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
 | [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
 | [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+
+## Transport
+
+This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+
+```
+Endpoint: https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp
+Transport: Streamable HTTP (POST)
+Auth: None required (free tier) | X-API-Key header (Pro tier)
+```
 
 ## Keywords
 

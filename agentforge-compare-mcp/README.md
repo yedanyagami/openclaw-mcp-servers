@@ -1,13 +1,22 @@
 # AgentForge AI Tool Compare MCP Server
 
-[![Smithery](https://smithery.ai/badge/@yagami8095/agentforge-compare-mcp)](https://smithery.ai/server/@yagami8095/agentforge-compare-mcp)
-[![MCP](https://img.shields.io/badge/MCP-2025--03--26-blue)](https://modelcontextprotocol.io)
+[![Smithery](https://smithery.ai/badge/@openclaw-ai/agentforge-compare-mcp)](https://smithery.ai/server/@openclaw-ai/agentforge-compare-mcp)
+[![MCP](https://img.shields.io/badge/MCP-2025--11--05-blue)](https://modelcontextprotocol.io)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday-green)](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp)
 
 > 5 AI coding tool comparison tools — Claude Code, Cursor, Devin, Copilot, and more
 
 Compare AI coding tools side-by-side. Get detailed profiles, feature comparisons, pricing analysis, and AI-powered recommendations. Covers Claude Code, Cursor, Windsurf, Devin, SWE-agent, Copilot, Aider, and Cline.
+
+## Features
+
+- **Side-by-side comparison** — compare any AI coding tools on multiple criteria
+- **Detailed profiles** — pricing, strengths, weaknesses, and use cases for each tool
+- **Trend tracking** — see which AI tools are gaining or losing popularity
+- **Category filtering** — compare within coding, writing, design, or general AI
+- **Auto-generated reports** — markdown comparison reports ready to share
+- **Always current** — data updated regularly to reflect the latest tool landscape
 
 ## Quick Install
 
@@ -32,7 +41,7 @@ Add to your MCP config:
 ### Smithery
 
 ```bash
-npx @smithery/cli install @yagami8095/agentforge-compare-mcp
+npx @smithery/cli install @openclaw-ai/agentforge-compare-mcp
 ```
 
 ## Tools (5)
@@ -45,12 +54,39 @@ npx @smithery/cli install @yagami8095/agentforge-compare-mcp
 | `get_pricing_comparison` | Side-by-side pricing breakdown for all AI coding tools |
 | `purchase_pro_key` | Get Pro API key for full comparisons with recommendations |
 
-## Example
+## Examples
 
-Call `compare_ai_tools`:
-
+### Compare AI Tools
 ```json
-{"tools": ["claude-code", "cursor"], "aspects": ["features", "pricing"]}
+// Input
+{"tools": ["cursor", "claude-code"], "criteria": ["speed", "accuracy", "cost"]}
+
+// Output
+{
+  "comparison": [
+    {"tool": "Cursor", "speed": 8, "accuracy": 7, "cost": "$20/mo", "verdict": "Fast IDE integration"},
+    {"tool": "Claude Code", "speed": 7, "accuracy": 9, "cost": "$20/mo", "verdict": "Best for complex tasks"}
+  ],
+  "recommendation": "Claude Code for accuracy, Cursor for speed"
+}
+```
+
+### Get Tool Details
+```json
+// Input
+{"tool": "devin"}
+
+// Output
+{"name": "Devin", "category": "Autonomous Agent", "pricing": "$500/mo", "strengths": ["Full autonomy", "Multi-file changes"], "weaknesses": ["Expensive", "Slow iteration"]}
+```
+
+### Trending AI Tools
+```json
+// Input
+{"category": "coding", "limit": 5}
+
+// Output
+{"trending": ["Claude Code", "Cursor", "Windsurf", "Copilot", "Aider"], "period": "2024-Q4"}
 ```
 
 ## Rate Limits
@@ -78,6 +114,16 @@ This server is one of **9 MCP servers** with **49 tools** total. All run on Clou
 | [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
 | [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
 | [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+
+## Transport
+
+This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+
+```
+Endpoint: https://agentforge-compare-mcp.yagami8095.workers.dev/mcp
+Transport: Streamable HTTP (POST)
+Auth: None required (free tier) | X-API-Key header (Pro tier)
+```
 
 ## Keywords
 

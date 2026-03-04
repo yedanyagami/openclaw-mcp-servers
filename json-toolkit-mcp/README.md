@@ -1,13 +1,22 @@
 # JSON Toolkit MCP Server
 
-[![Smithery](https://smithery.ai/badge/@yagami8095/json-toolkit-mcp)](https://smithery.ai/server/@yagami8095/json-toolkit-mcp)
-[![MCP](https://img.shields.io/badge/MCP-2025--03--26-blue)](https://modelcontextprotocol.io)
+[![Smithery](https://smithery.ai/badge/@openclaw-ai/json-toolkit-mcp)](https://smithery.ai/server/@openclaw-ai/json-toolkit-mcp)
+[![MCP](https://img.shields.io/badge/MCP-2025--11--05-blue)](https://modelcontextprotocol.io)
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-20%2Fday-green)](https://json-toolkit-mcp.yagami8095.workers.dev/mcp)
 
 > 6 free JSON tools for AI agents on Cloudflare Workers
 
 A utility MCP server for AI agents that work with JSON data daily. Format, validate, diff, query, transform, and generate schemas — all in one server.
+
+## Features
+
+- **Zero config** — works out of the box with Streamable HTTP, no API key needed
+- **6 essential tools** — format, validate, diff, query, transform, schema generation
+- **JSONPath queries** — `$.users[*].name`, dot notation, wildcards, array slicing
+- **Detailed error info** — line number, column, and context for validation errors
+- **Schema generation** — auto-generate JSON Schema from sample data
+- **Production-ready** — runs on Cloudflare Workers with global edge deployment
 
 ## Quick Install
 
@@ -32,7 +41,7 @@ Add to your MCP config:
 ### Smithery
 
 ```bash
-npx @smithery/cli install @yagami8095/json-toolkit-mcp
+npx @smithery/cli install @openclaw-ai/json-toolkit-mcp
 ```
 
 ## Tools (6)
@@ -46,12 +55,36 @@ npx @smithery/cli install @yagami8095/json-toolkit-mcp
 | `json_transform` | Flatten, unflatten, pick, omit, rename keys in JSON |
 | `json_schema_generate` | Generate JSON Schema from a sample JSON object |
 
-## Example
+## Examples
 
-Call `json_format`:
-
+### Format JSON
 ```json
-{"json": "{\"name\":\"test\",\"value\":42}", "indent": 2}
+// Input
+{"json": "{\"name\":\"Alice\",\"scores\":[98,87,95]}", "indent": 2}
+
+// Output
+{
+  "name": "Alice",
+  "scores": [98, 87, 95]
+}
+```
+
+### Validate JSON
+```json
+// Input
+{"json": "{\"key\": value}"}
+
+// Output
+{"valid": false, "error": "Unexpected token 'v' at line 1 col 9", "line": 1, "column": 9}
+```
+
+### Diff Two JSON Objects
+```json
+// Input
+{"json_a": "{\"x\": 1, \"y\": 2}", "json_b": "{\"x\": 1, \"z\": 3}"}
+
+// Output
+{"added": ["z"], "removed": ["y"], "changed": [], "unchanged": ["x"]}
 ```
 
 ## Rate Limits
@@ -79,6 +112,16 @@ This server is one of **9 MCP servers** with **49 tools** total. All run on Clou
 | [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
 | [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
 | [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+
+## Transport
+
+This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+
+```
+Endpoint: https://json-toolkit-mcp.yagami8095.workers.dev/mcp
+Transport: Streamable HTTP (POST)
+Auth: None required (free tier) | X-API-Key header (Pro tier)
+```
 
 ## Keywords
 
