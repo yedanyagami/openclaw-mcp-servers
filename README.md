@@ -19,6 +19,15 @@ After payment, email yagami8095@gmail.com with your PayPal receipt. API key deli
 
 Or pay per call: USDC $0.05 on Base (x402 auto-pay, no signup).
 
+## Support OpenClaw
+
+Your support helps keep these 9 MCP servers running and free for everyone!
+
+- **[Sponsor on GitHub](https://github.com/sponsors/yedanyagamiai-cmd)** - Monthly support with perks
+- **[Buy me a coffee on Ko-fi](https://ko-fi.com/openclaw)** - One-time tips & support
+- **[PayPal Tip](https://paypal.me/Yagami8095)** - Direct support via PayPal
+- **[Get Pro API Key](https://paypal.me/Yagami8095/9)** - $9/month for 1000 calls/day across all servers
+
 ## Install in Cursor (One Click)
 
 Click any badge to install directly into [Cursor](https://cursor.com):
