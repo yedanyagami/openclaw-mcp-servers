@@ -1191,3 +1191,4 @@ app.listen(PORT, () => {
   console.log(`DB: ${process.env.DATABASE_URL ? '✅' : '❌'} | TG: ${TELEGRAM_BOT_TOKEN ? '✅' : '❌'} | Think: ${DEEPSEEK_API_KEY ? '✅' : '❌'}`);
   boot();
 });
+// v4.1.2 deploy trigger
