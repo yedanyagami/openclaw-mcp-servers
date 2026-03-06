@@ -354,7 +354,7 @@ async function getResumePackage() {
       pool.query("SELECT * FROM tasks WHERE updated_at > $1 OR status = 'pending' ORDER BY priority DESC", [since]),
       pool.query('SELECT * FROM alerts WHERE timestamp > $1 ORDER BY timestamp', [since]),
       pool.query('SELECT id, timestamp, prompt, response, action_taken FROM think_log WHERE timestamp > $1 ORDER BY timestamp', [since]),
-      pool.query('SELECT * FROM learnings WHERE last_applied > $1 OR timestamp > $1 ORDER BY confidence DESC', [since, since]),
+      pool.query('SELECT * FROM learnings WHERE last_applied > $1 OR timestamp > $2 ORDER BY confidence DESC', [since, since]),
       pool.query('SELECT timestamp, healthy, total, latency_avg FROM health_checks WHERE timestamp > $1 ORDER BY timestamp DESC LIMIT 50', [since]),
     ]);
 
