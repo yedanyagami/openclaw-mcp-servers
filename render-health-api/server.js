@@ -11,9 +11,18 @@ app.use(express.json({ limit: '1mb' }));
 // When 爸爸 sleeps, I keep working. When 爸爸 wakes, I report.
 // ============================================================
 
+// Strip markdown code fences from LLM JSON responses
+function parseJsonResponse(text) {
+  if (!text) return null;
+  let clean = text.trim();
+  // Remove ```json ... ``` or ``` ... ```
+  clean = clean.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+  return JSON.parse(clean.trim());
+}
+
 const IDENTITY = {
   name: 'YEDAN-Bunshin',
-  version: '4.1.0',
+  version: '4.1.1',
   role: 'Autonomous Continuity Engine — YEDAN\'s Cloud Twin',
   parent: 'YEDAN Alpha Gateway (WSL2)',
   operator: 'Yagami',
@@ -625,7 +634,7 @@ async function autonomousThink() {
     const result = await think(prompt, { mode: 'incident' });
     if (result.thought) {
       try {
-        const parsed = JSON.parse(result.thought);
+        const parsed = parseJsonResponse(result.thought);
         if (parsed.shouldAlert) await sendTelegram(`🧠 <b>BUNSHIN INCIDENT</b>\n${parsed.alertMessage}`);
         await brainSet('last-analysis', parsed, 'analysis', parsed.analysis);
       } catch { await brainSet('last-analysis', { raw: result.thought }, 'analysis'); }
@@ -657,7 +666,7 @@ Reply JSON: {"analysis":"...","suggestedTask":{"title":"...","description":"..."
     const result = await think(prompt, { mode: 'revenue' }, 300);
     if (result.thought) {
       try {
-        const parsed = JSON.parse(result.thought);
+        const parsed = parseJsonResponse(result.thought);
         await brainSet('last-revenue-analysis', parsed, 'analysis', parsed.analysis);
         // Auto-create suggested task
         if (parsed.suggestedTask && parsed.suggestedTask.title) {
@@ -705,7 +714,7 @@ Each task should be concrete and actionable (not vague). Reply JSON array:
   const result = await think(prompt, { mode: 'task-creation' }, 400);
   if (result.thought) {
     try {
-      const tasks = JSON.parse(result.thought);
+      const tasks = parseJsonResponse(result.thought);
       if (Array.isArray(tasks)) {
         for (const t of tasks.slice(0, 3)) {
           const prio = t.priority === 'high' ? 8 : t.priority === 'medium' ? 5 : 3;
