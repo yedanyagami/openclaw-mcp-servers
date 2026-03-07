@@ -1,0 +1,40 @@
+# Render Blueprint — OpenClaw Golem Agent
+# https://render.com/docs/blueprint-spec
+#
+# Deploy: Render Dashboard → New → Blueprint → connect this repo
+# Set env vars manually in Render Dashboard after deploy
+
+services:
+  - type: web
+    name: openclaw-golem-agent
+    runtime: docker
+    dockerfilePath: ./golem-agent/Dockerfile
+    rootDir: golem-agent
+    plan: free
+    region: oregon
+    branch: main
+    repo: https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers
+
+    healthCheckPath: /health
+
+    envVars:
+      - key: PORT
+        value: "3000"
+      - key: NODE_ENV
+        value: production
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        value: "7848052227"
+      - key: CF_BROWSER_URL
+        value: https://openclaw-browser.yagami8095.workers.dev
+      - key: CF_BROWSER_TOKEN
+        sync: false
+      - key: DEEPINFRA_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: BUNSHIN_URL
+        value: https://openclaw-mcp-servers.onrender.com
+      - key: BUNSHIN_TOKEN
+        sync: false
