@@ -3,7 +3,7 @@
   "name": "io.github.yedanyagamiai-cmd/openclaw-mcp-servers",
   "description": "9 remote MCP servers on Cloudflare Workers for AI agents. Free tier + Pro API keys.",
   "title": "OpenClaw MCP Ecosystem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://product-store.yagami8095.workers.dev",
   "repository": {
     "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers",

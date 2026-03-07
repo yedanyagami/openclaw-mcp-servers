@@ -38,6 +38,7 @@ const PRODUCTS = {
     file_key: 'products/prompt-collection-50',
     badge: 'BEST SELLER',
     emoji: '🚀',
+    stripe_link: 'https://buy.stripe.com/00w6oA3Ene3874AfGv3sI04',
   },
   'automation-guide': {
     id: 'automation-guide',
@@ -58,6 +59,7 @@ const PRODUCTS = {
     file_key: 'products/automation-guide',
     badge: 'NEW',
     emoji: '⚡',
+    stripe_link: 'https://buy.stripe.com/eVq00cgr9aQWagM51R3sI00',
   },
   'side-income-roadmap': {
     id: 'side-income-roadmap',
@@ -78,6 +80,7 @@ const PRODUCTS = {
     file_key: 'products/side-income-roadmap',
     badge: 'HOT',
     emoji: '💰',
+    stripe_link: 'https://buy.stripe.com/eVq5kw2Aj5wCcoU8e33sI05',
   },
   'intel-api-pro': {
     id: 'intel-api-pro',
@@ -98,6 +101,7 @@ const PRODUCTS = {
     type: 'api_key',
     badge: 'PRO',
     emoji: '🔑',
+    stripe_link: 'https://buy.stripe.com/14A6oAcaT7EKbkQ65V3sI02',
   },
   'mcp-starter-kit': {
     id: 'mcp-starter-kit',
@@ -119,6 +123,7 @@ const PRODUCTS = {
     file_key: 'products/mcp-starter-kit',
     badge: 'NEW',
     emoji: '🛠️',
+    stripe_link: 'https://buy.stripe.com/3cIcMYdeXbV0bkQbqf3sI01',
   },
   'ecosystem-pro': {
     id: 'ecosystem-pro',
@@ -140,6 +145,7 @@ const PRODUCTS = {
     type: 'api_key',
     badge: 'MOST POPULAR',
     emoji: '🦞',
+    stripe_link: 'https://buy.stripe.com/6oUaEQ5Mv0ci4Ws2TJ3sI06',
   },
   'intel-annual-pass': {
     id: 'intel-annual-pass',
@@ -161,6 +167,7 @@ const PRODUCTS = {
     type: 'subscription',
     badge: 'BEST VALUE',
     emoji: '🏆',
+    stripe_link: 'https://buy.stripe.com/cNi14gej1bV0coU2TJ3sI03',
   },
   'enterprise-bundle': {
     id: 'enterprise-bundle',
@@ -473,6 +480,7 @@ function catalogPage(env) {
       <p style="color:#aaa; margin-bottom:16px;">${p.description}</p>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
         <a href="/products/${p.id}" class="btn btn-stripe">View Details &rarr;</a>
+        ${p.stripe_link ? `<a href="${p.stripe_link}" class="btn" style="background:#ff4500;color:#fff;text-decoration:none;font-size:0.85rem;padding:10px 16px;" target="_blank">Buy Now &rarr;</a>` : ''}
         <div style="display:flex; gap:4px; flex-wrap:wrap;">
           <span style="font-size:0.65rem; color:#555; background:#111; padding:2px 8px; border-radius:4px;">PayPal</span>
           <span style="font-size:0.65rem; color:#555; background:#111; padding:2px 8px; border-radius:4px;">Crypto</span>
@@ -555,11 +563,12 @@ function productPage(product, env) {
       <button type="submit" class="btn btn-paypal">🅿️ PayPal — $${product.price_usd}</button>
     </form>` : '';
 
-  const stripeBtn = hasStripe ? `
+  const stripeBtn = product.stripe_link ? `
+    <a href="${product.stripe_link}" class="btn btn-stripe" target="_blank" style="text-decoration:none;">💳 Card / Apple Pay / Google Pay — \u00A5${product.price_jpy.toLocaleString()}</a>` : (hasStripe ? `
     <form action="/checkout/stripe" method="post" style="display:inline;">
       <input type="hidden" name="product_id" value="${product.id}">
       <button type="submit" class="btn btn-stripe">💳 Card — $${product.price_usd}</button>
-    </form>` : '';
+    </form>` : '');
 
   const cryptoSection = `
     <div style="background:#1a1a2e; border:1px solid #555; border-radius:12px; padding:20px; margin:16px 0;">
@@ -1422,6 +1431,69 @@ async function handleOAuthStatus(request, env) {
 // ============================================================
 // MAIN ROUTER
 // ============================================================
+
+// ============================================================
+// 特定商取引法に基づく表記 (Specified Commercial Transactions Act)
+// ============================================================
+function handleTokushoho() {
+  const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>特定商取引法に基づく表記 | OpenClaw</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.8; }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    h1 { font-size: 1.5rem; margin-bottom: 30px; color: #fff; border-bottom: 2px solid #f97316; padding-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #333; }
+    th { width: 200px; background: #1a1a2e; color: #f97316; font-weight: 600; vertical-align: top; }
+    td { background: #111; }
+    a { color: #f97316; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .footer { margin-top: 40px; text-align: center; color: #666; font-size: 0.85rem; }
+    .back { display: inline-block; margin-bottom: 20px; color: #f97316; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back">&larr; ストアに戻る</a>
+    <h1>特定商取引法に基づく表記</h1>
+    <table>
+      <tr><th>販売業者</th><td>OpenClaw (個人事業)</td></tr>
+      <tr><th>運営責任者</th><td>Yagami</td></tr>
+      <tr><th>所在地</th><td>請求があった場合、遅滞なく開示いたします。</td></tr>
+      <tr><th>電話番号</th><td>請求があった場合、遅滞なく開示いたします。</td></tr>
+      <tr><th>メールアドレス</th><td>yedanyagamiai@gmail.com</td></tr>
+      <tr><th>販売URL</th><td><a href="https://product-store.yagami8095.workers.dev">https://product-store.yagami8095.workers.dev</a></td></tr>
+      <tr><th>販売価格</th><td>各商品ページに記載の価格（税込）<br>
+        ・MCP Server Pro: $9/月 (約1,400円)<br>
+        ・MCP Server Enterprise: $29/月 (約4,500円)<br>
+        ・デジタル商品: 各商品ページ参照</td></tr>
+      <tr><th>商品代金以外の必要料金</th><td>なし（インターネット接続料金はお客様負担）</td></tr>
+      <tr><th>支払方法</th><td>クレジットカード（Visa, Mastercard, AMEX, JCB）、Apple Pay、Google Pay<br>※Stripe決済を利用</td></tr>
+      <tr><th>支払時期</th><td>サブスクリプション：毎月自動課金<br>単品購入：購入時に即時決済</td></tr>
+      <tr><th>商品の引渡し時期</th><td>デジタル商品：決済完了後、即時ダウンロード/APIアクセス可能<br>API サブスクリプション：決済完了後、即時利用開始</td></tr>
+      <tr><th>返品・キャンセル</th><td>デジタル商品の性質上、購入後の返品・返金は原則としてお受けしておりません。<br>サブスクリプション：次回更新日の前日までにキャンセル可能。日割り返金はありません。<br>ただし、商品に重大な欠陥がある場合は個別に対応いたします。</td></tr>
+      <tr><th>動作環境</th><td>MCP対応クライアント（Claude Desktop, Cursor, VS Code等）<br>インターネット接続環境</td></tr>
+      <tr><th>特別条件</th><td>未成年者の購入には保護者の同意が必要です。</td></tr>
+    </table>
+    <div class="footer">
+      <p>&copy; 2026 OpenClaw. All rights reserved.</p>
+      <p>Last updated: March 2026</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  return new Response(html, {
+    status: 200,
+    headers: { 'Content-Type': 'text/html; charset=utf-8' }
+  });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -1499,6 +1571,11 @@ export default {
 
       if (path === '/api/orders' && method === 'GET') {
         return handleAPIOrders(request, env);
+      }
+
+
+      if (path === '/tokushoho' && method === 'GET') {
+        return handleTokushoho();
       }
 
       if (path === '/api/health' && method === 'GET') {

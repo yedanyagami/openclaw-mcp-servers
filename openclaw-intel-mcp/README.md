@@ -5,9 +5,9 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday-green)](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp)
 
-> 6 AI market intelligence tools — trends, reports, stats for AI agents
+> Track AI coding tool trends — Claude Code vs Cursor vs Copilot vs Devin — market data, growth analysis, competitor intelligence
 
-AI-native market intelligence. Track GitHub stars, releases, growth trends for AI coding tools. Get reports, stats, and competitor analysis — designed for AI agents as the primary customer.
+AI market intelligence for developers and AI agents. Compare Claude Code, Cursor, Copilot, Windsurf, Devin and 8+ tools with real data. Get market reports, growth trends, investment signals, and competitor analysis. Works with Claude Desktop, Cursor IDE, and any MCP-compatible client.
 
 ## Features
 

@@ -5,9 +5,9 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-5%2Fday%2Ftool-green)](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp)
 
-> 8 Japanese content publishing tools — Markdown, SEO, translation, outlines
+> Publish and optimize articles for note.com, Zenn, and Qiita — translate, SEO-optimize, and cross-post Japanese tech content
 
-Japanese content publishing toolkit for AI agents. Convert Markdown to HTML, optimize for SEO, translate EN to JP, generate article outlines, find trending topics, and cross-post to note.com, Zenn, and Qiita.
+Create and publish Japanese tech content directly from Claude Desktop or Cursor. Translate English to natural Japanese, analyze SEO, generate article outlines, format for note.com/Zenn/Qiita, and cross-post across platforms. 8 tools for developers and content creators targeting the Japanese tech audience. Works with any MCP-compatible client.
 
 ## Features
 

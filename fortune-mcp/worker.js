@@ -352,7 +352,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro: $9 → 1000/day → paypal.me/Yagami8095/9`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $9: paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }
@@ -705,7 +705,7 @@ if (path === '/health') {
       }
 
       if (!rl.allowed) {
-        return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${FORTUNE_RATE_LIMIT}/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`)), {
+        return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${FORTUNE_RATE_LIMIT}/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`)), {
           status: 402, headers: {
             ...cors, 'Content-Type': 'application/json',
             'X-Payment-Required': 'true',

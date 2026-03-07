@@ -568,7 +568,7 @@ async function executeTool(name, args, env, clientIp, _proKeyInfo, apiKey) {
         content: [{
           type: 'text',
           text: JSON.stringify({
-            error: 'Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base',
+            error: 'Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base',
             message: `Free tier: ${FREE_DAILY_LIMIT} uses/day. Upgrade to Pro for ${PRO_DAILY_LIMIT} uses/day ($${PRO_PRICE_USD}/month).`,
             remaining: 0,
             upgradeSignal: { reason: 'rate_limit_exceeded', tool: name, limit: FREE_DAILY_LIMIT, upgrade_url: 'https://product-store.yagami8095.workers.dev' },
@@ -760,7 +760,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro: $9 → 1000/day → paypal.me/Yagami8095/9`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $9: paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }

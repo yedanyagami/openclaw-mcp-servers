@@ -5,9 +5,9 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday-green)](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp)
 
-> 5 AI coding tool comparison tools — Claude Code, Cursor, Devin, Copilot, and more
+> Compare Claude Code vs Cursor vs Copilot vs Devin — side-by-side features, pricing, benchmarks, and AI-powered recommendations
 
-Compare AI coding tools side-by-side. Get detailed profiles, feature comparisons, pricing analysis, and AI-powered recommendations. Covers Claude Code, Cursor, Windsurf, Devin, SWE-agent, Copilot, Aider, and Cline.
+Choose the right AI coding assistant. Compare 8 tools including Claude Code, Cursor, Windsurf, GitHub Copilot, Devin, Aider, Cline, and SWE-agent on speed, accuracy, pricing, and capabilities. Get AI-powered recommendations tailored to your workflow. Works with Claude Desktop, Cursor IDE, and any MCP client.
 
 ## Features
 
