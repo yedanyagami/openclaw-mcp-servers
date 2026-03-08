@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yedanyagamiai-cmd/color-palette",
+  "title": "Color Palette MCP",
+  "description": "Color conversion, palette generation, and WCAG accessibility checking for design workflows.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp"
+    }
+  ]
+}
