@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yedanyagamiai-cmd/regex-engine",
+  "title": "Regex Engine MCP",
+  "description": "Regex pattern testing, explanation, and generation from natural language descriptions.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp"
+    }
+  ]
+}
