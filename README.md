@@ -1,6 +1,8 @@
 <p align="center">
   <h1 align="center">OpenClaw MCP Servers</h1>
   <p align="center"><strong>49 AI tools. 9 servers. Zero setup. Connect in 10 seconds.</strong></p>
+  <p align="center"><em>49 個 AI 工具 · 9 台伺服器 · 零設定 · 10 秒連接</em></p>
+  <p align="center"><em>49のAIツール · 9サーバー · セットアップ不要 · 10秒で接続</em></p>
 </p>
 
 <p align="center">
@@ -24,7 +26,13 @@
 
 ---
 
-## Why OpenClaw?
+## 🌐 Languages | 語言 | 言語
+
+This project supports English, 繁體中文, and 日本語.
+
+---
+
+## Why OpenClaw? | 為何選擇 OpenClaw？ | なぜOpenClaw？
 
 | Feature | OpenClaw | Others |
 |---------|----------|--------|
