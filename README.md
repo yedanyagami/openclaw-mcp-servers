@@ -201,7 +201,7 @@ Add to `claude_desktop_config.json`:
 | `get_trending_topics` | Trending on note.com/Zenn/Qiita | **Pro** |
 | `cross_post_format` | Format for all 3 platforms | **Pro** |
 | `analyze_article_performance` | Predict performance before publish | **Pro** |
-| `purchase_pro_key` | Unlock Pro features ($12/mo) | — |
+| `purchase_pro_key` | Unlock Pro features ($9/mo) | — |
 
 ### AI Tool Compare — 5 tools
 

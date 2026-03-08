@@ -1,7 +1,8 @@
 // KPI Dashboard Worker — OpenClaw Command Center
-// Auth: Bearer openclaw-kpi-2026 (API only, HTML is public)
+// Auth: Bearer $KPI_TOKEN (set via wrangler secret, API only, HTML is public)
 
-const KPI_TOKEN = 'openclaw-kpi-2026';
+// KPI_TOKEN must be set via: wrangler secret put KPI_TOKEN
+// Fallback removed — do not hardcode tokens
 const KV_TTL = 300; // 5 minutes
 
 const PRODUCT_STORE_URL = 'https://product-store.yagami8095.workers.dev/api/orders';
@@ -19,9 +20,10 @@ const FLEET_WORKERS = [
 
 // ─── Auth helper ────────────────────────────────────────────────────────────
 
-function checkAuth(request) {
+function checkAuth(request, env) {
+  if (!env.KPI_TOKEN) return false;
   const auth = request.headers.get('Authorization') || '';
-  return auth === `Bearer ${KPI_TOKEN}`;
+  return auth === `Bearer ${env.KPI_TOKEN}`;
 }
 
 function unauthorizedJson() {
@@ -716,7 +718,7 @@ export default {
 
     // API endpoints — require auth
     if (path.startsWith('/api/')) {
-      if (!checkAuth(request)) return unauthorizedJson();
+      if (!checkAuth(request, env)) return unauthorizedJson();
 
       if (path === '/api/kpi') {
         const metrics = await fetchAllMetrics(KV);

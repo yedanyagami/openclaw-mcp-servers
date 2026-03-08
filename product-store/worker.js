@@ -495,6 +495,8 @@ function catalogPage(env) {
       <h1>🧠 AI Intelligence Tools & Digital Arsenal</h1>
       <p>MCP-native market intelligence, battle-tested AI prompts, and automation templates.<br>
       Built for AI agents. Used by developers. Powered by Cloudflare.</p>
+      <p style="color:#888; font-size:0.85rem; margin-top:8px;">MCP 原生市場情報、實戰 AI 提示詞、自動化模板 — 為 AI 代理而生<br>
+      MCP対応マーケットインテリジェンス・実戦AIプロンプト・自動化テンプレート</p>
       <div style="margin-top:24px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
         <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">🔌 MCP Protocol</span>
         <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">⚡ Instant Delivery</span>
@@ -510,7 +512,8 @@ function catalogPage(env) {
       </div>
       <div style="background:linear-gradient(135deg,#ff6b35,#ff4500);border-radius:12px;padding:24px;margin:24px 0;text-align:center;">
         <h2 style="color:#fff;margin-bottom:12px;">Try All 49 Tools Free for 7 Days</h2>
-        <p style="color:rgba(255,255,255,0.9);margin-bottom:16px;">Sign in with GitHub. 100 calls/day across all 9 servers. No credit card required.</p>
+        <p style="color:rgba(255,255,255,0.9);margin-bottom:8px;">Sign in with GitHub. 100 calls/day across all 9 servers. No credit card required.</p>
+        <p style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-bottom:16px;">GitHub 登入即可免費試用 49 個工具 7 天 | GitHubログインで49ツール7日間無料</p>
         <a href="/auth/login" class="btn" style="background:#fff;color:#ff4500;font-size:1.1rem;padding:16px 40px;text-decoration:none;display:inline-block;border-radius:8px;font-weight:bold;">Start Free Trial &rarr;</a>
       </div>
 
@@ -528,14 +531,16 @@ function catalogPage(env) {
             <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp</code>
           </div>
         </div>
-        <p style="text-align:center; margin-top:16px; font-size:0.8rem; color:#666;">Works with Claude Code, Cursor, Windsurf, Cline — just add the URL to your MCP config</p>
+        <p style="text-align:center; margin-top:16px; font-size:0.8rem; color:#666;">Works with Claude Code, Cursor, Windsurf, Cline — just add the URL to your MCP config<br>
+        支援 Claude Code、Cursor、Windsurf、Cline — 只需加入 URL | Claude Code・Cursor・Windsurf・Cline対応</p>
       </div>
 
       ${productCards}
 
       <div style="text-align:center; margin:40px 0 20px; padding:24px; background:#151515; border-radius:12px; border:1px solid #2a2a2a;">
-        <p style="color:#888; font-size:0.85rem;">🔒 Secure payments via PayPal, credit card, and cryptocurrency</p>
-        <p style="color:#555; font-size:0.75rem; margin-top:8px;">All products include instant delivery. Digital goods — no shipping required.</p>
+        <p style="color:#888; font-size:0.85rem;">🔒 Secure payments via PayPal, credit card, USDC, and bank transfer</p>
+        <p style="color:#555; font-size:0.75rem; margin-top:4px;">All products include instant delivery. Digital goods — no shipping required.</p>
+        <p style="color:#555; font-size:0.75rem;">安全支付：PayPal、信用卡、USDC、銀行轉帳 | 即時配送 | 安全な決済：PayPal・クレジットカード・USDC・銀行振込 | 即時配信</p>
       </div>
     </div>
   `);
@@ -572,8 +577,17 @@ function productPage(product, env) {
 
   const cryptoSection = `
     <div style="background:#1a1a2e; border:1px solid #555; border-radius:12px; padding:20px; margin:16px 0;">
-      <p style="color:#888; font-weight:bold; margin-bottom:8px;">₿ Crypto Payment — Coming Soon</p>
-      <p style="color:#666; font-size:0.85rem;">Crypto payment options will be available soon. Please use PayPal for now.</p>
+      <p style="color:#fff; font-weight:bold; margin-bottom:12px;">💎 USDC Payment (Base L2)</p>
+      <p style="color:#888; font-size:0.85rem; margin-bottom:8px;">Send USDC on Base network to:</p>
+      <code style="display:block; background:#0d1117; color:#58a6ff; padding:10px; border-radius:6px; font-size:0.8rem; word-break:break-all; margin-bottom:8px;">0x72aa56DAe3819c75C545c57778cc404092d60731</code>
+      <p style="color:#666; font-size:0.75rem;">Send exact amount in USDC. Email yagami8095@gmail.com with tx hash for instant delivery.</p>
+    </div>
+    <div style="background:#1a2e1a; border:1px solid #555; border-radius:12px; padding:20px; margin:16px 0;">
+      <p style="color:#fff; font-weight:bold; margin-bottom:12px;">🏦 Bank Transfer (Taiwan)</p>
+      <p style="color:#888; font-size:0.85rem;">Mega Bank (兆豐國際商業銀行) — 大里分行</p>
+      <p style="color:#888; font-size:0.85rem;">Account: <code style="color:#3fb950;">24110234810</code></p>
+      <p style="color:#888; font-size:0.85rem;">SWIFT: <code style="color:#3fb950;">ICBCTWTP017</code></p>
+      <p style="color:#666; font-size:0.75rem; margin-top:8px;">Email yagami8095@gmail.com with transfer receipt for delivery.</p>
     </div>`;
 
   const paypalMeFallback = `
@@ -1086,14 +1100,33 @@ async function handlePayPalIPN(request, env) {
   return new Response('OK', { status: 200 });
 }
 
+async function verifyStripeSignature(body, sig, secret) {
+  if (!sig || !secret) return false;
+  const parts = Object.fromEntries(sig.split(',').map(p => { const [k, v] = p.split('='); return [k, v]; }));
+  const timestamp = parts['t'];
+  const v1 = parts['v1'];
+  if (!timestamp || !v1) return false;
+  // Reject if timestamp is older than 5 minutes (replay protection)
+  if (Math.abs(Date.now() / 1000 - parseInt(timestamp)) > 300) return false;
+  const payload = `${timestamp}.${body}`;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
+  const expected = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return expected === v1;
+}
+
 async function handleStripeWebhook(request, env) {
   if (!env.STRIPE_WEBHOOK_SECRET) return new Response('No webhook secret', { status: 400 });
 
   const body = await request.text();
   const sig = request.headers.get('stripe-signature');
 
-  // Simple signature verification (for production, use proper HMAC)
-  // For now, trust Cloudflare's network isolation
+  // Verify Stripe webhook signature (HMAC-SHA256)
+  const valid = await verifyStripeSignature(body, sig, env.STRIPE_WEBHOOK_SECRET);
+  if (!valid) {
+    return new Response('Invalid signature', { status: 401 });
+  }
+
   let event;
   try {
     event = JSON.parse(body);

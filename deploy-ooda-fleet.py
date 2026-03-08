@@ -2,8 +2,13 @@
 """Deploy all 6 OODA Fleet Workers to Cloudflare via REST API"""
 import json, sys, os, requests, time
 
-CF_ACCOUNT_ID = "9c7d295713f70a863bee478b1a658516"
-CF_API_TOKEN = "GLpoOReB7dCUOMe-AHHXgtd-dNBJFUvWU4V7XGvY"
+CF_ACCOUNT_ID = os.environ.get("CF_ACCOUNT_ID", "")
+CF_API_TOKEN = os.environ.get("CF_API_TOKEN", "")
+if not CF_ACCOUNT_ID or not CF_API_TOKEN:
+    print("ERROR: Set CF_ACCOUNT_ID and CF_API_TOKEN environment variables")
+    print("  export CF_ACCOUNT_ID='your-account-id'")
+    print("  export CF_API_TOKEN='your-api-token'")
+    sys.exit(1)
 BASE = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/workers/scripts"
 HEADERS = {"Authorization": f"Bearer {CF_API_TOKEN}"}
 
