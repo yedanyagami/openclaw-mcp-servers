@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yedanyagamiai-cmd/json-toolkit",
+  "title": "JSON Toolkit MCP",
+  "description": "JSON validation, formatting, diff, schema generation, and transformation tools for AI agents.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"
+    }
+  ]
+}
