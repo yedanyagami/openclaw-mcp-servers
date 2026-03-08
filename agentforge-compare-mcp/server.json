@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yedanyagamiai-cmd/agentforge-compare",
+  "title": "AgentForge Compare MCP",
+  "description": "Compare AI agent frameworks, model capabilities, and architectures across providers.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://agentforge-compare-mcp.yagami8095.workers.dev/mcp"
+    }
+  ]
+}
