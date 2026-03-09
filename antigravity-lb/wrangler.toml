@@ -1,0 +1,31 @@
+name = "antigravity-lb"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+
+# ---------------------------------------------------------------------------
+# KV Namespace — stores health state and round-robin index
+# ---------------------------------------------------------------------------
+# Create the namespace first:
+#   wrangler kv:namespace create LB_STATE
+# Then paste the returned id below.
+[[kv_namespaces]]
+binding = "LB_STATE"
+id = "eb2c8f1e605645b09b6d9b0b6d2677dd"
+
+# ---------------------------------------------------------------------------
+# Cron Triggers — health check every 5 minutes
+# ---------------------------------------------------------------------------
+[triggers]
+crons = ["*/5 * * * *"]
+
+# ---------------------------------------------------------------------------
+# Secrets (set via `wrangler secret put LB_AUTH_TOKEN`)
+# ---------------------------------------------------------------------------
+# LB_AUTH_TOKEN — Bearer token required for all authenticated endpoints
+
+# ---------------------------------------------------------------------------
+# Optional: custom route / domain
+# ---------------------------------------------------------------------------
+# [[routes]]
+# pattern = "antigravity-lb.yourdomain.com/*"
+# zone_name = "yourdomain.com"

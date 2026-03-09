@@ -1,0 +1,9 @@
+{
+  "requestThrottlingEnabled": true,
+  "requestDelayMs": 3000,
+  "defaultCooldownMs": 15000,
+  "maxRetries": 3,
+  "accountSelection": {
+    "strategy": "sticky"
+  }
+}

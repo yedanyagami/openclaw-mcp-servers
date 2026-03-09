@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: antigravity-node3
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: NODE_ENV
+        value: production
+      - key: ANTIGRAVITY_ACCOUNTS
+        sync: false  # set manually via Render dashboard
+    disk:
+      name: antigravity-data
+      mountPath: /home/node/.config/antigravity-proxy
+      sizeGB: 1
