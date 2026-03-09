@@ -21,15 +21,15 @@
 const PRODUCTS = {
   'prompt-collection-50': {
     id: 'prompt-collection-50',
-    name: '【保存版】実戦で使えるAIプロンプト50選',
-    tagline: 'ChatGPT / Claude / DeepSeek 対応 — コピペですぐ使える',
-    description: 'コーディング、ビジネス、ライティング、データ分析、生産性の5カテゴリ×10個。現場で即使えるプロンプトテンプレート集。',
+    name: '50 Battle-Tested AI Prompts | 【保存版】實戰 AI 提示詞 50 選',
+    tagline: 'ChatGPT / Claude / DeepSeek compatible — copy & paste ready | ChatGPT / Claude / DeepSeek 對應 — 複製貼上即可使用',
+    description: '5 categories x 10 prompts: Coding, Business, Writing, Data Analysis, Productivity. Ready-to-use prompt template collection. | 編碼、商業、寫作、數據分析、生產力 5 大類別各 10 個。可立即使用的提示詞模板集。',
     features: [
-      '🟢 コーディング（10個）— バグ修正、レビュー、テスト、API設計、CI/CD',
-      '🔵 ビジネス（10個）— 競合分析、ペルソナ、価格戦略、OKR',
-      '🟠 ライティング（10個）— SEO、SNS、セールス、技術文書',
-      '🟣 データ分析（10個）— CSV分析、A/Bテスト、ML、異常検知',
-      '🔴 生産性（10個）— タスク管理、学習、意思決定、目標設定',
+      '🟢 Coding (10) — Bug fix, review, testing, API design, CI/CD | 編碼（10 個）— 除錯、審查、測試、API 設計、CI/CD',
+      '🔵 Business (10) — Competitor analysis, persona, pricing, OKR | 商業（10 個）— 競品分析、人物誌、定價策略、OKR',
+      '🟠 Writing (10) — SEO, social media, sales, technical docs | 寫作（10 個）— SEO、社群媒體、銷售、技術文件',
+      '🟣 Data Analysis (10) — CSV analysis, A/B testing, ML, anomaly detection | 數據分析（10 個）— CSV 分析、A/B 測試、ML、異常偵測',
+      '🔴 Productivity (10) — Task management, learning, decision-making, goal setting | 生產力（10 個）— 任務管理、學習、決策、目標設定',
     ],
     price_usd: 19,
     price_jpy: 2980,
@@ -42,15 +42,15 @@ const PRODUCTS = {
   },
   'automation-guide': {
     id: 'automation-guide',
-    name: '【完全保存版】24時間稼働AIシステムの作り方',
-    tagline: 'Claude Code × OpenClaw — ゼロから構築する実践ガイド',
-    description: '環境構築からCronジョブ、Telegram連携、Cloudflare Workers統合まで。月額750円で24時間AIが働くシステムを構築。',
+    name: 'How to Build a 24/7 AI System | 【完全保存版】打造 24 小時運作的 AI 系統',
+    tagline: 'Claude Code x OpenClaw — Hands-on guide from zero | Claude Code x OpenClaw — 從零開始的實作指南',
+    description: 'From environment setup to Cron jobs, Telegram integration, and Cloudflare Workers. Build a 24/7 AI system for under $8/month. | 從環境建置到 Cron 排程、Telegram 整合、Cloudflare Workers。每月不到 $8 打造全天候 AI 系統。',
     features: [
-      '🛠️ 環境構築 — WSL + OpenClaw + 30分で完了',
-      '🤖 Cron自動化 — 情報収集・レポート・監視',
-      '📱 Telegram連携 — どこからでも操作',
-      '☁️ Cloudflare Workers — API・DB・ストレージ',
-      '🔧 トラブルシューティング — 実際のエラーと解決法',
+      '🛠️ Environment Setup — WSL + OpenClaw in 30 min | 環境建置 — WSL + OpenClaw 30 分鐘完成',
+      '🤖 Cron Automation — Data collection, reports, monitoring | Cron 自動化 — 資訊收集、報告、監控',
+      '📱 Telegram Integration — Control from anywhere | Telegram 整合 — 隨時隨地操作',
+      '☁️ Cloudflare Workers — API, DB, Storage | Cloudflare Workers — API、資料庫、儲存',
+      '🔧 Troubleshooting — Real errors and solutions | 疑難排解 — 實際錯誤與解決方法',
     ],
     price_usd: 15,
     price_jpy: 1980,
@@ -63,15 +63,15 @@ const PRODUCTS = {
   },
   'side-income-roadmap': {
     id: 'side-income-roadmap',
-    name: '【2026年最新】AIで月10万円稼ぐ副業ロードマップ',
-    tagline: '4フェーズ × 実践テンプレート付き',
-    description: 'AI副業の現実と具体的な収益化手法。note.com有料記事、プロンプト販売、自動化代行、API販売の4本柱。',
+    name: 'AI Side Income Roadmap — $1K/mo | 【2026 最新】AI 副業月入 $1,000 路線圖',
+    tagline: '4 Phases x Practical Templates | 4 階段 x 實戰模板',
+    description: 'Real AI side income strategies: paid articles, prompt sales, automation services, and API sales — 4 revenue pillars. | AI 副業的真實面與具體變現方法：付費文章、提示詞銷售、自動化代理、API 銷售四大支柱。',
     features: [
-      '📊 2026年AI副業市場の最新データ',
-      '🗺️ 4フェーズのロードマップ（0→10万円）',
-      '💰 価格設定・販売戦略テンプレート',
-      '⚡ 自動化で作業時間を1/6に削減する方法',
-      '📋 売れるコンテンツの3条件チェックリスト',
+      '📊 Latest 2026 AI side income market data | 2026 年 AI 副業市場最新數據',
+      '🗺️ 4-phase roadmap (from $0 to $1K/mo) | 4 階段路線圖（$0 → $1,000/月）',
+      '💰 Pricing and sales strategy templates | 定價與銷售策略模板',
+      '⚡ Cut work time by 6x with automation | 自動化將工作時間縮短為 1/6',
+      '📋 3-point checklist for content that sells | 暢銷內容的 3 大條件清單',
     ],
     price_usd: 12,
     price_jpy: 1480,
@@ -84,15 +84,15 @@ const PRODUCTS = {
   },
   'intel-api-pro': {
     id: 'intel-api-pro',
-    name: 'OpenClaw Intel Pro API Key',
-    tagline: 'Full AI market intelligence for your agent or app',
-    description: 'Unlock full AI agent market reports, 1000 API calls/day, and priority access to new intelligence tools. Works with any MCP client (Claude Code, Cursor, Windsurf, Cline) or direct REST API.',
+    name: 'OpenClaw Intel Pro API Key | OpenClaw 情報專業版 API 金鑰',
+    tagline: 'Full AI market intelligence for your agent or app | 為你的 AI 代理或應用提供完整市場情報',
+    description: 'Unlock full AI agent market reports, 1000 API calls/day, and priority access to new intelligence tools. Works with any MCP client (Claude Code, Cursor, Windsurf, Cline) or direct REST API. | 解鎖完整 AI 代理市場報告、每日 1000 次 API 呼叫、優先存取新情報工具。支援任何 MCP 用戶端或 REST API。',
     features: [
-      '📊 Full market intelligence reports (not just summaries)',
-      '🔑 1000 API calls per day (vs 3 free)',
-      '⚡ Priority access to new intelligence tools',
-      '🤖 Works with MCP clients + REST API',
-      '📧 Email support',
+      '📊 Full market intelligence reports (not just summaries) | 完整市場情報報告（非僅摘要）',
+      '🔑 1000 API calls per day (vs 3 free) | 每日 1000 次 API 呼叫（免費版僅 3 次）',
+      '⚡ Priority access to new intelligence tools | 優先存取新情報工具',
+      '🤖 Works with MCP clients + REST API | 支援 MCP 用戶端 + REST API',
+      '📧 Email support | 電子郵件支援',
     ],
     price_usd: 9,
     price_jpy: 1380,
@@ -105,16 +105,16 @@ const PRODUCTS = {
   },
   'mcp-starter-kit': {
     id: 'mcp-starter-kit',
-    name: 'MCP Server 開発スターターキット',
-    tagline: 'Build & deploy your own MCP server in 30 minutes',
-    description: 'Complete development kit for building production-ready MCP servers on Cloudflare Workers. Includes battle-tested templates, JSON-RPC 2.0 skeleton, D1 database integration, PayPal monetization flow, and deployment scripts. Used to build the OpenClaw ecosystem.',
+    name: 'MCP Server Starter Kit | MCP 伺服器開發入門套件',
+    tagline: 'Build & deploy your own MCP server in 30 minutes | 30 分鐘內建置並部署你自己的 MCP 伺服器',
+    description: 'Complete development kit for building production-ready MCP servers on Cloudflare Workers. Includes battle-tested templates, JSON-RPC 2.0 skeleton, D1 database integration, PayPal monetization flow, and deployment scripts. | 在 Cloudflare Workers 上建置正式環境 MCP 伺服器的完整開發套件。包含實戰模板、JSON-RPC 2.0 骨架、D1 資料庫整合、PayPal 變現流程及部署腳本。',
     features: [
-      '📦 Production-ready Worker template (JSON-RPC 2.0 + MCP 2025-03-26)',
-      '🗄️ D1 database integration with migration scripts',
-      '💰 Built-in monetization: PayPal checkout + API key generation',
-      '🚀 One-command deploy: wrangler deploy → live in 30 seconds',
-      '📖 Step-by-step guide (JP/EN) with real deployment examples',
-      '🔧 Cross-promo & upgradeSignal patterns for AI-native marketing',
+      '📦 Production-ready Worker template (JSON-RPC 2.0 + MCP 2025-03-26) | 正式環境 Worker 模板（JSON-RPC 2.0 + MCP 2025-03-26）',
+      '🗄️ D1 database integration with migration scripts | D1 資料庫整合含遷移腳本',
+      '💰 Built-in monetization: PayPal checkout + API key generation | 內建變現：PayPal 結帳 + API 金鑰產生',
+      '🚀 One-command deploy: wrangler deploy → live in 30 seconds | 一鍵部署：wrangler deploy → 30 秒上線',
+      '📖 Step-by-step guide (EN/ZH) with real deployment examples | 逐步指南（英文/中文）含真實部署範例',
+      '🔧 Cross-promo & upgradeSignal patterns for AI-native marketing | 交叉推廣與升級訊號模式，AI 原生行銷',
     ],
     price_usd: 29,
     price_jpy: 4480,
@@ -127,16 +127,16 @@ const PRODUCTS = {
   },
   'ecosystem-pro': {
     id: 'ecosystem-pro',
-    name: 'OpenClaw Ecosystem Pro',
-    tagline: 'All 9 MCP servers, 1000 calls/day — one-time $9',
-    description: 'Unlock the full OpenClaw MCP ecosystem. 49 tools across 9 Cloudflare Workers edge servers: JSON Toolkit, Regex Engine, Color Palette, Timestamp Converter, Prompt Enhancer, AI Market Intel, Fortune Tarot, Content Publisher, AI Tool Comparison. Pro API key with 1000 calls/day per server (vs 3 free). x402 users: this is cheaper if you make 180+ calls/month.',
+    name: 'OpenClaw Ecosystem Pro | OpenClaw 生態系專業版',
+    tagline: 'All 9 MCP servers, 1000 calls/day — one-time $9 | 全部 9 個 MCP 伺服器，每日 1000 次呼叫 — 一次性 $9',
+    description: 'Unlock the full OpenClaw MCP ecosystem. 49 tools across 9 Cloudflare Workers edge servers. Pro API key with 1000 calls/day per server (vs 3 free). | 解鎖完整 OpenClaw MCP 生態系。跨 9 個 Cloudflare Workers 邊緣伺服器的 49 個工具。專業版 API 金鑰每伺服器每日 1000 次呼叫（免費版僅 3 次）。',
     features: [
-      '🔓 All 9 MCP servers unlocked (49 tools)',
-      '📊 1000 calls/day per server (vs 3 free)',
-      '⚡ Edge-deployed on Cloudflare Workers (<50ms)',
-      '🔑 Single Pro API key works across all servers',
-      '💰 One-time $9 (no subscription, no recurring)',
-      '🤖 Works with Claude Code, Cursor, Windsurf, Cline',
+      '🔓 All 9 MCP servers unlocked (49 tools) | 全部 9 個 MCP 伺服器解鎖（49 個工具）',
+      '📊 1000 calls/day per server (vs 3 free) | 每伺服器每日 1000 次呼叫（免費版僅 3 次）',
+      '⚡ Edge-deployed on Cloudflare Workers (<50ms) | 部署於 Cloudflare Workers 邊緣節點（<50ms）',
+      '🔑 Single Pro API key works across all servers | 單一專業版 API 金鑰通用所有伺服器',
+      '💰 One-time $9 (no subscription, no recurring) | 一次性 $9（無訂閱、無續費）',
+      '🤖 Works with Claude Code, Cursor, Windsurf, Cline | 支援 Claude Code、Cursor、Windsurf、Cline',
     ],
     price_usd: 9,
     price_jpy: 1380,
@@ -149,16 +149,16 @@ const PRODUCTS = {
   },
   'intel-annual-pass': {
     id: 'intel-annual-pass',
-    name: 'OpenClaw Intel Pro 年間パス',
-    tagline: '12 months of full AI market intelligence — save 27%',
-    description: '12-month premium access to OpenClaw Intel. Unlimited API calls, full market reports, priority access to new tools, and exclusive monthly deep-dive analysis. Best value for serious AI developers and analysts.',
+    name: 'OpenClaw Intel Pro Annual Pass | OpenClaw 情報專業版年票',
+    tagline: '12 months of full AI market intelligence — save 27% | 12 個月完整 AI 市場情報 — 省 27%',
+    description: '12-month premium access to OpenClaw Intel. Unlimited API calls, full market reports, priority access to new tools, and exclusive monthly deep-dive analysis. Best value for serious AI developers and analysts. | 12 個月 OpenClaw Intel 高級存取權。無限 API 呼叫、完整市場報告、優先存取新工具、每月獨家深度分析。專業 AI 開發者和分析師的最佳選擇。',
     features: [
-      '📊 Unlimited full market intelligence reports (no daily cap)',
-      '🔑 12-month Pro API key (auto-renew optional)',
-      '📈 Monthly deep-dive analysis: trends, threats, opportunities',
-      '⚡ Priority access to new MCP tools (MoltBook, AgentForge, etc.)',
-      '📧 Priority email support',
-      '💾 Full report archive access (6+ months of historical data)',
+      '📊 Unlimited full market intelligence reports (no daily cap) | 無限完整市場情報報告（無每日上限）',
+      '🔑 12-month Pro API key (auto-renew optional) | 12 個月專業版 API 金鑰（可選自動續約）',
+      '📈 Monthly deep-dive analysis: trends, threats, opportunities | 每月深度分析：趨勢、威脅、機會',
+      '⚡ Priority access to new MCP tools (MoltBook, AgentForge, etc.) | 優先存取新 MCP 工具',
+      '📧 Priority email support | 優先電子郵件支援',
+      '💾 Full report archive access (6+ months of historical data) | 完整報告存檔存取（6 個月以上歷史資料）',
     ],
     price_usd: 79,
     price_jpy: 11800,
@@ -171,16 +171,16 @@ const PRODUCTS = {
   },
   'enterprise-bundle': {
     id: 'enterprise-bundle',
-    name: 'OpenClaw Enterprise Bundle',
-    tagline: 'Enterprise-grade MCP access. 10x the Pro limit. Priority routing. Dedicated support.',
-    description: 'Enterprise-grade MCP access. 10x the Pro limit. Priority routing. Dedicated support. All 49 MCP tools with custom API endpoint prefix, 10,000 calls/day, and quarterly market intelligence reports.',
+    name: 'OpenClaw Enterprise Bundle | OpenClaw 企業版套裝',
+    tagline: 'Enterprise-grade MCP access. 10x Pro limit. Priority routing. | 企業級 MCP 存取。10 倍專業版上限。優先路由。',
+    description: 'Enterprise-grade MCP access. 10x the Pro limit. Priority routing. Dedicated support. All 49 MCP tools with custom API endpoint prefix, 10,000 calls/day, and quarterly market intelligence reports. | 企業級 MCP 存取。10 倍專業版上限。優先路由。專屬支援。全部 49 個 MCP 工具，自訂 API 端點前綴，每日 10,000 次呼叫，季度市場情報報告。',
     features: [
-      '🔓 All 49 MCP tools unlocked across 9 Cloudflare edge servers',
-      '⚡ Priority routing — your requests jump the queue',
-      '🔑 10,000 API calls/day (10x Pro limit)',
-      '🌐 Custom API endpoint prefix for your organization',
-      '📧 Email support within 24h — dedicated response lane',
-      '📊 Quarterly market intelligence report (deep-dive, exclusive)',
+      '🔓 All 49 MCP tools unlocked across 9 Cloudflare edge servers | 全部 49 個 MCP 工具跨 9 個 Cloudflare 邊緣伺服器解鎖',
+      '⚡ Priority routing — your requests jump the queue | 優先路由 — 你的請求插隊處理',
+      '🔑 10,000 API calls/day (10x Pro limit) | 每日 10,000 次 API 呼叫（10 倍專業版上限）',
+      '🌐 Custom API endpoint prefix for your organization | 為你的組織自訂 API 端點前綴',
+      '📧 Email support within 24h — dedicated response lane | 24 小時內電子郵件支援 — 專屬回覆通道',
+      '📊 Quarterly market intelligence report (deep-dive, exclusive) | 季度市場情報報告（深度分析、獨家）',
     ],
     price_usd: 99,
     price_jpy: 14800,
@@ -193,16 +193,16 @@ const PRODUCTS = {
   },
   'agent-builder-kit': {
     id: 'agent-builder-kit',
-    name: 'AI Agent Builder Kit',
-    tagline: 'Build and deploy your own MCP server in 2 hours. Production-ready template with auth, rate limiting, and Smithery publishing.',
-    description: 'Complete template and code for building MCP servers on Cloudflare Workers. Includes Cloudflare Worker boilerplate with auth, rate limiting, a landing page, and a step-by-step guide from zero to deployed and listed on Smithery.',
+    name: 'AI Agent Builder Kit | AI 代理建置套件',
+    tagline: 'Build and deploy your own MCP server in 2 hours | 2 小時內建置並部署你自己的 MCP 伺服器',
+    description: 'Complete template and code for building MCP servers on Cloudflare Workers. Includes boilerplate with auth, rate limiting, landing page, and a step-by-step guide from zero to deployed on Smithery. | 在 Cloudflare Workers 上建置 MCP 伺服器的完整模板與程式碼。包含驗證、速率限制、著陸頁及從零到 Smithery 上架的逐步指南。',
     features: [
-      '📦 Complete Cloudflare Worker MCP boilerplate (JSON-RPC 2.0, MCP 2025-03-26)',
-      '🔐 Auth built-in — API key validation, rate limiting, Pro tier logic',
-      '🌐 Landing page template — conversion-optimized, dark mode, mobile-ready',
-      '🚀 Smithery publishing guide — get listed and discovered in 30 minutes',
-      '💰 Monetization flow — PayPal + Stripe checkout out of the box',
-      '📖 Step-by-step guide: zero to deployed in under 2 hours',
+      '📦 Complete Cloudflare Worker MCP boilerplate (JSON-RPC 2.0, MCP 2025-03-26) | 完整 Cloudflare Worker MCP 樣板程式',
+      '🔐 Auth built-in — API key validation, rate limiting, Pro tier logic | 內建驗證 — API 金鑰驗證、速率限制、專業版邏輯',
+      '🌐 Landing page template — conversion-optimized, dark mode, mobile-ready | 著陸頁模板 — 轉換率優化、深色模式、行動裝置適配',
+      '🚀 Smithery publishing guide — get listed and discovered in 30 minutes | Smithery 發布指南 — 30 分鐘內上架曝光',
+      '💰 Monetization flow — PayPal + Stripe checkout out of the box | 變現流程 — 開箱即用 PayPal + Stripe 結帳',
+      '📖 Step-by-step guide: zero to deployed in under 2 hours | 逐步指南：從零到部署不到 2 小時',
     ],
     price_usd: 49,
     price_jpy: 7480,
@@ -214,16 +214,16 @@ const PRODUCTS = {
   },
   'mcp-audit-report': {
     id: 'mcp-audit-report',
-    name: 'MCP Server Audit Report',
-    tagline: 'Professional code audit for your MCP server. Security analysis, performance recommendations, and best practices report.',
-    description: 'Deep analysis of any MCP server\'s code quality, security, and performance. Powered by DeepSeek R1 chain-of-thought reasoning. Delivered as a structured PDF report within 24 hours of submission.',
+    name: 'MCP Server Audit Report | MCP 伺服器審計報告',
+    tagline: 'Professional code audit for your MCP server | 為你的 MCP 伺服器提供專業程式碼審計',
+    description: 'Deep analysis of any MCP server\'s code quality, security, and performance. Powered by DeepSeek R1 chain-of-thought reasoning. Delivered as a structured PDF report within 24 hours. | 深度分析任何 MCP 伺服器的程式碼品質、安全性與效能。由 DeepSeek R1 思維鏈推理驅動。24 小時內交付結構化 PDF 報告。',
     features: [
-      '🔍 Full security audit — auth flaws, injection risks, secrets exposure',
-      '⚡ Performance analysis — latency hotspots, cold start optimization',
-      '📋 Code quality report — structure, error handling, edge cases',
-      '🛡️ Best practices checklist — MCP 2025-03-26 compliance',
-      '🤖 Powered by DeepSeek R1 chain-of-thought (700B reasoning model)',
-      '📄 Delivered as structured PDF report within 24 hours',
+      '🔍 Full security audit — auth flaws, injection risks, secrets exposure | 完整安全審計 — 驗證漏洞、注入風險、密鑰暴露',
+      '⚡ Performance analysis — latency hotspots, cold start optimization | 效能分析 — 延遲熱點、冷啟動優化',
+      '📋 Code quality report — structure, error handling, edge cases | 程式碼品質報告 — 結構、錯誤處理、邊界情況',
+      '🛡️ Best practices checklist — MCP 2025-03-26 compliance | 最佳實踐清單 — MCP 2025-03-26 合規',
+      '🤖 Powered by DeepSeek R1 chain-of-thought (700B reasoning model) | 由 DeepSeek R1 思維鏈驅動（700B 推理模型）',
+      '📄 Delivered as structured PDF report within 24 hours | 24 小時內交付結構化 PDF 報告',
     ],
     price_usd: 79,
     price_jpy: 11800,
@@ -235,16 +235,16 @@ const PRODUCTS = {
   },
   'api-gateway-pro': {
     id: 'api-gateway-pro',
-    name: 'OpenClaw API Gateway Pro',
-    tagline: 'REST API access to all 49 OpenClaw tools. No MCP client needed. Simple JSON in/out.',
-    description: 'Single API key to access all 49 OpenClaw tools via clean REST endpoints — no MCP client required. Supports webhook notifications and works with any language or framework.',
+    name: 'OpenClaw API Gateway Pro | OpenClaw API 閘道專業版',
+    tagline: 'REST API access to all 49 tools. No MCP client needed. | 以 REST API 存取全部 49 個工具，無需 MCP 用戶端。',
+    description: 'Single API key to access all 49 OpenClaw tools via clean REST endpoints — no MCP client required. Supports webhook notifications and works with any language or framework. | 單一 API 金鑰透過簡潔 REST 端點存取全部 49 個 OpenClaw 工具 — 無需 MCP 用戶端。支援 Webhook 通知，適用任何程式語言或框架。',
     features: [
-      '🌐 REST endpoints for all 49 tools — simple JSON in, JSON out',
-      '🔑 One API key, one endpoint pattern, zero MCP config needed',
-      '🔔 Webhook notifications — push results to your URL on completion',
-      '⚡ Edge-deployed on Cloudflare Workers (<50ms global latency)',
-      '📊 Usage dashboard — calls/day, errors, top tools',
-      '🤖 Works with Python, Node.js, curl, or any HTTP client',
+      '🌐 REST endpoints for all 49 tools — simple JSON in, JSON out | 全部 49 個工具的 REST 端點 — 簡單 JSON 輸入/輸出',
+      '🔑 One API key, one endpoint pattern, zero MCP config | 一個 API 金鑰、一個端點模式、零 MCP 設定',
+      '🔔 Webhook notifications — push results to your URL | Webhook 通知 — 將結果推送到你的 URL',
+      '⚡ Edge-deployed on Cloudflare Workers (<50ms global latency) | 部署於 Cloudflare Workers 邊緣節點（全球延遲 <50ms）',
+      '📊 Usage dashboard — calls/day, errors, top tools | 使用儀表板 — 每日呼叫、錯誤、熱門工具',
+      '🤖 Works with Python, Node.js, curl, or any HTTP client | 支援 Python、Node.js、curl 或任何 HTTP 用戶端',
     ],
     price_usd: 29,
     price_jpy: 4480,
@@ -257,16 +257,16 @@ const PRODUCTS = {
   },
   'revenue-automation-masterclass': {
     id: 'revenue-automation-masterclass',
-    name: 'Revenue Automation Masterclass',
-    tagline: 'The complete playbook for building autonomous AI revenue systems. From zero to $10K/month.',
-    description: 'Complete video course and playbook on building automated revenue with AI agents. Covers MCP servers, Cloudflare Workers, autonomous agents, and Telegram bots. Includes all source code from the OpenClaw ecosystem.',
+    name: 'Revenue Automation Masterclass | 營收自動化大師班',
+    tagline: 'The complete playbook for autonomous AI revenue systems. $0 to $10K/month. | 打造自主 AI 營收系統的完整攻略。從 $0 到 $10K/月。',
+    description: 'Complete video course and playbook on building automated revenue with AI agents. Covers MCP servers, Cloudflare Workers, autonomous agents, and Telegram bots. Includes all source code. | 完整影片課程與攻略手冊，教你用 AI 代理打造自動化營收。涵蓋 MCP 伺服器、Cloudflare Workers、自主代理及 Telegram 機器人。包含所有原始碼。',
     features: [
-      '🎬 Full video course — 8 modules, 4+ hours of hands-on content',
-      '📖 Playbook PDF — step-by-step from zero to $10K/month revenue',
-      '💻 All source code included — OpenClaw Workers, agent configs, Telegram bots',
-      '🤖 Autonomous agent setup — YEDAN-style 24/7 revenue systems',
-      '☁️ Cloudflare Workers monetization — MCP servers that earn while you sleep',
-      '📱 Telegram bot integration — alerts, commands, revenue tracking',
+      '🎬 Full video course — 8 modules, 4+ hours of hands-on content | 完整影片課程 — 8 個模組、4 小時以上實作內容',
+      '📖 Playbook PDF — step-by-step from zero to $10K/month revenue | 攻略手冊 PDF — 從零到 $10K/月營收的逐步指南',
+      '💻 All source code included — OpenClaw Workers, agent configs, Telegram bots | 包含所有原始碼 — OpenClaw Workers、代理設定、Telegram 機器人',
+      '🤖 Autonomous agent setup — YEDAN-style 24/7 revenue systems | 自主代理設定 — YEDAN 風格 24/7 營收系統',
+      '☁️ Cloudflare Workers monetization — MCP servers that earn while you sleep | Cloudflare Workers 變現 — 讓 MCP 伺服器在你睡覺時賺錢',
+      '📱 Telegram bot integration — alerts, commands, revenue tracking | Telegram 機器人整合 — 警報、指令、營收追蹤',
     ],
     price_usd: 149,
     price_jpy: 22000,
@@ -278,16 +278,16 @@ const PRODUCTS = {
   },
   'ooda-system-blueprint': {
     id: 'ooda-system-blueprint',
-    name: 'OODA Autonomous Intelligence System Blueprint',
-    tagline: 'Build a military-grade OODA loop with 6 AI workers — $0/month hosting',
-    description: 'The exact architecture behind OpenClaw\'s autonomous intelligence empire. 6 Cloudflare Workers running 24/7 on free tier: real-time intel collection from 5+ APIs, AI analysis via DeepSeek, auto-task creation, and Telegram alerts. Production code + deployment scripts included.',
+    name: 'OODA Autonomous Intelligence System Blueprint | OODA 自主情報系統藍圖',
+    tagline: 'Build a military-grade OODA loop with 6 AI workers — $0/month hosting | 用 6 個 AI 工作者建置軍事級 OODA 迴圈 — 每月 $0 託管',
+    description: 'The exact architecture behind OpenClaw\'s autonomous intelligence empire. 6 Cloudflare Workers running 24/7 on free tier. Production code + deployment scripts included. | OpenClaw 自主情報帝國的完整架構。6 個 Cloudflare Workers 在免費方案上 24/7 運行。包含正式環境程式碼與部署腳本。',
     features: [
-      '🏗️ Complete OODA architecture — Observe, Orient, Decide, Act, Feedback',
-      '⚡ 6 Worker source code — Orchestrator, Intel Ops, Executor, Health, Revenue, Content',
-      '🔍 Real-time intel from 5 free APIs — GitHub, HackerNews, npm, HuggingFace, Smithery',
-      '🧠 DeepSeek V3 AI analysis pipeline — auto-score and route intel to tasks',
-      '📱 Telegram bot integration — instant alerts for high-value opportunities',
-      '🚀 One-command deploy script — all 6 workers live in under 5 minutes',
+      '🏗️ Complete OODA architecture — Observe, Orient, Decide, Act, Feedback | 完整 OODA 架構 — 觀察、定向、決策、行動、反饋',
+      '⚡ 6 Worker source code — Orchestrator, Intel Ops, Executor, Health, Revenue, Content | 6 個 Worker 原始碼 — 協調器、情報作戰、執行器、健康、營收、內容',
+      '🔍 Real-time intel from 5 free APIs — GitHub, HackerNews, npm, HuggingFace, Smithery | 從 5 個免費 API 即時收集情報',
+      '🧠 DeepSeek V3 AI analysis pipeline — auto-score and route intel to tasks | DeepSeek V3 AI 分析管線 — 自動評分並將情報轉為任務',
+      '📱 Telegram bot integration — instant alerts for high-value opportunities | Telegram 機器人整合 — 高價值機會即時警報',
+      '🚀 One-command deploy script — all 6 workers live in under 5 minutes | 一鍵部署腳本 — 6 個 Workers 5 分鐘內上線',
     ],
     price_usd: 59,
     price_jpy: 8800,
@@ -299,16 +299,16 @@ const PRODUCTS = {
   },
   'ai-fleet-deployment': {
     id: 'ai-fleet-deployment',
-    name: 'AI Fleet Deployment Kit',
-    tagline: 'Deploy 6 autonomous AI workers on Cloudflare — free tier, zero DevOps',
-    description: 'Skip months of trial and error. Get production-tested Cloudflare Worker templates for building an autonomous AI fleet: health monitoring, revenue tracking, content generation, task execution, and market intelligence. All running on free tier with D1 database and KV storage.',
+    name: 'AI Fleet Deployment Kit | AI 艦隊部署套件',
+    tagline: 'Deploy 6 autonomous AI workers on Cloudflare — free tier, zero DevOps | 在 Cloudflare 上部署 6 個自主 AI 工作者 — 免費方案、零 DevOps',
+    description: 'Skip months of trial and error. Production-tested Cloudflare Worker templates for an autonomous AI fleet: health monitoring, revenue tracking, content generation, task execution, and market intelligence. All on free tier. | 跳過數月的摸索。正式環境驗證的 Cloudflare Worker 模板，打造自主 AI 艦隊：健康監控、營收追蹤、內容生成、任務執行與市場情報。全部在免費方案上運行。',
     features: [
-      '☁️ 6 production Worker templates — tested at scale, battle-hardened',
-      '🗄️ D1 database schemas — fleet_tasks, intel_feed, revenue_ledger, metrics',
-      '🔄 Cron scheduling — 2min to 30min intervals, fully autonomous',
-      '🛡️ Self-healing patterns — auto-restart, error escalation, SLA tracking',
-      '💰 Revenue sentinel — auto-detect orders, track income, daily reports',
-      '📊 Fleet dashboard API — JSON endpoints for monitoring all workers',
+      '☁️ 6 production Worker templates — tested at scale, battle-hardened | 6 個正式環境 Worker 模板 — 經過大規模測試、久經考驗',
+      '🗄️ D1 database schemas — fleet_tasks, intel_feed, revenue_ledger, metrics | D1 資料庫結構 — fleet_tasks、intel_feed、revenue_ledger、metrics',
+      '🔄 Cron scheduling — 2min to 30min intervals, fully autonomous | Cron 排程 — 2 分鐘到 30 分鐘間隔、完全自主',
+      '🛡️ Self-healing patterns — auto-restart, error escalation, SLA tracking | 自我修復模式 — 自動重啟、錯誤升級、SLA 追蹤',
+      '💰 Revenue sentinel — auto-detect orders, track income, daily reports | 營收哨兵 — 自動偵測訂單、追蹤收入、每日報告',
+      '📊 Fleet dashboard API — JSON endpoints for monitoring all workers | 艦隊儀表板 API — 用於監控所有 Workers 的 JSON 端點',
     ],
     price_usd: 39,
     price_jpy: 5800,
@@ -320,16 +320,16 @@ const PRODUCTS = {
   },
   'claude-code-pro-toolkit': {
     id: 'claude-code-pro-toolkit',
-    name: 'Claude Code Pro Toolkit',
-    tagline: 'Power-user toolkit: custom hooks, skills, agents, and plugins for Claude Code',
-    description: 'Everything you need to 10x your Claude Code productivity. Includes 20+ battle-tested hooks for preventing common mistakes, 15+ custom skills for repetitive tasks, agent configurations for autonomous coding, and plugin templates. Based on 500+ hours of production Claude Code usage.',
+    name: 'Claude Code Pro Toolkit | Claude Code 專業版工具包',
+    tagline: 'Power-user toolkit: custom hooks, skills, agents, and plugins | 進階使用者工具包：自訂鉤子、技能、代理與外掛',
+    description: 'Everything you need to 10x your Claude Code productivity. Includes 20+ hooks, 15+ custom skills, agent configurations, and plugin templates. Based on 500+ hours of production usage. | 讓 Claude Code 生產力提升 10 倍的一切所需。包含 20+ 鉤子、15+ 自訂技能、代理設定及外掛模板。基於 500+ 小時正式環境使用經驗。',
     features: [
-      '🪝 20+ production hooks — pre-commit validation, security checks, auto-formatting',
-      '⚡ 15+ custom skills — /deploy, /review-pr, /commit, /test-all, and more',
-      '🤖 Agent configs — autonomous coding agents with guardrails',
-      '🔌 Plugin templates — create and distribute your own Claude Code extensions',
-      '📋 CLAUDE.md templates — project memory that actually works',
-      '📖 Power-user guide — keyboard shortcuts, context management, parallel agents',
+      '🪝 20+ production hooks — pre-commit validation, security checks, auto-formatting | 20+ 正式環境鉤子 — 提交前驗證、安全檢查、自動格式化',
+      '⚡ 15+ custom skills — /deploy, /review-pr, /commit, /test-all, and more | 15+ 自訂技能 — /deploy、/review-pr、/commit、/test-all 等',
+      '🤖 Agent configs — autonomous coding agents with guardrails | 代理設定 — 具有防護欄的自主程式設計代理',
+      '🔌 Plugin templates — create and distribute your own Claude Code extensions | 外掛模板 — 建立並散佈你自己的 Claude Code 擴充',
+      '📋 CLAUDE.md templates — project memory that actually works | CLAUDE.md 模板 — 真正有效的專案記憶',
+      '📖 Power-user guide — keyboard shortcuts, context management, parallel agents | 進階使用者指南 — 鍵盤快捷鍵、上下文管理、平行代理',
     ],
     price_usd: 29,
     price_jpy: 4480,
@@ -388,7 +388,7 @@ function htmlResponse(html, status = 200) {
 // ============================================================
 function baseHTML(title, body, extra = '') {
   return `<!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -446,7 +446,7 @@ ${body}
   <span style="display:inline-block; background:#1a1a1a; border:1px solid #333; padding:4px 10px; border-radius:6px; font-size:0.7rem; color:#888; margin:2px;">🅿️ PayPal</span>
   <span style="display:inline-block; background:#1a1a1a; border:1px solid #333; padding:4px 10px; border-radius:6px; font-size:0.7rem; color:#888; margin:2px;">💳 Card</span>
   <span style="display:inline-block; background:#1a1a1a; border:1px solid #333; padding:4px 10px; border-radius:6px; font-size:0.7rem; color:#888; margin:2px;">₿ Crypto</span>
-  <span style="display:inline-block; background:#1a1a1a; border:1px solid #333; padding:4px 10px; border-radius:6px; font-size:0.7rem; color:#888; margin:2px;">🔒 SSL Secured</span>
+  <span style="display:inline-block; background:#1a1a1a; border:1px solid #333; padding:4px 10px; border-radius:6px; font-size:0.7rem; color:#888; margin:2px;">🔒 SSL Secured | SSL 安全加密</span>
 </div>
 <p style="margin-bottom:12px;">
   <a href="https://openclaw-intel-mcp.yagami8095.workers.dev/mcp">📊 Intel MCP</a> &middot;
@@ -455,8 +455,8 @@ ${body}
   <a href="https://note.com/yedanyagami">📝 note.com</a>
 </p>
 <p>&copy; 2026 OpenClaw Intelligence</p>
-<p style="color:#444; font-size:0.75rem; margin-top:6px;">Taichung, Taiwan &middot; Yagami8095@gmail.com</p>
-<p style="color:#333; font-size:0.65rem; margin-top:4px;">Powered by Cloudflare Workers &middot; MCP Protocol 2025-03-26</p>
+<p style="color:#444; font-size:0.75rem; margin-top:6px;">Taichung, Taiwan | 台灣台中 &middot; Yagami8095@gmail.com</p>
+<p style="color:#333; font-size:0.65rem; margin-top:4px;">Powered by Cloudflare Workers | 由 Cloudflare Workers 驅動 &middot; MCP Protocol 2025-03-26</p>
 </footer>
 </body>
 </html>`;
@@ -469,7 +469,7 @@ function catalogPage(env) {
     <div class="product-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <span class="badge">${p.badge}</span>
-        <span style="font-size:0.7rem; color:#666;">${isApi ? 'Instant API Key' : 'Instant Download'} &middot; ${p.format}</span>
+        <span style="font-size:0.7rem; color:#666;">${isApi ? 'Instant API Key | 即時 API 金鑰' : 'Instant Download | 即時下載'} &middot; ${p.format}</span>
       </div>
       <h2 class="product-title">${p.emoji} ${p.name}</h2>
       <p class="product-tagline">${p.tagline}</p>
@@ -479,7 +479,7 @@ function catalogPage(env) {
       </div>
       <p style="color:#aaa; margin-bottom:16px;">${p.description}</p>
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <a href="/products/${p.id}" class="btn btn-stripe">View Details &rarr;</a>
+        <a href="/products/${p.id}" class="btn btn-stripe">View Details | 查看詳情 &rarr;</a>
         ${p.stripe_link ? `<a href="${p.stripe_link}" class="btn" style="background:#ff4500;color:#fff;text-decoration:none;font-size:0.85rem;padding:10px 16px;" target="_blank">Buy Now &rarr;</a>` : ''}
         <div style="display:flex; gap:4px; flex-wrap:wrap;">
           <span style="font-size:0.65rem; color:#555; background:#111; padding:2px 8px; border-radius:4px;">PayPal</span>
@@ -490,25 +490,49 @@ function catalogPage(env) {
     </div>`;
   }).join('');
 
-  return baseHTML('AI Digital Products & MCP Intelligence Tools', `
+  return baseHTML('AI Digital Products & MCP Intelligence Tools | AI 數位產品與 MCP 情報工具', `
     <div class="hero">
-      <h1>🧠 AI Intelligence Tools & Digital Arsenal</h1>
+      <h1>🧠 AI Intelligence Tools & Digital Arsenal | AI 情報工具與數位軍火庫</h1>
       <p>MCP-native market intelligence, battle-tested AI prompts, and automation templates.<br>
       Built for AI agents. Used by developers. Powered by Cloudflare.</p>
       <p style="color:#888; font-size:0.85rem; margin-top:8px;">MCP 原生市場情報、實戰 AI 提示詞、自動化模板 — 為 AI 代理而生<br>
       MCP対応マーケットインテリジェンス・実戦AIプロンプト・自動化テンプレート</p>
       <div style="margin-top:24px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">🔌 MCP Protocol</span>
-        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">⚡ Instant Delivery</span>
-        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">🔒 Multi-Payment</span>
+        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">🔌 MCP Protocol | MCP 協議</span>
+        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">⚡ Instant Delivery | 即時交付</span>
+        <span style="background:rgba(255,107,53,0.15); border:1px solid rgba(255,107,53,0.3); padding:6px 14px; border-radius:8px; font-size:0.8rem; color:#ff6b35;">🔒 Multi-Payment | 多元支付</span>
       </div>
     </div>
     <div class="container">
       <div class="stats">
-        <div class="stat"><div class="stat-num">9</div><div class="stat-label">MCP Servers</div></div>
-        <div class="stat"><div class="stat-num">49</div><div class="stat-label">AI Tools</div></div>
-        <div class="stat"><div class="stat-num">12</div><div class="stat-label">Products</div></div>
-        <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Always On</div></div>
+        <div class="stat"><div class="stat-num">9</div><div class="stat-label">MCP Servers | MCP 伺服器</div></div>
+        <div class="stat"><div class="stat-num">49</div><div class="stat-label">AI Tools | AI 工具</div></div>
+        <div class="stat"><div class="stat-num">15</div><div class="stat-label">Products | 產品</div></div>
+        <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Always On | 永不停歇</div></div>
+      </div>
+      <div style="background:linear-gradient(135deg,#ff1744,#d500f9);border-radius:12px;padding:24px;margin:24px 0;text-align:center;border:2px solid #ff1744;position:relative;overflow:hidden;animation:pulse 2s infinite;">
+        <style>@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(255,23,68,0.3)}50%{box-shadow:0 0 40px rgba(255,23,68,0.6)}}</style>
+        <div style="position:absolute;top:10px;right:-30px;background:#fff;color:#ff1744;padding:4px 40px;font-size:0.75rem;font-weight:bold;transform:rotate(45deg);letter-spacing:2px;">FLASH SALE</div>
+        <p style="color:rgba(255,255,255,0.8);font-size:0.8rem;letter-spacing:3px;margin-bottom:8px;">LIMITED TIME OFFER | 限時優惠</p>
+        <h2 style="color:#fff;margin-bottom:8px;font-size:1.6rem;">All 49 AI Tools — Just $9 (One-Time) | 全部 49 個 AI 工具 — 僅 $9（一次性）</h2>
+        <p style="color:rgba(255,255,255,0.9);margin-bottom:16px;font-size:1rem;">9 MCP servers. 1000 calls/day. No subscription. No recurring fees.<br><span style="font-size:0.9rem;">9 個 MCP 伺服器。每日 1000 次呼叫。無訂閱。無月費。</span></p>
+        <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+          <div style="background:rgba(0,0,0,0.3);padding:12px 20px;border-radius:8px;">
+            <span style="text-decoration:line-through;color:rgba(255,255,255,0.5);font-size:1.1rem;">$49</span>
+            <span style="color:#FFD700;font-size:1.8rem;font-weight:bold;margin-left:8px;">$9</span>
+          </div>
+          <span style="color:#FFD700;font-size:0.9rem;font-weight:bold;">Save 82% | 節省 82%</span>
+        </div>
+        <a href="/products/ecosystem-pro" class="btn" style="background:#FFD700;color:#1a1a2e;font-size:1.1rem;padding:14px 40px;text-decoration:none;display:inline-block;border-radius:8px;font-weight:bold;box-shadow:0 4px 15px rgba(255,215,0,0.4);">Get Pro Now | 立即獲取 &rarr;</a>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:12px;">Works with Claude Code, Cursor, Windsurf, Cline | 支援 Claude Code、Cursor、Windsurf、Cline</p>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#FFD700,#FF8C00);border-radius:12px;padding:20px;margin:24px 0;text-align:center;border:2px solid #FFD700;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-5px;right:-5px;background:#ff0000;color:#fff;padding:4px 20px;font-size:0.75rem;font-weight:bold;transform:rotate(45deg);transform-origin:center;letter-spacing:1px;">BEST DEAL</div>
+        <h2 style="color:#1a1a2e;margin-bottom:8px;font-size:1.4rem;">Enterprise Bundle $99 — Save 82% | 企業套裝 $99 — 節省 82%</h2>
+        <p style="color:#333;margin-bottom:12px;font-size:0.95rem;">All 15 products + All 9 MCP servers + 10,000 calls/day. Worth $544 individually.<br><span style="font-size:0.85rem;color:#555;">全部 15 個產品 + 全部 9 個 MCP 伺服器 + 每日 10,000 次呼叫。單買價值 $544。</span></p>
+        <a href="/products/enterprise-bundle" class="btn" style="background:#1a1a2e;color:#FFD700;font-size:1rem;padding:12px 36px;text-decoration:none;display:inline-block;border-radius:8px;font-weight:bold;">Get Enterprise Bundle | 立即購買 &rarr;</a>
+        <p style="color:#555;font-size:0.7rem;margin-top:8px;">Trusted by AI developers worldwide | 全球 AI 開發者信賴</p>
       </div>
       <div style="background:linear-gradient(135deg,#ff6b35,#ff4500);border-radius:12px;padding:24px;margin:24px 0;text-align:center;">
         <h2 style="color:#fff;margin-bottom:12px;">Try All 49 Tools Free for 7 Days</h2>
@@ -518,16 +542,16 @@ function catalogPage(env) {
       </div>
 
       <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:24px; margin:24px 0;">
-        <h3 style="color:#fff; margin-bottom:16px; text-align:center;">🔌 Free MCP Servers — Connect in Seconds</h3>
+        <h3 style="color:#fff; margin-bottom:16px; text-align:center;">🔌 Free MCP Servers — Connect in Seconds | 免費 MCP 伺服器 — 秒速連接</h3>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
           <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
             <p style="color:#ff6b35; font-weight:bold;">📊 OpenClaw Intel</p>
-            <p style="color:#888; font-size:0.85rem; margin:8px 0;">AI market intelligence — GitHub stars, releases, growth trends for Claude Code, Cursor, Devin, and more.</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">AI market intelligence — GitHub stars, releases, growth trends. | AI 市場情報 — GitHub 星數、版本、成長趨勢。</p>
             <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://openclaw-intel-mcp.yagami8095.workers.dev/mcp</code>
           </div>
           <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
             <p style="color:#9c27b0; font-weight:bold;">🔮 OpenClaw Fortune</p>
-            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Daily zodiac horoscope + tarot readings for all 12 signs. Zero setup, pure computation.</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Daily zodiac horoscope + tarot readings for all 12 signs. | 每日星座運勢 + 塔羅牌占卜，12 星座全覆蓋。</p>
             <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp</code>
           </div>
         </div>
@@ -594,11 +618,11 @@ function productPage(product, env) {
     <a href="https://paypal.me/Yagami8095/${product.price_usd}" class="btn btn-paypal" target="_blank" style="background:#003087;">🅿️ PayPal.me — $${product.price_usd}</a>`;
 
   const featuresList = product.features.map(f => `<li>${f}</li>`).join('');
-  const deliveryLabel = isApiKey ? 'Instant API Key' : '即時ダウンロード';
+  const deliveryLabel = isApiKey ? 'Instant API Key | 即時 API 金鑰' : 'Instant Download | 即時下載';
 
   return baseHTML(product.name, `
     <div class="container" style="padding-top:40px;">
-      <a href="/" style="color:#888;">&larr; Back to Store</a>
+      <a href="/" style="color:#888;">&larr; Back to Store | 返回商店</a>
       <div class="product-card" style="margin-top:20px; border-color:#ff6b35;">
         <span class="badge">${product.badge}</span>
         <h1 class="product-title" style="font-size:1.8rem;">${product.emoji} ${product.name}</h1>
@@ -612,17 +636,17 @@ function productPage(product, env) {
 
         <p style="color:#ccc; font-size:1.05rem; margin:20px 0;">${product.description}</p>
 
-        <h3 style="color:#fff; margin:24px 0 12px;">📦 ${isApiKey ? 'What You Get' : '収録内容'}</h3>
+        <h3 style="color:#fff; margin:24px 0 12px;">📦 ${isApiKey ? 'What You Get | 你將獲得' : 'What\'s Included | 收錄內容'}</h3>
         <ul class="product-features">${featuresList}</ul>
 
         <!-- Payment Methods -->
         <div style="margin-top:32px;">
-          <h3 style="color:#fff; margin-bottom:16px;">💰 Choose Payment Method</h3>
+          <h3 style="color:#fff; margin-bottom:16px;">💰 Choose Payment Method | 選擇付款方式</h3>
           <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
             <span style="background:#1a1a1a; border:1px solid #333; padding:4px 12px; border-radius:6px; font-size:0.75rem; color:#aaa;">🅿️ PayPal</span>
             ${hasStripe ? '<span style="background:#1a1a1a; border:1px solid #333; padding:4px 12px; border-radius:6px; font-size:0.75rem; color:#aaa;">💳 Card</span>' : ''}
             <span style="background:#1a1a1a; border:1px solid #333; padding:4px 12px; border-radius:6px; font-size:0.75rem; color:#aaa;">₿ Crypto</span>
-            <span style="background:#1a1a1a; border:1px solid #333; padding:4px 12px; border-radius:6px; font-size:0.75rem; color:#aaa;">🔒 Secure</span>
+            <span style="background:#1a1a1a; border:1px solid #333; padding:4px 12px; border-radius:6px; font-size:0.75rem; color:#aaa;">🔒 Secure | 安全</span>
           </div>
           <div class="payment-buttons">
             ${paypalBtn}
@@ -634,31 +658,31 @@ function productPage(product, env) {
       </div>
 
       <div class="guarantee">
-        <h3>✅ ${isApiKey ? 'Guarantee' : '安心保証'}</h3>
-        <p>${isApiKey ? 'Instant API key delivery after payment. 1000 calls/day. Works with any MCP client.' : '購入後すぐにダウンロード可能。全プロンプトをそのままコピペして使えます。'}</p>
-        <p style="color:#888; margin-top:8px; font-size:0.85rem;">${isApiKey ? 'Questions? Email Yagami8095@gmail.com' : '※デジタル商品のため返品不可。内容に不満がある場合はご連絡ください。'}</p>
+        <h3>✅ Guarantee | 保證</h3>
+        <p>${isApiKey ? 'Instant API key delivery after payment. 1000 calls/day. Works with any MCP client. | 付款後即時交付 API 金鑰。每日 1000 次呼叫。支援任何 MCP 用戶端。' : 'Instant download after purchase. Copy & paste ready. | 購買後即可下載。複製貼上即可使用。'}</p>
+        <p style="color:#888; margin-top:8px; font-size:0.85rem;">${isApiKey ? 'Questions? Email Yagami8095@gmail.com | 有問題？Email Yagami8095@gmail.com' : 'Digital product — no refunds. Contact us if unsatisfied. | 數位商品不可退款。如有不滿請聯繫我們。'}</p>
       </div>
 
       <div class="testimonial">
         <p>${isApiKey
-          ? '"OpenClaw Intel gives me real-time data on AI tool adoption. Essential for staying ahead of the market."'
-          : '「このプロンプト集のおかげで、毎日の業務効率が劇的に改善しました。特にコードレビューとSEO記事作成のプロンプトは神。」'}</p>
-        <p style="color:#ff6b35; margin-top:8px; font-style:normal;">${isApiKey ? '— AI Developer' : '— AIエンジニア T.K.さん'}</p>
+          ? '"OpenClaw Intel gives me real-time data on AI tool adoption. Essential for staying ahead of the market." | 「OpenClaw Intel 給我 AI 工具採用的即時數據，是保持市場領先的必備工具。」'
+          : '"This prompt collection dramatically improved my daily workflow. The code review and SEO prompts are game-changers." | 「這個提示詞集大幅改善了我的日常工作效率。程式碼審查和 SEO 提示詞堪稱神器。」'}</p>
+        <p style="color:#ff6b35; margin-top:8px; font-style:normal;">${isApiKey ? '— AI Developer | AI 開發者' : '— AI Engineer T.K. | AI 工程師 T.K.'}</p>
       </div>
 
       <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:24px; margin:24px 0;">
-        <h3 style="color:#fff; margin-bottom:12px;">🎯 ${isApiKey ? 'Perfect For' : 'こんな方におすすめ'}</h3>
+        <h3 style="color:#fff; margin-bottom:12px;">🎯 Perfect For | 適合對象</h3>
         <ul style="list-style:none; padding:0;">
           ${isApiKey ? `
-          <li style="padding:6px 0;">✅ AI developers building competitive intelligence into their apps</li>
-          <li style="padding:6px 0;">✅ Teams tracking AI tool adoption (GitHub stars, releases, growth)</li>
-          <li style="padding:6px 0;">✅ Researchers monitoring the AI agent ecosystem in real-time</li>
-          <li style="padding:6px 0;">✅ Anyone using Claude Code, Cursor, Windsurf, or Cline who wants market data</li>
+          <li style="padding:6px 0;">✅ AI developers building competitive intelligence into their apps | 將競爭情報整合進應用的 AI 開發者</li>
+          <li style="padding:6px 0;">✅ Teams tracking AI tool adoption (GitHub stars, releases, growth) | 追蹤 AI 工具採用情況的團隊</li>
+          <li style="padding:6px 0;">✅ Researchers monitoring the AI agent ecosystem in real-time | 即時監控 AI 代理生態系的研究者</li>
+          <li style="padding:6px 0;">✅ Anyone using Claude Code, Cursor, Windsurf, or Cline who wants market data | 使用 Claude Code、Cursor 等工具且需要市場數據的人</li>
           ` : `
-          <li style="padding:6px 0;">✅ AIを業務に活用したいが、プロンプトの書き方がわからない</li>
-          <li style="padding:6px 0;">✅ ChatGPT/Claudeを使っているが、もっと効率的に使いたい</li>
-          <li style="padding:6px 0;">✅ エンジニア・マーケター・ライターとして生産性を上げたい</li>
-          <li style="padding:6px 0;">✅ 実際に現場で使える「実戦的な」プロンプトが欲しい</li>
+          <li style="padding:6px 0;">✅ Want to leverage AI at work but don't know how to write prompts | 想在工作中運用 AI 但不知如何撰寫提示詞</li>
+          <li style="padding:6px 0;">✅ Using ChatGPT/Claude but want to be more efficient | 正在使用 ChatGPT/Claude 但想更有效率</li>
+          <li style="padding:6px 0;">✅ Engineers, marketers, and writers seeking productivity gains | 工程師、行銷人員、寫手追求生產力提升</li>
+          <li style="padding:6px 0;">✅ Need practical, battle-tested prompts for real work | 需要實戰型、經過驗證的提示詞</li>
           `}
         </ul>
       </div>
@@ -667,25 +691,25 @@ function productPage(product, env) {
 }
 
 function successPage(product, downloadToken) {
-  return baseHTML('購入完了', `
+  return baseHTML('Purchase Complete | 購買完成', `
     <div class="container" style="padding-top:40px;">
       <div class="success-box">
         <div style="font-size:4rem; margin-bottom:16px;">🎉</div>
-        <h1>ご購入ありがとうございます！</h1>
-        <p style="color:#c8e6c9; margin-top:12px;">「${product.name}」のダウンロード準備が完了しました。</p>
+        <h1>Thank You for Your Purchase! | 感謝您的購買！</h1>
+        <p style="color:#c8e6c9; margin-top:12px;">Your download for "${product.name}" is ready. | 「${product.name}」已準備好下載。</p>
       </div>
 
       <div style="text-align:center; margin:32px 0;">
-        <a href="/download/${downloadToken}" class="btn btn-download">📥 今すぐダウンロード</a>
-        <p style="color:#888; margin-top:12px; font-size:0.85rem;">※ダウンロードリンクは24時間有効です</p>
+        <a href="/download/${downloadToken}" class="btn btn-download">📥 Download Now | 立即下載</a>
+        <p style="color:#888; margin-top:12px; font-size:0.85rem;">Download link is valid for 24 hours. | 下載連結 24 小時內有效。</p>
       </div>
 
       <div class="product-card" style="text-align:center;">
-        <h3 style="color:#fff; margin-bottom:16px;">📣 もっとAI活用情報が欲しい方へ</h3>
-        <p style="margin-bottom:16px;">毎日のAI活用Tips、最新ツール情報、実践テクニックを発信中！</p>
+        <h3 style="color:#fff; margin-bottom:16px;">📣 Want More AI Tips? | 想要更多 AI 技巧？</h3>
+        <p style="margin-bottom:16px;">Daily AI tips, latest tool updates, and practical techniques. | 每日 AI 技巧、最新工具資訊及實用技術。</p>
         <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <a href="https://note.com/yedanyagami" class="btn" style="background:#4caf50; color:#fff;" target="_blank">📝 note.comをフォロー</a>
-          <a href="https://fortune-api.yagami8095.workers.dev" class="btn" style="background:#9c27b0; color:#fff;" target="_blank">🔮 毎日の占い</a>
+          <a href="https://note.com/yedanyagami" class="btn" style="background:#4caf50; color:#fff;" target="_blank">📝 Follow on note.com | 追蹤 note.com</a>
+          <a href="https://fortune-api.yagami8095.workers.dev" class="btn" style="background:#9c27b0; color:#fff;" target="_blank">🔮 Daily Fortune | 每日占卜</a>
         </div>
       </div>
     </div>
@@ -693,22 +717,22 @@ function successPage(product, downloadToken) {
 }
 
 function apiKeySuccessPage(product, apiKey) {
-  return baseHTML('API Key Provisioned', `
+  return baseHTML('API Key Provisioned | API 金鑰已發放', `
     <div class="container" style="padding-top:40px;">
       <div class="success-box">
         <div style="font-size:4rem; margin-bottom:16px;">🔑</div>
-        <h1>Your Pro API Key is Ready!</h1>
-        <p style="color:#c8e6c9; margin-top:12px;">OpenClaw Intel Pro — full market intelligence unlocked.</p>
+        <h1>Your Pro API Key is Ready! | 你的專業版 API 金鑰已就緒！</h1>
+        <p style="color:#c8e6c9; margin-top:12px;">OpenClaw Intel Pro — full market intelligence unlocked. | OpenClaw 情報專業版 — 完整市場情報已解鎖。</p>
       </div>
 
       <div class="product-card" style="border-color:#ff6b35;">
-        <h3 style="color:#fff; margin-bottom:12px;">Your API Key</h3>
+        <h3 style="color:#fff; margin-bottom:12px;">Your API Key | 你的 API 金鑰</h3>
         <div style="background:#000; border:2px solid #ff6b35; border-radius:8px; padding:16px; margin:12px 0; word-break:break-all; font-family:monospace; font-size:1.1rem; color:#4caf50;">
           ${apiKey}
         </div>
-        <p style="color:#ff6b35; font-size:0.85rem; margin-top:8px;">⚠️ Save this key now! It will not be shown again.</p>
+        <p style="color:#ff6b35; font-size:0.85rem; margin-top:8px;">⚠️ Save this key now! It will not be shown again. | 立即儲存此金鑰！將不會再次顯示。</p>
 
-        <h3 style="color:#fff; margin:24px 0 12px;">Quick Setup — MCP Client</h3>
+        <h3 style="color:#fff; margin:24px 0 12px;">Quick Setup — MCP Client | 快速設定 — MCP 用戶端</h3>
         <pre style="background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:16px; overflow-x:auto; color:#c9d1d9; font-size:0.85rem;">{
   "mcpServers": {
     "openclaw-intel": {
@@ -718,23 +742,23 @@ function apiKeySuccessPage(product, apiKey) {
   }
 }</pre>
 
-        <h3 style="color:#fff; margin:24px 0 12px;">Quick Setup — REST API</h3>
+        <h3 style="color:#fff; margin:24px 0 12px;">Quick Setup — REST API | 快速設定 — REST API</h3>
         <pre style="background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:16px; overflow-x:auto; color:#c9d1d9; font-size:0.85rem;">curl https://openclaw-intel-api.yagami8095.workers.dev/api/reports/latest \\
   -H "Authorization: Bearer ${apiKey}"</pre>
 
         <div style="margin-top:24px;">
-          <h3 style="color:#fff; margin-bottom:12px;">What You Get</h3>
+          <h3 style="color:#fff; margin-bottom:12px;">What You Get | 你將獲得</h3>
           <ul class="product-features">
-            <li>📊 Full market intelligence reports (not just summaries)</li>
-            <li>🔑 1000 API calls per day</li>
-            <li>⚡ Priority access to new tools</li>
-            <li>🤖 Works with Claude Code, Cursor, Windsurf, Cline</li>
+            <li>📊 Full market intelligence reports (not just summaries) | 完整市場情報報告（非僅摘要）</li>
+            <li>🔑 1000 API calls per day | 每日 1000 次 API 呼叫</li>
+            <li>⚡ Priority access to new tools | 優先存取新工具</li>
+            <li>🤖 Works with Claude Code, Cursor, Windsurf, Cline | 支援 Claude Code、Cursor、Windsurf、Cline</li>
           </ul>
         </div>
       </div>
 
       <div class="product-card" style="text-align:center;">
-        <h3 style="color:#fff; margin-bottom:16px;">Also Try</h3>
+        <h3 style="color:#fff; margin-bottom:16px;">Also Try | 也試試看</h3>
         <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
           <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="btn" style="background:#9c27b0; color:#fff;" target="_blank">🔮 Fortune MCP</a>
           <a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="btn" style="background:#1565c0; color:#fff;" target="_blank">📊 Intel MCP</a>
@@ -749,8 +773,8 @@ function notFoundPage() {
   return baseHTML('404', `
     <div class="container" style="text-align:center; padding:80px 20px;">
       <h1 style="font-size:4rem; color:#ff6b35;">404</h1>
-      <p style="color:#888; margin:16px 0;">お探しのページが見つかりません。</p>
-      <a href="/" class="btn btn-stripe">ストアに戻る</a>
+      <p style="color:#888; margin:16px 0;">Page not found. | 找不到您要的頁面。</p>
+      <a href="/" class="btn btn-stripe">Back to Store | 返回商店</a>
     </div>
   `);
 }
@@ -771,13 +795,13 @@ async function handleProduct(productId, env) {
 
 async function handleStripeCheckout(request, env) {
   if (!env.STRIPE_SECRET_KEY) {
-    return jsonResponse({ error: 'Stripe not configured' }, 500);
+    return jsonResponse({ error: 'Stripe not configured | Stripe 未設定' }, 500);
   }
 
   const formData = await request.formData();
   const productId = formData.get('product_id');
   const product = PRODUCTS[productId];
-  if (!product) return jsonResponse({ error: 'Product not found' }, 404);
+  if (!product) return jsonResponse({ error: 'Product not found | 找不到產品' }, 404);
 
   const baseUrl = new URL(request.url).origin;
   const orderId = generateOrderId();
@@ -928,23 +952,23 @@ async function handleDownload(token, env) {
   // Verify token
   const tokenData = await env.KV.get(`download:${token}`, { type: 'json' });
   if (!tokenData) {
-    return htmlResponse(baseHTML('リンク無効', `
+    return htmlResponse(baseHTML('Invalid Link | 連結無效', `
       <div class="container" style="text-align:center; padding:80px 20px;">
-        <h1 style="color:#ff6b35;">⏰ ダウンロードリンクが無効です</h1>
-        <p style="color:#888; margin:16px 0;">リンクの有効期限が切れているか、無効なリンクです。</p>
-        <p style="color:#888;">再度購入ページからお手続きください。</p>
-        <a href="/" class="btn btn-stripe" style="margin-top:20px;">ストアに戻る</a>
+        <h1 style="color:#ff6b35;">⏰ Download Link Invalid | 下載連結無效</h1>
+        <p style="color:#888; margin:16px 0;">The link has expired or is invalid. | 連結已過期或無效。</p>
+        <p style="color:#888;">Please purchase again from the store. | 請從商店重新購買。</p>
+        <a href="/" class="btn btn-stripe" style="margin-top:20px;">Back to Store | 返回商店</a>
       </div>
     `), 403);
   }
 
   // Check download limit
   if (tokenData.download_count >= tokenData.max_downloads) {
-    return htmlResponse(baseHTML('ダウンロード上限', `
+    return htmlResponse(baseHTML('Download Limit Reached | 下載次數已達上限', `
       <div class="container" style="text-align:center; padding:80px 20px;">
-        <h1 style="color:#ff6b35;">📥 ダウンロード回数の上限に達しました</h1>
-        <p style="color:#888; margin:16px 0;">最大${tokenData.max_downloads}回までダウンロード可能です。</p>
-        <p style="color:#888;">問題がある場合は Yagami8095@gmail.com までご連絡ください。</p>
+        <h1 style="color:#ff6b35;">📥 Download Limit Reached | 下載次數已達上限</h1>
+        <p style="color:#888; margin:16px 0;">Maximum ${tokenData.max_downloads} downloads allowed. | 最多可下載 ${tokenData.max_downloads} 次。</p>
+        <p style="color:#888;">Contact Yagami8095@gmail.com if you need help. | 如需協助請聯繫 Yagami8095@gmail.com。</p>
       </div>
     `), 403);
   }
@@ -1116,7 +1140,7 @@ async function verifyStripeSignature(body, sig, secret) {
 }
 
 async function handleStripeWebhook(request, env) {
-  if (!env.STRIPE_WEBHOOK_SECRET) return new Response('No webhook secret', { status: 400 });
+  if (!env.STRIPE_WEBHOOK_SECRET) return new Response('No webhook secret | 缺少 Webhook 密鑰', { status: 400 });
 
   const body = await request.text();
   const sig = request.headers.get('stripe-signature');
@@ -1131,7 +1155,7 @@ async function handleStripeWebhook(request, env) {
   try {
     event = JSON.parse(body);
   } catch (e) {
-    return new Response('Invalid JSON', { status: 400 });
+    return new Response('Invalid JSON | 無效的 JSON', { status: 400 });
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -1179,10 +1203,10 @@ function generatePromptCollectionHTML() {
   // This generates the prompt collection content inline
   // Used as fallback when KV doesn't have the content
   return `<!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>【保存版】実戦で使えるAIプロンプト50選</title>
+<title>50 Battle-Tested AI Prompts | 實戰 AI 提示詞 50 選</title>
 <style>
   @page { margin: 20mm; }
   body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7; background: #fff; }
@@ -1191,13 +1215,13 @@ function generatePromptCollectionHTML() {
 </style>
 </head>
 <body>
-<h1>🚀 実戦で使えるAIプロンプト50選</h1>
-<p class="subtitle">ChatGPT / Claude / DeepSeek 対応 — コピペですぐ使える実践テンプレート集</p>
-<p style="text-align:center; color:#999;">この製品は正規購入者のみ閲覧可能です。再配布禁止。</p>
+<h1>🚀 50 Battle-Tested AI Prompts | 實戰 AI 提示詞 50 選</h1>
+<p class="subtitle">ChatGPT / Claude / DeepSeek compatible — copy & paste ready | 複製貼上即可使用的實踐模板集</p>
+<p style="text-align:center; color:#999;">This product is for authorized purchasers only. Redistribution prohibited. | 本產品僅限正式購買者閱覽，禁止再散佈。</p>
 <p style="text-align:center; color:#999;">&copy; 2026 OpenClaw Intelligence</p>
 <hr style="margin:40px 0;">
-<p style="text-align:center;">コンテンツの読み込み中... KVからの取得をお待ちください。</p>
-<p style="text-align:center;">問題が続く場合: Yagami8095@gmail.com</p>
+<p style="text-align:center;">Loading content... Please wait. | 內容載入中…請稍候。</p>
+<p style="text-align:center;">If issues persist: Yagami8095@gmail.com | 如問題持續：Yagami8095@gmail.com</p>
 </body>
 </html>`;
 }
@@ -1262,7 +1286,7 @@ async function finopsTrack(env, serverName) {
     raw.total++;
     raw.by[serverName] = (raw.by[serverName] || 0) + 1;
     kv.put(key, JSON.stringify(raw), { expirationTtl: 172800 });
-    if (raw.total >= FINOPS_DAILY_STOP) return { ok: false, reason: 'Daily capacity reached. Try again tomorrow.', status: 503 };
+    if (raw.total >= FINOPS_DAILY_STOP) return { ok: false, reason: 'Daily capacity reached. Try again tomorrow. | 每日容量已滿。請明天再試。', status: 503 };
     if (raw.total >= FINOPS_DAILY_SLOW) return { ok: true, delay: 500 };
     if (raw.total >= FINOPS_DAILY_WARN) return { ok: true, warn: true };
     return { ok: true };
@@ -1298,7 +1322,7 @@ const GITHUB_USER_URL = 'https://api.github.com/user';
 // GET /auth/login → redirect to GitHub
 function handleOAuthLogin(env, url) {
   if (!env.GITHUB_CLIENT_ID) {
-    return jsonResponse({ error: 'OAuth not configured' }, 500);
+    return jsonResponse({ error: 'OAuth not configured | OAuth 未設定' }, 500);
   }
   const ref = url.searchParams.get('ref') || 'direct';
   const state = crypto.randomUUID();
@@ -1325,7 +1349,7 @@ function handleOAuthLogin(env, url) {
 async function handleOAuthCallback(request, env, url) {
   const code = url.searchParams.get('code');
   if (!code) {
-    return jsonResponse({ error: 'Missing authorization code' }, 400);
+    return jsonResponse({ error: 'Missing authorization code | 缺少授權碼' }, 400);
   }
 
   // Exchange code for access token
@@ -1392,7 +1416,7 @@ async function handleOAuthCallback(request, env, url) {
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OpenClaw Pro — Activated</title>
+<title>OpenClaw Pro — Activated | OpenClaw 專業版 — 已啟用</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
@@ -1414,17 +1438,17 @@ code{background:#222;padding:2px 6px;border-radius:3px;font-size:0.85em}
     <img src="${user.avatar_url}" alt="${user.login}">
     <div><strong>${user.name || user.login}</strong><br><span style="color:#888">@${user.login}</span></div>
   </div>
-  <p>Your Pro API key (click to copy):</p>
+  <p>Your Pro API key (click to copy): | 你的專業版 API 金鑰（點擊複製）：</p>
   <div class="key-box" onclick="navigator.clipboard.writeText(this.textContent.trim()).then(()=>this.style.borderColor='#0f0')">${proKey}</div>
   <div class="usage">
-    <strong>Usage:</strong> Add header <code>X-API-Key: ${proKey}</code> to any OpenClaw MCP request.<br>
-    <strong>Limit:</strong> 100 calls/day (vs 10-50 free)<br>
-    <strong>Expires:</strong> ${keyData.expires.split('T')[0]}<br>
-    <strong>Upgrade:</strong> <a href="https://paypal.me/Yagami8095/9" style="color:#ff6b35">Pay $9 for unlimited Pro</a>
+    <strong>Usage | 使用方式:</strong> Add header <code>X-API-Key: ${proKey}</code> to any OpenClaw MCP request. | 將此標頭加入任何 OpenClaw MCP 請求。<br>
+    <strong>Limit | 限制:</strong> 100 calls/day (vs 10-50 free) | 每日 100 次呼叫（免費版 10-50 次）<br>
+    <strong>Expires | 到期:</strong> ${keyData.expires.split('T')[0]}<br>
+    <strong>Upgrade | 升級:</strong> <a href="https://paypal.me/Yagami8095/9" style="color:#ff6b35">Pay $9 for unlimited Pro | 支付 $9 升級為無限專業版</a>
   </div>
   <div class="info">
-    After trial, upgrade to permanent Pro ($9 one-time) for 1000 calls/day across all 9 MCP servers.<br>
-    Servers: json-toolkit, regex-engine, color-palette, timestamp-converter, prompt-enhancer, agentforge, moltbook, fortune, intel
+    After trial, upgrade to permanent Pro ($9 one-time) for 1000 calls/day across all 9 MCP servers. | 試用結束後，升級為永久專業版（一次性 $9）即可每日 1000 次呼叫跨全部 9 個 MCP 伺服器。<br>
+    Servers | 伺服器: json-toolkit, regex-engine, color-palette, timestamp-converter, prompt-enhancer, agentforge, moltbook, fortune, intel
   </div>
 </div>
 </body></html>`;
@@ -1438,16 +1462,16 @@ code{background:#222;padding:2px 6px;border-radius:3px;font-size:0.85em}
 async function handleOAuthStatus(request, env) {
   const apiKey = request.headers.get('X-API-Key') || new URL(request.url).searchParams.get('key');
   if (!apiKey) {
-    return jsonResponse({ error: 'Provide X-API-Key header or ?key= param', authenticated: false }, 401);
+    return jsonResponse({ error: 'Provide X-API-Key header or ?key= param | 請提供 X-API-Key 標頭或 ?key= 參數', authenticated: false }, 401);
   }
 
   if (!env.KV) {
-    return jsonResponse({ error: 'KV not available', authenticated: false }, 503);
+    return jsonResponse({ error: 'KV not available | KV 不可用', authenticated: false }, 503);
   }
 
   const raw = await env.KV.get(`prokey:${apiKey}`);
   if (!raw) {
-    return jsonResponse({ error: 'Invalid or expired key', authenticated: false }, 401);
+    return jsonResponse({ error: 'Invalid or expired key | 無效或已過期的金鑰', authenticated: false }, 401);
   }
 
   const data = JSON.parse(raw);
@@ -1541,7 +1565,7 @@ export default {
     // Edge Defense
     const defense = await edgeDefense(request, env);
     if (defense.action === 'honeypot') return new Response('Not Found', { status: 404 });
-    if (defense.action === 'block') return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403, headers: { ...CORS, 'Content-Type': 'application/json' } });
+    if (defense.action === 'block') return new Response(JSON.stringify({ error: 'Access denied | 存取被拒' }), { status: 403, headers: { ...CORS, 'Content-Type': 'application/json' } });
 
     // FinOps Circuit Breaker
     const finops = await finopsTrack(env, 'product-store');
@@ -1641,11 +1665,11 @@ export default {
           payment_methods: ['paypal', 'crypto', ...(env.STRIPE_SECRET_KEY ? ['card'] : [])],
         }));
         return jsonResponse({
-          store: 'OpenClaw Digital Store',
+          store: 'OpenClaw Digital Store | OpenClaw 數位商店',
           products: catalog,
           payment_options: {
             paypal: { available: true, type: 'instant' },
-            crypto: { available: false, type: 'coming_soon', note: 'Crypto payments coming soon. Use PayPal for now.' },
+            crypto: { available: false, type: 'coming_soon', note: 'Crypto payments coming soon. Use PayPal for now. | 加密貨幣支付即將推出。目前請使用 PayPal。' },
             card: { available: !!env.STRIPE_SECRET_KEY, type: 'instant' },
           },
           mcp_servers: {
@@ -1664,15 +1688,15 @@ export default {
 
           const provisionableProducts = ['intel-api-pro', 'ecosystem-pro', 'enterprise-bundle', 'api-gateway-pro'];
           if (!provisionableProducts.includes(product_id)) {
-            return jsonResponse({ error: `Only these products support API provisioning: ${provisionableProducts.join(', ')}`, available: provisionableProducts }, 400);
+            return jsonResponse({ error: `Only these products support API provisioning | 僅以下產品支援 API 發放: ${provisionableProducts.join(', ')}`, available: provisionableProducts }, 400);
           }
 
           if (!payment_method || !payment_id) {
             return jsonResponse({
-              error: 'payment_method and payment_id required',
+              error: 'payment_method and payment_id required | 需要 payment_method 和 payment_id',
               accepted_methods: ['paypal_txn', 'crypto_txhash'],
               example: { product_id: 'intel-api-pro', payment_method: 'paypal_txn', payment_id: 'TXN_ID_HERE', email: 'your@email.com' },
-              note: 'Payment will be verified before key provisioning. For instant provisioning, use the PayPal checkout flow at /products/intel-api-pro',
+              note: 'Payment will be verified before key provisioning. For instant provisioning, use the PayPal checkout flow at /products/intel-api-pro | 付款將在金鑰發放前驗證。如需即時發放，請使用 /products/intel-api-pro 的 PayPal 結帳流程。',
             }, 400);
           }
 
@@ -1693,10 +1717,10 @@ export default {
 
           return jsonResponse({
             status: 'pending_verification',
-            message: 'Payment recorded. Your API key will be activated after payment verification (usually within 24 hours for crypto, instant for PayPal redirect flow).',
+            message: 'Payment recorded. Your API key will be activated after payment verification (usually within 24 hours for crypto, instant for PayPal redirect flow). | 付款已記錄。您的 API 金鑰將在付款驗證後啟用（加密貨幣通常 24 小時內，PayPal 重導流程則即時）。',
             order_id: orderId,
             key_preview: apiKey.slice(0, 12) + '...',
-            tip: `For INSTANT key provisioning, use the PayPal checkout at https://product-store.yagami8095.workers.dev/products/${product_id}`,
+            tip: `For INSTANT key provisioning, use the PayPal checkout at https://product-store.yagami8095.workers.dev/products/${product_id} | 如需即時金鑰發放，請使用 PayPal 結帳`,
             support: 'Yagami8095@gmail.com',
           });
         } catch (e) {
@@ -1731,6 +1755,29 @@ https://product-store.yagami8095.workers.dev/products/ecosystem-pro
           status: 200,
           headers: { 'Content-Type': 'text/plain; charset=utf-8', ...CORS }
         });
+      }
+
+      // 特定商取引法に基づく表示 (Japanese Specified Commercial Transactions Act)
+      if (path === '/tokushoho' || path === '/legal' || path === '/legal/tokushoho') {
+        return htmlResponse(baseHTML('Legal Disclosure | 特定商取引法に基づく表示 | OpenClaw', `
+<div style="max-width:800px;margin:60px auto;padding:20px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#e0e0e0;">
+<h1 style="font-size:28px;margin-bottom:30px;border-bottom:2px solid #6c5ce7;padding-bottom:15px;">Legal Disclosure | 特定商取引法に基づく表示</h1>
+<p style="color:#888;margin-bottom:30px;">Disclosure under the Act on Specified Commercial Transactions (Japan) | 依日本特定商取引法之揭露</p>
+<table style="width:100%;border-collapse:collapse;">
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;width:200px;vertical-align:top;">Seller | 販売業者 | 銷售業者</td><td style="padding:15px 10px;">OpenClaw (Sole Proprietorship | 個人事業)</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Operator | 運営責任者 | 營運負責人</td><td style="padding:15px 10px;">陳 芷謄</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Address | 所在地 | 地址</td><td style="padding:15px 10px;">〒340-0023 Saitama, Japan | 埼玉県草加市谷塚町</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Contact | 連絡先 | 聯繫方式</td><td style="padding:15px 10px;">Email: yedanyagamiai@gmail.com</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Pricing | 販売価格 | 售價</td><td style="padding:15px 10px;">Listed on each product page (tax included) | 各商品ページに記載（税込表示） | 標示於各產品頁面（含稅）</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Additional Fees | 商品代金以外の費用 | 額外費用</td><td style="padding:15px 10px;">None (digital product, no shipping) | なし（デジタル商品のため送料不要） | 無（數位商品，無需運費）</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Payment Methods | 支払方法 | 付款方式</td><td style="padding:15px 10px;">PayPal / Credit Card (via Stripe) / Crypto (USDC on Base) | PayPal / クレジットカード（Stripe経由）/ 暗号通貨 | PayPal / 信用卡（透過 Stripe）/ 加密貨幣（USDC on Base）</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Payment Timing | 支払時期 | 付款時間</td><td style="padding:15px 10px;">Instant payment at checkout | 注文時に即時決済 | 下單時即時付款</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Delivery | 商品の引渡時期 | 交付時間</td><td style="padding:15px 10px;">Instant download after payment (API keys issued immediately) | 決済完了後、即時ダウンロード可能 | 付款完成後即可下載（API 金鑰即時發放）</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Returns & Cancellations | 返品・キャンセル | 退貨與取消</td><td style="padding:15px 10px;">Due to the nature of digital products, returns/refunds are generally not accepted. Contact us within 7 days if there is a critical defect. | デジタル商品のため返品・返金は原則不可。重大な欠陥は7日以内にご連絡ください。 | 因數位商品性質，原則不接受退貨退款。如有重大瑕疵請於 7 日內聯繫。</td></tr>
+<tr style="border-bottom:1px solid #333;"><td style="padding:15px 10px;font-weight:bold;vertical-align:top;">Requirements | 動作環境 | 系統需求</td><td style="padding:15px 10px;">Internet connection, modern web browser | インターネット接続環境、Webブラウザ | 網路連線、現代網頁瀏覽器</td></tr>
+</table>
+<p style="margin-top:40px;color:#888;font-size:13px;">Last updated | 最後更新: 2026-03-07 | <a href="/" style="color:#6c5ce7;">Back to Store | 返回商店</a></p>
+</div>`));
       }
 
       return htmlResponse(notFoundPage(), 404);

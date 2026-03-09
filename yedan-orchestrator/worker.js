@@ -15,6 +15,7 @@ const FLEET_WORKERS = [
   { id: 'yedan-intel-ops', url: 'https://yedan-intel-ops.yagami8095.workers.dev' },
   { id: 'yedan-health-commander', url: 'https://yedan-health-commander.yagami8095.workers.dev' },
   { id: 'yedan-cloud-executor', url: 'https://yedan-cloud-executor.yagami8095.workers.dev' },
+  { id: 'dansin-gateway', url: 'http://161.33.7.159:18789' },
 ];
 
 const MCP_SERVERS = [

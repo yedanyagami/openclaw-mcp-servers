@@ -22,6 +22,9 @@ const ALL_ENDPOINTS = [
   { id: 'intel-ops', url: 'https://yedan-intel-ops.yagami8095.workers.dev/health', category: 'fleet' },
   { id: 'cloud-executor', url: 'https://yedan-cloud-executor.yagami8095.workers.dev/health', category: 'fleet' },
 
+  // DANSIN Cloud Brain (VM2 24/7)
+  { id: 'dansin-gateway', url: 'http://161.33.7.159/health', category: 'fleet' },
+
   // MCP Servers (Revenue-critical)
   { id: 'json-toolkit', url: 'https://json-toolkit-mcp.yagami8095.workers.dev/health', category: 'mcp' },
   { id: 'regex-engine', url: 'https://regex-engine-mcp.yagami8095.workers.dev/health', category: 'mcp' },
@@ -37,7 +40,7 @@ const ALL_ENDPOINTS = [
   { id: 'product-store', url: 'https://product-store.yagami8095.workers.dev/api/stats', category: 'production' },
   { id: 'fortune-api', url: 'https://fortune-api.yagami8095.workers.dev/health', category: 'production' },
   { id: 'intel-api', url: 'https://openclaw-intel-api.yagami8095.workers.dev/health', category: 'production' },
-  { id: 'bunshin', url: 'https://openclaw-mcp-servers.onrender.com/api/health', category: 'external' },
+  { id: 'bunshin', url: 'https://openclaw-mcp-servers.onrender.com/health', category: 'external' },
   { id: 'cf-browser', url: 'https://openclaw-browser.yagami8095.workers.dev/health', category: 'production' },
 ];
 
