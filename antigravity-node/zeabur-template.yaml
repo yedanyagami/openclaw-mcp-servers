@@ -1,0 +1,21 @@
+apiVersion: zeabur.com/v1
+kind: Template
+metadata:
+  name: antigravity-node4
+spec:
+  description: Antigravity Claude Proxy Node 4
+  services:
+    - name: antigravity-node4
+      icon: https://raw.githubusercontent.com/yedanyagamiai-cmd/openclaw-mcp-servers/main/antigravity-node/icon.png
+      template: PREBUILT
+      spec:
+        image: ghcr.io/yedanyagamiai-cmd/antigravity-node:latest
+        ports:
+          - id: web
+            port: 8080
+            type: HTTP
+        env:
+          PORT:
+            default: "8080"
+          NODE_ENV:
+            default: production
