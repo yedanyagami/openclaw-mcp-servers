@@ -27,7 +27,6 @@ const ECOSYSTEM = {
   intel_api:   'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page:    'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   paypal:      'https://paypal.me/Yagami8095/9',
-  store:       'https://product-store.yagami8095.workers.dev/products/ecosystem-pro',
 };
 
 const SERVER_INFO = { name: 'prompt-enhancer', version: '1.0.0' };
@@ -39,7 +38,7 @@ const VENDOR      = 'OpenClaw Intelligence';
 const TOOLS = [
   {
     name: 'enhance_prompt',
-    description: 'Take a basic prompt and return an optimized, enhanced version with clearer instructions, better structure, added constraints, and example format. FREE tool.',
+    description: 'Take a basic prompt and return an optimized, enhanced version with clearer instructions, better structure, added constraints, and example format. FREE tool. | 將基本提示詞優化為更清晰的指令、更好的結構、附加約束條件和範例格式。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -55,7 +54,7 @@ const TOOLS = [
   },
   {
     name: 'analyze_prompt',
-    description: 'Analyze a prompt for quality: clarity score (0-100), specificity score, potential issues, and improvement suggestions. FREE tool.',
+    description: 'Analyze a prompt for quality: clarity score (0-100), specificity score, potential issues, and improvement suggestions. FREE tool. | 分析提示詞品質：清晰度評分（0-100）、具體性評分、潛在問題及改進建議。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -66,7 +65,7 @@ const TOOLS = [
   },
   {
     name: 'convert_prompt_format',
-    description: 'Convert a prompt between formats: plain, xml, markdown, json. FREE tool.',
+    description: 'Convert a prompt between formats: plain, xml, markdown, json. FREE tool. | 在純文字、XML、Markdown、JSON 格式之間轉換提示詞。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -79,7 +78,7 @@ const TOOLS = [
   },
   {
     name: 'generate_system_prompt',
-    description: 'Generate a high-quality system prompt for a given role and task. FREE tool.',
+    description: 'Generate a high-quality system prompt for a given role and task. FREE tool. | 根據指定角色和任務生成高品質系統提示詞。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -93,7 +92,7 @@ const TOOLS = [
   },
   {
     name: 'prompt_template_library',
-    description: 'Browse 30+ curated, production-ready prompt templates by category (coding, analysis, writing, translation, debugging, data-extraction). PRO tool — requires api_key.',
+    description: 'Browse 30+ curated, production-ready prompt templates by category (coding, analysis, writing, translation, debugging, data-extraction). PRO tool — requires api_key. | 瀏覽 30+ 精選生產級提示詞模板，按類別分類（程式、分析、寫作、翻譯、除錯、資料擷取）。PRO 工具 — 需要 api_key。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -109,7 +108,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_pro_key',
-    description: 'Get purchase instructions for a Pro API key ($9 one-time). Unlocks prompt_template_library and higher rate limits (100 req/day). FREE tool.',
+    description: 'Get purchase instructions for a Pro API key ($9 one-time). Unlocks prompt_template_library and higher rate limits (1000 req/day). FREE tool. | 取得 Pro API 金鑰購買說明（$9 一次性付費）。解鎖提示詞模板庫及更高頻率限制（1000 次/天）。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1314,7 +1313,7 @@ function memoryRateLimit(ip) {
 async function checkRateLimit(env, identifier, isPro) {
   if (!env.KV) return memoryRateLimit(identifier);
 
-  const limit     = isPro ? 100 : 10;
+  const limit     = isPro ? 1000 : 20;
   const today     = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const key       = `rl:prompt:${identifier}:${today}`;
 
@@ -1425,7 +1424,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (10/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
         data: {
           upgradeSignal: true,
           upgrade_url:   ECOSYSTEM.pro_page,
@@ -1448,7 +1447,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (10/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
         data: {
           upgradeSignal: true,
           upgrade_url:   ECOSYSTEM.pro_page,
@@ -1473,7 +1472,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (10/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
         data: { upgradeSignal: true, upgrade_url: ECOSYSTEM.pro_page, paypal: ECOSYSTEM.paypal },
       };
     }
@@ -1490,7 +1489,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (10/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
         data: { upgradeSignal: true, upgrade_url: ECOSYSTEM.pro_page, paypal: ECOSYSTEM.paypal },
       };
     }
@@ -1539,7 +1538,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: 'Rate limit exceeded (100/day Pro). Resets at midnight UTC. x402: $0.05/call USDC on Base for unlimited.',
+        message: 'Rate limit exceeded (1000/day Pro). Resets at midnight UTC. x402: $0.05/call USDC on Base for unlimited.',
         data: { upgradeSignal: true, daily_limit: 100, tier: 'pro' },
       };
     }
@@ -1567,7 +1566,7 @@ async function dispatchTool(toolName, params, env, request) {
       price:          '$9 USD (one-time payment)',
       what_you_get: [
         'Unlock prompt_template_library (30+ professional templates across 6 categories)',
-        'Increased rate limit: 100 requests/day (vs 10 free)',
+        'Increased rate limit: 1000 requests/day (vs 20 free)',
         'Priority access to new templates as they are added',
         'Access to all future Pro tools in this MCP',
       ],
@@ -1606,7 +1605,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $9: paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro: $9 → 1000/day → paypal.me/Yagami8095/9`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }
@@ -1646,7 +1645,7 @@ async function handleMCPMethod(method, params, id, env, request) {
     try {
       const result = await dispatchTool(toolName, toolArgs, env, request);
       const rateLimitInfo = result?._meta
-        ? { remaining: result._meta.remaining_today, used: (result._meta.tier === 'pro' ? 100 : 10) - (result._meta.remaining_today ?? 0) }
+        ? { remaining: result._meta.remaining_today, used: (result._meta.tier === 'pro' ? 1000 : 20) - (result._meta.remaining_today ?? 0) }
         : null;
       const response = rpcSuccess(id, {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
@@ -1855,6 +1854,7 @@ function landingPageHTML() {
     <div class="badge">OpenClaw Intelligence</div>
     <h1>Prompt Enhancer MCP</h1>
     <p class="tagline">The meta-AI tool for AI agents. Enhance, analyze, convert, and generate prompts — programmatically, at scale.</p>
+    <p class="tagline" style="font-size:1rem;opacity:0.7;margin-top:-20px;">AI 代理的元工具。以程式化方式大規模優化、分析、轉換和生成提示詞。</p>
     <div class="cta-row">
       <a href="/mcp" class="btn btn-primary">Connect via MCP</a>
       <a href="${ECOSYSTEM.pro_page}" class="btn btn-outline">Get Pro — $9</a>
@@ -1866,61 +1866,61 @@ function landingPageHTML() {
   </div>
 
   <section>
-    <h2>6 Powerful Tools</h2>
+    <h2>6 Powerful Tools | 6 款強大工具</h2>
     <div class="tools-grid">
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">enhance_prompt</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Restructure any prompt with role definition, clear task framing, output format, and quality constraints. 4 styles: concise, detailed, structured, creative.</p>
+        <p class="tool-desc">Restructure any prompt with role definition, clear task framing, output format, and quality constraints. 4 styles: concise, detailed, structured, creative.<br><span style="opacity:0.7;font-size:13px;">重新建構提示詞，加入角色定義、清晰任務框架、輸出格式和品質約束。4 種風格可選。</span></p>
       </div>
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">analyze_prompt</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Score your prompt across 5 dimensions: clarity, specificity, structure, actionability, constraints. Get a grade (A–F) and targeted improvement suggestions.</p>
+        <p class="tool-desc">Score your prompt across 5 dimensions: clarity, specificity, structure, actionability, constraints. Get a grade (A&#x2013;F) and targeted improvement suggestions.<br><span style="opacity:0.7;font-size:13px;">從 5 個維度評分：清晰度、具體性、結構、可操作性、約束條件。獲得等級（A&#x2013;F）和改進建議。</span></p>
       </div>
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">convert_prompt_format</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Convert between plain text, XML tags, Markdown headers, and JSON structured format. Preserves sections and semantic meaning.</p>
+        <p class="tool-desc">Convert between plain text, XML tags, Markdown headers, and JSON structured format. Preserves sections and semantic meaning.<br><span style="opacity:0.7;font-size:13px;">在純文字、XML 標籤、Markdown 標題和 JSON 結構格式之間轉換。保留段落和語意。</span></p>
       </div>
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">generate_system_prompt</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Generate a production-quality system prompt for any role and task. Includes role definition, capabilities, communication style, quality standards, and boundaries.</p>
+        <p class="tool-desc">Generate a production-quality system prompt for any role and task. Includes role definition, capabilities, communication style, quality standards, and boundaries.<br><span style="opacity:0.7;font-size:13px;">為任何角色和任務生成生產級系統提示詞。包含角色定義、能力、溝通風格、品質標準和邊界。</span></p>
       </div>
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">prompt_template_library</span>
           <span class="tier-badge tier-pro">PRO</span>
         </div>
-        <p class="tool-desc">Browse 30+ curated, battle-tested prompt templates across 6 categories: coding, analysis, writing, translation, debugging, data-extraction.</p>
+        <p class="tool-desc">Browse 30+ curated, battle-tested prompt templates across 6 categories: coding, analysis, writing, translation, debugging, data-extraction.<br><span style="opacity:0.7;font-size:13px;">瀏覽 30+ 精選實戰模板，涵蓋 6 大類別：程式、分析、寫作、翻譯、除錯、資料擷取。</span></p>
       </div>
       <div class="tool-card">
         <div class="tool-header">
           <span class="tool-name">purchase_pro_key</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Get instructions to purchase a Pro API key. One-time $9 payment unlocks template library and 100 req/day rate limit.</p>
+        <p class="tool-desc">Get instructions to purchase a Pro API key. One-time $9 payment unlocks template library and 1000 req/day rate limit.<br><span style="opacity:0.7;font-size:13px;">取得 Pro API 金鑰購買說明。一次性 $9 付費解鎖模板庫和 1000 次/天限制。</span></p>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Upgrade to Pro</h2>
+    <h2>Upgrade to Pro | 升級到 Pro</h2>
     <div class="pricing-box">
       <div class="price">$9</div>
-      <div class="price-sub">One-time payment — no subscription</div>
+      <div class="price-sub">One-time payment — no subscription | 一次性付費 — 無需訂閱</div>
       <ul class="features-list">
         <li>prompt_template_library (30+ templates)</li>
-        <li>100 requests/day (vs 10 free)</li>
+        <li>1000 requests/day (vs 20 free)</li>
         <li>All future Pro tools in this MCP</li>
         <li>Templates across 6 professional categories</li>
         <li>New templates added regularly</li>
@@ -1930,7 +1930,7 @@ function landingPageHTML() {
   </section>
 
   <section>
-    <h2>OpenClaw MCP Ecosystem</h2>
+    <h2>OpenClaw MCP Ecosystem | OpenClaw MCP 生態系統</h2>
     <div class="ecosystem-grid">
       <div class="eco-card"><div class="eco-name">Prompt Enhancer</div><div class="eco-url">/mcp</div></div>
       <div class="eco-card"><div class="eco-name">JSON Toolkit</div><div class="eco-url">${ECOSYSTEM.json}</div></div>
@@ -1946,7 +1946,7 @@ function landingPageHTML() {
   </section>
 
   <footer>
-    &copy; 2025 OpenClaw Intelligence &mdash; ${SERVER_INFO.name} v${SERVER_INFO.version} &mdash;
+    &copy; 2025 OpenClaw Intelligence | OpenClaw 智能 &mdash; ${SERVER_INFO.name} v${SERVER_INFO.version} &mdash;
     <a href="/health" style="color:#a37448;">Health</a>
   </footer>
 </body>

@@ -36,7 +36,7 @@ const ECOSYSTEM = {
 const TOOLS = [
   {
     name: 'generate_palette',
-    description: 'Generate a harmonious color palette using color theory. Provide a base color, mood, or both. Returns an array of colors with hex, rgb, hsl, name, and CSS variable. Harmony modes use HSL rotation (complementary=180°, analogous=30°, triadic=120°, etc.).',
+    description: 'Generate a harmonious color palette using color theory. Provide a base color, mood, or both. Returns an array of colors with hex, rgb, hsl, name, and CSS variable. Harmony modes use HSL rotation (complementary=180, analogous=30, triadic=120, etc.). | 使用色彩理論生成和諧配色方案。提供基底色、風格或兩者皆可。回傳含 hex、rgb、hsl、名稱及 CSS 變數的色彩陣列。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -63,7 +63,7 @@ const TOOLS = [
   },
   {
     name: 'contrast_check',
-    description: 'Check WCAG 2.1 accessibility contrast ratio between two colors. Returns the contrast ratio, AA pass/fail (4.5:1 normal, 3:1 large), AAA pass/fail (7:1 normal, 4.5:1 large), and suggestions for improving contrast if it fails.',
+    description: 'Check WCAG 2.1 accessibility contrast ratio between two colors. Returns the contrast ratio, AA pass/fail (4.5:1 normal, 3:1 large), AAA pass/fail (7:1 normal, 4.5:1 large), and suggestions for improving contrast if it fails. | 檢查兩色之間的 WCAG 2.1 無障礙對比度。回傳對比度、AA/AAA 通過與否及改善建議。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -81,7 +81,7 @@ const TOOLS = [
   },
   {
     name: 'color_convert',
-    description: 'Convert a color between formats: hex, rgb, hsl, and CSS named colors (140 standard names). Input any format and optionally specify the target format. Returns all formats if to_format is omitted.',
+    description: 'Convert a color between formats: hex, rgb, hsl, and CSS named colors (140 standard names). Input any format and optionally specify the target format. Returns all formats if to_format is omitted. | 在 hex、rgb、hsl 及 CSS 命名色（140 種）之間轉換色彩。輸入任何格式，可選擇指定目標格式。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -100,7 +100,7 @@ const TOOLS = [
   },
   {
     name: 'css_gradient',
-    description: 'Generate ready-to-use CSS gradient code from an array of hex colors. Supports linear, radial, and conic gradients. Returns the CSS property value and a description of the visual effect.',
+    description: 'Generate ready-to-use CSS gradient code from an array of hex colors. Supports linear, radial, and conic gradients. Returns the CSS property value and a description of the visual effect. | 從 hex 色彩陣列生成可直接使用的 CSS 漸層程式碼。支援線性、放射及圓錐漸層。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -124,7 +124,7 @@ const TOOLS = [
   },
   {
     name: 'tailwind_colors',
-    description: 'Look up Tailwind CSS v3 color values. Provide color_name to get all shades (50–950), or provide closest_to (a hex value) to find the nearest Tailwind color and shade.',
+    description: 'Look up Tailwind CSS v3 color values. Provide color_name to get all shades (50-950), or provide closest_to (a hex value) to find the nearest Tailwind color and shade. | 查詢 Tailwind CSS v3 色彩值。提供色名取得所有色階（50-950），或提供 hex 值找出最接近的 Tailwind 色彩。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -973,16 +973,22 @@ async function checkRateLimit(env, clientId) {
 // LANDING PAGE (rainbow gradient theme)
 // ============================================================
 function landingPage() {
-  const toolRows = TOOLS.map(t => `
+  const toolRows = TOOLS.map(t => {
+    const parts = t.description.split(' | ');
+    const enDesc = parts[0].split('.')[0] + '.';
+    const zhDesc = parts[1] ? parts[1].split('。')[0] + '。' : '';
+    return `
     <div class="bg-white/5 rounded-xl p-5 border border-white/10 hover:border-white/30 transition">
       <div class="flex items-start gap-3">
         <span class="text-2xl">${toolIcon(t.name)}</span>
         <div>
           <div class="font-semibold text-white">${t.name}</div>
-          <div class="text-sm text-gray-300 mt-1">${t.description.split('.')[0]}.</div>
+          <div class="text-sm text-gray-300 mt-1">${enDesc}</div>
+          ${zhDesc ? `<div class="text-sm text-gray-500 mt-0.5">${zhDesc}</div>` : ''}
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   const paletteSwatches = [
     '#ff6b6b','#ffa07a','#ffd700','#9acd32','#40e0d0','#6495ed','#da70d6'
@@ -1021,11 +1027,13 @@ function landingPage() {
       <div class="mb-4">${paletteSwatches}</div>
       <h1 class="text-5xl font-extrabold mb-3 rainbow-text">Color Palette MCP</h1>
       <p class="text-xl text-gray-300">Design Utility for AI Agents &amp; Developers</p>
+      <p class="text-gray-400 mt-1 text-base">AI 代理與開發者的設計工具</p>
       <p class="text-gray-500 mt-2 text-sm">Color Theory &bull; WCAG Contrast &bull; CSS Gradients &bull; Tailwind CSS &bull; MCP Protocol</p>
+      <p class="text-gray-600 mt-1 text-xs">色彩理論 &bull; WCAG 對比度 &bull; CSS 漸層 &bull; Tailwind CSS &bull; MCP 協議</p>
     </div>
 
     <!-- Tools Grid -->
-    <h2 class="text-xl font-semibold text-gray-300 mb-4">5 Free Tools</h2>
+    <h2 class="text-xl font-semibold text-gray-300 mb-4">5 Free Tools | 5 款免費工具</h2>
     <div class="grid gap-4 mb-12">
       ${toolRows}
     </div>
@@ -1033,19 +1041,19 @@ function landingPage() {
     <!-- Rate Limit -->
     <div class="rainbow-border mb-12">
       <div class="p-6">
-        <h3 class="font-semibold text-lg text-yellow-400 mb-2">Free Tier — 25 requests/day</h3>
+        <h3 class="font-semibold text-lg text-yellow-400 mb-2">Free Tier | 免費方案 — 25 requests/day</h3>
         <ul class="text-sm text-gray-300 space-y-1">
-          <li>&#x2705; All 5 tools fully free</li>
-          <li>&#x2705; 25 requests per day (resets at 00:00 UTC)</li>
-          <li>&#x2705; No API key required</li>
-          <li>&#x2705; Batch JSON-RPC requests supported</li>
+          <li>&#x2705; All 5 tools fully free | 全部 5 款工具完全免費</li>
+          <li>&#x2705; 25 requests per day (resets at 00:00 UTC) | 每日 25 次請求（UTC 午夜重置）</li>
+          <li>&#x2705; No API key required | 無需 API 金鑰</li>
+          <li>&#x2705; Batch JSON-RPC requests supported | 支援批次 JSON-RPC 請求</li>
         </ul>
       </div>
     </div>
 
     <!-- MCP Config -->
     <div class="bg-white/5 rounded-xl p-6 border border-white/10 mb-12">
-      <h3 class="font-semibold text-lg mb-3">Connect via MCP</h3>
+      <h3 class="font-semibold text-lg mb-3">Connect via MCP | 透過 MCP 連接</h3>
       <pre class="bg-black/60 rounded-lg p-4 text-sm text-green-400 overflow-x-auto">{
   "mcpServers": {
     "color-palette": {
@@ -1058,22 +1066,22 @@ function landingPage() {
 
     <!-- Example Calls -->
     <div class="bg-white/5 rounded-xl p-6 border border-white/10 mb-12">
-      <h3 class="font-semibold text-lg mb-4">Example Tool Calls</h3>
+      <h3 class="font-semibold text-lg mb-4">Example Tool Calls | 工具呼叫範例</h3>
       <div class="space-y-4 text-sm">
         <div>
-          <div class="text-gray-400 mb-1">Generate a pastel palette:</div>
+          <div class="text-gray-400 mb-1">Generate a pastel palette | 生成粉彩配色方案：</div>
           <pre class="bg-black/60 rounded p-3 text-green-400 overflow-x-auto">{"name":"generate_palette","arguments":{"mood":"pastel","count":5}}</pre>
         </div>
         <div>
-          <div class="text-gray-400 mb-1">Check contrast (WCAG):</div>
+          <div class="text-gray-400 mb-1">Check contrast (WCAG) | 檢查對比度：</div>
           <pre class="bg-black/60 rounded p-3 text-green-400 overflow-x-auto">{"name":"contrast_check","arguments":{"foreground":"#ffffff","background":"#3b82f6"}}</pre>
         </div>
         <div>
-          <div class="text-gray-400 mb-1">Find nearest Tailwind color:</div>
+          <div class="text-gray-400 mb-1">Find nearest Tailwind color | 查找最接近的 Tailwind 色彩：</div>
           <pre class="bg-black/60 rounded p-3 text-green-400 overflow-x-auto">{"name":"tailwind_colors","arguments":{"closest_to":"#3b82f6"}}</pre>
         </div>
         <div>
-          <div class="text-gray-400 mb-1">Generate rainbow gradient CSS:</div>
+          <div class="text-gray-400 mb-1">Generate rainbow gradient CSS | 生成彩虹漸層 CSS：</div>
           <pre class="bg-black/60 rounded p-3 text-green-400 overflow-x-auto">{"name":"css_gradient","arguments":{"colors":["#ff6b6b","#ffd700","#40e0d0","#6495ed"],"type":"linear","direction":"to right"}}</pre>
         </div>
       </div>
@@ -1081,7 +1089,7 @@ function landingPage() {
 
     <!-- Ecosystem -->
     <div class="bg-white/5 rounded-xl p-6 border border-white/10 mb-8">
-      <h3 class="font-semibold text-lg mb-3">OpenClaw Intelligence Ecosystem</h3>
+      <h3 class="font-semibold text-lg mb-3">OpenClaw Intelligence Ecosystem | OpenClaw 智慧生態系</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
         <a href="${ECOSYSTEM.json}" class="bg-white/5 rounded-lg p-3 text-center hover:bg-white/10 transition">
           <div>&#x1F4CB; JSON Toolkit</div>
@@ -1116,6 +1124,7 @@ function landingPage() {
     <div class="text-center text-gray-600 text-xs">
       <p>Color Palette MCP v1.0.0 &bull; OpenClaw Intelligence &bull; Powered by Cloudflare Workers</p>
       <p class="mt-1">Color theory: HSL harmony rotation &bull; WCAG 2.1 contrast formula &bull; Tailwind CSS v3 database</p>
+      <p class="mt-1">色彩理論：HSL 和諧旋轉 &bull; WCAG 2.1 對比公式 &bull; Tailwind CSS v3 資料庫</p>
     </div>
   </div>
 </body>

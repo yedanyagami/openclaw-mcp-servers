@@ -99,7 +99,7 @@ const WEEKDAY_SHORT= ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const TOOLS = [
   {
     name: 'convert_timestamp',
-    description: 'Convert a timestamp between formats: unix epoch (seconds/ms) ↔ ISO 8601 ↔ human-readable ↔ relative ("3 hours ago"). Auto-detects input format. Returns all formats at once plus UTC offset info.',
+    description: 'Convert a timestamp between formats: unix epoch (seconds/ms) ↔ ISO 8601 ↔ human-readable ↔ relative ("3 hours ago"). Auto-detects input format. Returns all formats at once plus UTC offset info. | 在多種格式間轉換時間戳：unix 紀元 ↔ ISO 8601 ↔ 人類可讀 ↔ 相對時間。自動偵測輸入格式，一次返回所有格式。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -126,7 +126,7 @@ const TOOLS = [
   },
   {
     name: 'timezone_convert',
-    description: 'Convert a datetime from one timezone to another. When show_all=true, displays the time in 7 common timezones simultaneously (UTC, JST, EST, PST, CET, IST, CST).',
+    description: 'Convert a datetime from one timezone to another. When show_all=true, displays the time in 7 common timezones simultaneously (UTC, JST, EST, PST, CET, IST, CST). | 將日期時間從一個時區轉換到另一個。show_all=true 時同時顯示 7 個常用時區。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -152,7 +152,7 @@ const TOOLS = [
   },
   {
     name: 'parse_cron',
-    description: 'Parse a standard 5-field cron expression (minute hour day month weekday). Returns: human-readable description, validation status, next 5 run times. E.g. "*/5 9-17 * * 1-5" → "Every 5 minutes from 9am to 5pm, Mon-Fri".',
+    description: 'Parse a standard 5-field cron expression (minute hour day month weekday). Returns: human-readable description, validation status, next 5 run times. E.g. "*/5 9-17 * * 1-5". | 解析標準 5 欄位 cron 表達式。返回人類可讀描述、驗證狀態和接下來 5 次執行時間。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -170,7 +170,7 @@ const TOOLS = [
   },
   {
     name: 'time_diff',
-    description: 'Calculate the difference between two datetimes. Returns difference in seconds, minutes, hours, days, weeks, and approximate months. Handles past/future direction automatically.',
+    description: 'Calculate the difference between two datetimes. Returns difference in seconds, minutes, hours, days, weeks, and approximate months. Handles past/future direction automatically. | 計算兩個日期時間的差異。以秒、分、時、天、週和月為單位返回差值，自動處理過去/未來方向。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -188,7 +188,7 @@ const TOOLS = [
   },
   {
     name: 'format_duration',
-    description: 'Convert between duration formats: seconds (integer) ↔ human string ("2h 30m 15s") ↔ ISO 8601 duration ("PT2H30M15S"). Auto-detects input format.',
+    description: 'Convert between duration formats: seconds (integer) ↔ human string ("2h 30m 15s") ↔ ISO 8601 duration ("PT2H30M15S"). Auto-detects input format. | 在持續時間格式間轉換：秒數 ↔ 人類字串 ↔ ISO 8601 持續時間。自動偵測輸入格式。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1329,17 +1329,19 @@ const LANDING_HTML = `<!DOCTYPE html>
       <div class="text-5xl mb-4">&#x23F1;&#xFE0F;</div>
       <h1 class="text-5xl font-bold mb-3 text-violet-300">Timestamp Converter MCP</h1>
       <p class="text-xl text-indigo-300 mb-2">Time &amp; Timezone Utilities for AI Agents</p>
+      <p class="text-indigo-400 text-lg mb-2">AI 代理的時間與時區工具</p>
       <p class="text-gray-400">unix &#x21C4; ISO 8601 &bull; Timezone Math &bull; Cron Parsing &bull; Duration Formatting</p>
+      <p class="text-gray-500 text-sm">unix &#x21C4; ISO 8601 &bull; 時區運算 &bull; Cron 解析 &bull; 持續時間格式化</p>
       <div class="mt-4 inline-flex items-center gap-2 bg-green-900/30 border border-green-700/40 rounded-full px-4 py-1 text-sm text-green-400">
         <span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span>
-        Free Forever &bull; 30 req/day &bull; No API key needed
+        Free Forever | 永久免費 &bull; 30 req/day &bull; No API key needed | 無需 API 金鑰
       </div>
     </div>
 
     <!-- Quick Connect -->
     <div class="card rounded-xl p-6 mb-8">
-      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F527; Quick Connect</h2>
-      <p class="text-gray-400 text-sm mb-3">Add to your Claude Code, Cursor, or any MCP-compatible client:</p>
+      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F527; Quick Connect | 快速連接</h2>
+      <p class="text-gray-400 text-sm mb-3">Add to your Claude Code, Cursor, or any MCP-compatible client: | 加入你的 Claude Code、Cursor 或任何 MCP 相容客戶端：</p>
       <pre class="code-block rounded-lg p-4 text-sm text-green-400 overflow-x-auto">{
   "mcpServers": {
     "timestamp-converter": {
@@ -1352,40 +1354,40 @@ const LANDING_HTML = `<!DOCTYPE html>
 
     <!-- Tools Grid -->
     <div class="mb-8">
-      <h2 class="text-lg font-semibold mb-4 text-violet-300">&#x1F6E0;&#xFE0F; 5 Free Tools</h2>
+      <h2 class="text-lg font-semibold mb-4 text-violet-300">&#x1F6E0;&#xFE0F; 5 Free Tools | 5 款免費工具</h2>
       <div class="grid md:grid-cols-2 gap-4">
 
         <div class="card rounded-xl p-5">
           <div class="text-violet-400 font-mono text-sm mb-1">convert_timestamp</div>
-          <div class="text-gray-300 text-sm">Convert any timestamp to all formats at once.</div>
+          <div class="text-gray-300 text-sm">Convert any timestamp to all formats at once. | 一次轉換時間戳為所有格式。</div>
           <div class="text-gray-500 text-xs mt-2">unix &#x21C4; ISO 8601 &#x21C4; human &#x21C4; relative</div>
           <div class="code-block rounded mt-3 p-2 text-xs text-green-300 font-mono">{ "input": 1714000000 }</div>
         </div>
 
         <div class="card rounded-xl p-5">
           <div class="text-violet-400 font-mono text-sm mb-1">timezone_convert</div>
-          <div class="text-gray-300 text-sm">Convert datetimes between timezones. Show all 7 common zones at once with show_all=true.</div>
+          <div class="text-gray-300 text-sm">Convert datetimes between timezones. Show all 7 common zones at once. | 在時區之間轉換日期時間。一次顯示 7 個常用時區。</div>
           <div class="text-gray-500 text-xs mt-2">UTC, JST, EST, PST, CET, IST, CST</div>
           <div class="code-block rounded mt-3 p-2 text-xs text-green-300 font-mono">{ "datetime": "2024-04-25T10:00:00", "from_tz": "JST", "show_all": true }</div>
         </div>
 
         <div class="card rounded-xl p-5">
           <div class="text-violet-400 font-mono text-sm mb-1">parse_cron</div>
-          <div class="text-gray-300 text-sm">Parse a 5-field cron expression. Returns human description, validation, and next 5 run times.</div>
+          <div class="text-gray-300 text-sm">Parse a 5-field cron expression. Returns human description, validation, and next 5 run times. | 解析 5 欄位 cron 表達式。返回人類描述、驗證和接下來 5 次執行時間。</div>
           <div class="text-gray-500 text-xs mt-2">Standard cron: minute hour day month weekday</div>
           <div class="code-block rounded mt-3 p-2 text-xs text-green-300 font-mono">{ "expression": "*/5 9-17 * * 1-5", "timezone": "JST" }</div>
         </div>
 
         <div class="card rounded-xl p-5">
           <div class="text-violet-400 font-mono text-sm mb-1">time_diff</div>
-          <div class="text-gray-300 text-sm">Calculate difference between two datetimes in all units.</div>
+          <div class="text-gray-300 text-sm">Calculate difference between two datetimes in all units. | 以所有單位計算兩個日期時間的差異。</div>
           <div class="text-gray-500 text-xs mt-2">seconds, minutes, hours, days, weeks, months</div>
           <div class="code-block rounded mt-3 p-2 text-xs text-green-300 font-mono">{ "start": "2024-01-01", "end": "2024-12-31" }</div>
         </div>
 
         <div class="card rounded-xl p-5 md:col-span-2">
           <div class="text-violet-400 font-mono text-sm mb-1">format_duration</div>
-          <div class="text-gray-300 text-sm">Convert between duration formats in both directions. Auto-detects input type.</div>
+          <div class="text-gray-300 text-sm">Convert between duration formats in both directions. Auto-detects input type. | 雙向轉換持續時間格式，自動偵測輸入類型。</div>
           <div class="text-gray-500 text-xs mt-2">seconds &#x21C4; "2h 30m 15s" &#x21C4; ISO 8601 (PT2H30M15S)</div>
           <div class="flex flex-wrap gap-2 mt-3">
             <div class="code-block rounded p-2 text-xs text-green-300 font-mono">{ "input": 9015 }</div>
@@ -1399,7 +1401,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 
     <!-- Supported Timezones -->
     <div class="card rounded-xl p-6 mb-8">
-      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F30D; Supported Timezone Abbreviations</h2>
+      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F30D; Supported Timezone Abbreviations | 支援的時區縮寫</h2>
       <div class="flex flex-wrap gap-2 text-xs">
         ${['UTC','GMT','JST','EST','EDT','CST','CDT','MST','MDT','PST','PDT','CET','CEST','IST','SGT','HKT','KST','AEST','BRT','MSK','PKT'].map(tz => `<span class="bg-indigo-900/50 border border-indigo-700/30 rounded px-2 py-1 text-indigo-300">${tz}</span>`).join('')}
         <span class="text-gray-500 text-xs self-center">+ full IANA names (Asia/Tokyo, America/New_York, ...)</span>
@@ -1408,50 +1410,50 @@ const LANDING_HTML = `<!DOCTYPE html>
 
     <!-- Ecosystem -->
     <div class="card rounded-xl p-6 mb-8">
-      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F9E9; OpenClaw MCP Ecosystem</h2>
+      <h2 class="text-lg font-semibold mb-3 text-violet-300">&#x1F9E9; OpenClaw MCP Ecosystem | OpenClaw MCP 生態系統</h2>
       <div class="grid md:grid-cols-3 gap-3 text-sm">
         <a href="https://json-toolkit-mcp.yagami8095.workers.dev" class="block bg-blue-900/20 border border-blue-800/30 rounded-lg p-3 hover:border-blue-600 transition">
           <div class="text-blue-400 font-medium">JSON Toolkit MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Format, validate, query, diff JSON</div>
+          <div class="text-gray-400 text-xs mt-1">Format, validate, query, diff JSON | 格式化、驗證、查詢、比對 JSON</div>
         </a>
         <a href="https://regex-engine-mcp.yagami8095.workers.dev" class="block bg-green-900/20 border border-green-800/30 rounded-lg p-3 hover:border-green-600 transition">
           <div class="text-green-400 font-medium">Regex Engine MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Test, explain, generate regex</div>
+          <div class="text-gray-400 text-xs mt-1">Test, explain, generate regex | 測試、解說、生成正規表達式</div>
         </a>
         <a href="https://color-palette-mcp.yagami8095.workers.dev" class="block bg-rose-900/20 border border-rose-800/30 rounded-lg p-3 hover:border-rose-600 transition">
           <div class="text-rose-400 font-medium">Color Palette MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Palettes, contrast, gradients</div>
+          <div class="text-gray-400 text-xs mt-1">Palettes, contrast, gradients | 調色盤、對比度、漸層</div>
         </a>
         <a href="https://prompt-enhancer-mcp.yagami8095.workers.dev" class="block bg-yellow-900/20 border border-yellow-800/30 rounded-lg p-3 hover:border-yellow-600 transition">
           <div class="text-yellow-400 font-medium">Prompt Enhancer MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Optimize AI prompts</div>
+          <div class="text-gray-400 text-xs mt-1">Optimize AI prompts | 優化 AI 提示詞</div>
         </a>
         <a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="block bg-purple-900/20 border border-purple-800/30 rounded-lg p-3 hover:border-purple-600 transition">
           <div class="text-purple-400 font-medium">Intel MCP</div>
-          <div class="text-gray-400 text-xs mt-1">AI market intelligence reports</div>
+          <div class="text-gray-400 text-xs mt-1">AI market intelligence reports | AI 市場情報報告</div>
         </a>
         <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="block bg-pink-900/20 border border-pink-800/30 rounded-lg p-3 hover:border-pink-600 transition">
           <div class="text-pink-400 font-medium">Fortune MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Daily zodiac horoscopes</div>
+          <div class="text-gray-400 text-xs mt-1">Daily zodiac horoscopes | 每日星座運勢</div>
         </a>
         <a href="https://moltbook-publisher-mcp.yagami8095.workers.dev" class="block bg-indigo-900/20 border border-indigo-800/30 rounded-lg p-3 hover:border-indigo-600 transition">
           <div class="text-indigo-400 font-medium">MoltBook Publisher MCP</div>
-          <div class="text-gray-400 text-xs mt-1">Japanese content publishing</div>
+          <div class="text-gray-400 text-xs mt-1">Japanese content publishing | 日文內容發佈</div>
         </a>
         <a href="https://agentforge-compare-mcp.yagami8095.workers.dev" class="block bg-orange-900/20 border border-orange-800/30 rounded-lg p-3 hover:border-orange-600 transition">
           <div class="text-orange-400 font-medium">AgentForge Compare MCP</div>
-          <div class="text-gray-400 text-xs mt-1">AI coding tool comparisons</div>
+          <div class="text-gray-400 text-xs mt-1">AI coding tool comparisons | AI 程式工具比較</div>
         </a>
         <a href="https://product-store.yagami8095.workers.dev" class="block bg-amber-900/20 border border-amber-800/30 rounded-lg p-3 hover:border-amber-600 transition">
           <div class="text-amber-400 font-medium">Digital Store</div>
-          <div class="text-gray-400 text-xs mt-1">AI tools and products</div>
+          <div class="text-gray-400 text-xs mt-1">AI tools and products | AI 工具與產品</div>
         </a>
       </div>
     </div>
 
     <!-- Footer -->
     <div class="text-center text-gray-500 text-sm">
-      <p>Powered by <span class="text-violet-400">OpenClaw Intelligence</span> &bull; Free forever &bull; MCP 2025-03-26</p>
+      <p>Powered by <span class="text-violet-400">OpenClaw Intelligence</span> | OpenClaw 智能 &bull; Free forever | 永久免費 &bull; MCP 2025-03-26</p>
       <p class="mt-1"><a href="https://product-store.yagami8095.workers.dev" class="text-indigo-400 hover:underline">Digital Store</a> &bull; Health: <a href="/health" class="text-green-400 hover:underline">/health</a></p>
     </div>
 

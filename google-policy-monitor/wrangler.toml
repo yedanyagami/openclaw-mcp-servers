@@ -1,0 +1,23 @@
+# Google Policy Monitor Worker
+# Monitors Google Cloud Code, Gemini Code Assist, and Antigravity policy changes
+# Sends Telegram alerts on detected changes
+
+name = "google-policy-monitor"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Cron trigger: every 6 hours
+[triggers]
+crons = ["0 */6 * * *"]
+
+# KV Namespace binding (yedan-army-state)
+[[kv_namespaces]]
+binding = "KV"
+id = "51826cd6550a40e79a61d462b084a1c8"
+
+# D1 Database binding (yedan-army-command)
+[[d1_databases]]
+binding = "DB"
+database_name = "yedan-army-command"
+database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"

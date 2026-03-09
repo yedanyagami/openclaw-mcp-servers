@@ -193,7 +193,7 @@ const TOOL_IDS = Object.keys(AI_TOOLS);
 const TOOLS = [
   {
     name: 'compare_ai_tools',
-    description: 'Compare 2 or more AI coding tools side-by-side. Free tier returns a summary comparison table. Pro tier ($9) returns full detailed analysis with recommendations, pricing breakdowns, and growth trends. Available tools: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline.',
+    description: 'Compare 2 or more AI coding tools side-by-side. Free tier returns a summary comparison table. Pro tier ($9) returns full detailed analysis with recommendations, pricing breakdowns, and growth trends. Available tools: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline. | 並排比較 2 個以上 AI 程式工具。免費版返回摘要比較表，Pro 版（$9）返回完整詳細分析含推薦、定價及趨勢。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -212,7 +212,7 @@ const TOOLS = [
   },
   {
     name: 'get_tool_profile',
-    description: 'Get detailed profile for a single AI coding tool. Includes features, pricing, strengths/weaknesses, and use cases. Available: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline.',
+    description: 'Get detailed profile for a single AI coding tool. Includes features, pricing, strengths/weaknesses, and use cases. Available: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline. | 取得單一 AI 程式工具的詳細檔案。包含功能、定價、優缺點及使用場景。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -223,7 +223,7 @@ const TOOLS = [
   },
   {
     name: 'recommend_tool',
-    description: 'Get an AI-powered recommendation for which tool best fits your use case. Analyzes your requirements and returns ranked suggestions with reasoning. [PRO ONLY — $9 one-time key]',
+    description: 'Get an AI-powered recommendation for which tool best fits your use case. Analyzes your requirements and returns ranked suggestions with reasoning. [PRO ONLY — $9 one-time key] | 獲得 AI 驅動的工具推薦，分析需求並返回排名建議。[僅限 PRO — $9 一次性金鑰]',
     inputSchema: {
       type: 'object',
       properties: {
@@ -241,7 +241,7 @@ const TOOLS = [
   },
   {
     name: 'get_pricing_comparison',
-    description: 'Get a complete pricing comparison table for all AI coding tools. Shows free tiers, pro pricing, team pricing, and enterprise options. Always free — no API key needed.',
+    description: 'Get a complete pricing comparison table for all AI coding tools. Shows free tiers, pro pricing, team pricing, and enterprise options. Always free — no API key needed. | 取得所有 AI 程式工具的完整定價比較表。顯示免費方案、Pro 定價、團隊定價及企業選項。永久免費。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -251,7 +251,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_pro_key',
-    description: 'Get instructions to purchase a Pro API key ($9 one-time) for full comparisons and AI recommendations. Unlock detailed analysis, growth trends, and personalized tool recommendations.',
+    description: 'Get instructions to purchase a Pro API key ($9 one-time) for full comparisons and AI recommendations. Unlock detailed analysis, growth trends, and personalized tool recommendations. | 取得 Pro API 金鑰購買說明（$9 一次性付費），解鎖完整比較、成長趨勢及個人化工具推薦。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -646,41 +646,43 @@ function landingPage() {
     <div class="text-center mb-12">
       <h1 class="text-5xl font-bold mb-4">&#x2694;&#xFE0F; AgentForge Compare</h1>
       <p class="text-xl text-blue-300">AI Tool Comparison Engine for AI Agents</p>
+      <p class="text-blue-400 text-lg mt-1">AI 代理的 AI 工具比較引擎</p>
       <p class="text-gray-400 mt-2">MCP Protocol &bull; 8 Tools Tracked &bull; Real-Time Data</p>
+      <p class="text-gray-500 text-sm">MCP 協定 &bull; 追蹤 8 款工具 &bull; 即時數據</p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-6 mb-12">
       <div class="bg-white/5 rounded-xl p-6 border border-white/10">
-        <h3 class="text-lg font-semibold text-green-400 mb-3">&#127381; Free Tier</h3>
+        <h3 class="text-lg font-semibold text-green-400 mb-3">&#127381; Free Tier | 免費方案</h3>
         <ul class="space-y-2 text-gray-300 text-sm">
-          <li>&#x2705; Side-by-side tool comparisons (summary)</li>
-          <li>&#x2705; Detailed tool profiles</li>
-          <li>&#x2705; Full pricing comparison table</li>
-          <li>&#x2705; 20 requests/day</li>
+          <li>&#x2705; Side-by-side tool comparisons (summary) | 並排工具比較（摘要）</li>
+          <li>&#x2705; Detailed tool profiles | 詳細工具檔案</li>
+          <li>&#x2705; Full pricing comparison table | 完整定價比較表</li>
+          <li>&#x2705; 20 requests/day | 每天 20 次請求</li>
         </ul>
       </div>
       <div class="bg-blue-900/30 rounded-xl p-6 border border-blue-500/30">
-        <h3 class="text-lg font-semibold text-yellow-400 mb-3">&#x1F451; Pro — $9 one-time</h3>
+        <h3 class="text-lg font-semibold text-yellow-400 mb-3">&#x1F451; Pro — $9 one-time | $9 一次性付費</h3>
         <ul class="space-y-2 text-gray-300 text-sm">
-          <li>&#x2B50; Full detailed analysis + head-to-head scoring</li>
-          <li>&#x2B50; AI-powered personalized recommendations</li>
-          <li>&#x2B50; Growth trends + projections</li>
-          <li>&#x2B50; 1000 requests/day</li>
-          <li>&#x2B50; Works across ALL OpenClaw tools</li>
+          <li>&#x2B50; Full detailed analysis + head-to-head scoring | 完整詳細分析 + 對決評分</li>
+          <li>&#x2B50; AI-powered personalized recommendations | AI 驅動的個人化推薦</li>
+          <li>&#x2B50; Growth trends + projections | 成長趨勢 + 預測</li>
+          <li>&#x2B50; 1000 requests/day | 每天 1000 次請求</li>
+          <li>&#x2B50; Works across ALL OpenClaw tools | 適用於所有 OpenClaw 工具</li>
         </ul>
         <a href="${ENDPOINTS.pro_page}" class="inline-block mt-4 bg-yellow-500 text-black font-bold px-6 py-2 rounded-lg hover:bg-yellow-400 transition">Get Pro &rarr;</a>
       </div>
     </div>
 
     <div class="bg-white/5 rounded-xl p-6 border border-white/10 mb-12">
-      <h3 class="text-lg font-semibold mb-4">&#x1F3AF; Tools Tracked</h3>
+      <h3 class="text-lg font-semibold mb-4">&#x1F3AF; Tools Tracked | 追蹤中的工具</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         ${Object.values(AI_TOOLS).map(t => `<div class="bg-white/5 rounded-lg p-3 text-center"><div class="font-medium text-sm">${t.name.split(' (')[0]}</div><div class="text-xs text-gray-400">${t.stars ? (t.stars/1000).toFixed(1)+'k &#x2B50;' : 'Proprietary'}</div></div>`).join('')}
       </div>
     </div>
 
     <div class="bg-white/5 rounded-xl p-6 border border-white/10 mb-12">
-      <h3 class="text-lg font-semibold mb-3">&#x1F527; Connect via MCP</h3>
+      <h3 class="text-lg font-semibold mb-3">&#x1F527; Connect via MCP | 透過 MCP 連接</h3>
       <pre class="bg-black/50 rounded-lg p-4 text-sm text-green-400 overflow-x-auto">{
   "mcpServers": {
     "agentforge-compare": {
@@ -692,7 +694,7 @@ function landingPage() {
     </div>
 
     <div class="text-center text-gray-500 text-sm">
-      <p>Part of the <strong class="text-blue-400">OpenClaw Intelligence</strong> ecosystem</p>
+      <p>Part of the <strong class="text-blue-400">OpenClaw Intelligence</strong> ecosystem | OpenClaw 智能生態系統</p>
       <div class="flex flex-wrap justify-center gap-4 mt-2">
         <a href="${ENDPOINTS.intel_mcp}" class="hover:text-blue-300">&#x1F4CA; Intel MCP</a>
         <a href="${ENDPOINTS.fortune_mcp}" class="hover:text-purple-300">&#x1F52E; Fortune MCP</a>

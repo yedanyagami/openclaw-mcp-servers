@@ -42,7 +42,7 @@ const PRO_PRICE_USD = 9;
 const TOOLS = [
   {
     name: 'convert_markdown_to_html',
-    description: 'Convert Markdown text to platform-compatible HTML for note.com, Zenn, or Qiita. Handles headings, bold, italic, tables, lists, blockquotes, code blocks, and horizontal rules. Output is ready for direct paste into editor.',
+    description: 'Convert Markdown text to platform-compatible HTML for note.com, Zenn, or Qiita. Handles headings, bold, italic, tables, lists, blockquotes, code blocks, and horizontal rules. Output is ready for direct paste into editor. | 將 Markdown 轉換為適用於 note.com、Zenn 或 Qiita 的 HTML。支援標題、粗體、斜體、表格、列表、引用、程式碼區塊及分隔線。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -54,7 +54,7 @@ const TOOLS = [
   },
   {
     name: 'optimize_for_seo',
-    description: 'Analyze and optimize Japanese article content for SEO on note.com, Zenn, or Qiita. Returns title suggestions, keyword density, readability score, meta description, and improvement recommendations.',
+    description: 'Analyze and optimize Japanese article content for SEO on note.com, Zenn, or Qiita. Returns title suggestions, keyword density, readability score, meta description, and improvement recommendations. | 分析並優化日文文章的 SEO 表現。回傳標題建議、關鍵字密度、可讀性分數、meta 描述及改善建議。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -68,7 +68,7 @@ const TOOLS = [
   },
   {
     name: 'translate_en_to_jp',
-    description: 'Translate English text to natural Japanese. Not machine translation — produces native-sounding Japanese suitable for publishing on Japanese platforms. Preserves technical terms, adds furigana hints for complex kanji.',
+    description: 'Translate English text to natural Japanese. Not machine translation — produces native-sounding Japanese suitable for publishing on Japanese platforms. Preserves technical terms, adds furigana hints for complex kanji. | 將英文翻譯為自然日文。非機器翻譯 — 產出適合日本平台發布的道地日文。保留技術術語，為複雜漢字加註讀音提示。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -81,7 +81,7 @@ const TOOLS = [
   },
   {
     name: 'generate_article_outline',
-    description: 'Generate a structured article outline from a topic. Produces H2/H3 headings, key points per section, estimated word count, and SEO-optimized structure for Japanese platforms.',
+    description: 'Generate a structured article outline from a topic. Produces H2/H3 headings, key points per section, estimated word count, and SEO-optimized structure for Japanese platforms. | 依主題生成結構化文章大綱。產出 H2/H3 標題、各節要點、預估字數及針對日本平台的 SEO 優化結構。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -95,7 +95,7 @@ const TOOLS = [
   },
   {
     name: 'get_trending_topics',
-    description: '[PRO] Get current trending topics on note.com, Zenn, and Qiita. Returns top topics with estimated engagement, competition level, and content gap analysis. Updated daily.',
+    description: '[PRO] Get current trending topics on note.com, Zenn, and Qiita. Returns top topics with estimated engagement, competition level, and content gap analysis. Updated daily. | [PRO] 取得 note.com、Zenn 及 Qiita 上的熱門趨勢話題。回傳熱門主題、預估互動數、競爭程度及內容缺口分析。每日更新。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -107,7 +107,7 @@ const TOOLS = [
   },
   {
     name: 'cross_post_format',
-    description: '[PRO] Convert a single article into optimized formats for all 3 Japanese platforms (note.com, Zenn, Qiita). Adjusts heading styles, code blocks, image embeds, and metadata for each platform.',
+    description: '[PRO] Convert a single article into optimized formats for all 3 Japanese platforms (note.com, Zenn, Qiita). Adjusts heading styles, code blocks, image embeds, and metadata for each platform. | [PRO] 將單篇文章轉換為 3 個日本平台的最佳化格式。為每個平台調整標題樣式、程式碼區塊、圖片嵌入及中繼資料。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -121,7 +121,7 @@ const TOOLS = [
   },
   {
     name: 'analyze_article_performance',
-    description: '[PRO] Predict article performance before publishing. Returns estimated views, engagement score, SEO ranking potential, and platform-specific optimization tips.',
+    description: '[PRO] Predict article performance before publishing. Returns estimated views, engagement score, SEO ranking potential, and platform-specific optimization tips. | [PRO] 發布前預測文章表現。回傳預估瀏覽量、互動分數、SEO 排名潛力及平台專屬優化建議。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -135,7 +135,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_pro_key',
-    description: 'Get a MoltBook Publisher Pro API key. Pro unlocks: trending topics, cross-post formatting, performance analysis, and 1000 uses/day (vs 20 free). $9/month via PayPal.',
+    description: 'Get a MoltBook Publisher Pro API key. Pro unlocks: trending topics, cross-post formatting, performance analysis, and 1000 uses/day (vs 20 free). $9/month via PayPal. | 取得 MoltBook Publisher Pro API 金鑰。Pro 解鎖：趨勢話題、跨平台排版、效能預測、每日 1000 次使用（免費版 20 次）。$9/月。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -845,34 +845,35 @@ function landingPage() {
       <div class="text-6xl mb-4">\uD83D\uDCDD</div>
       <h1 class="text-4xl font-bold mb-4">MoltBook Publisher MCP</h1>
       <p class="text-xl text-purple-200">Japanese Content Publishing Toolkit for AI Agents</p>
+      <p class="text-lg text-purple-300 mt-1">AI 代理專用的日本內容發布工具組</p>
       <p class="text-sm text-purple-300 mt-2">by MoltBook Labs \u2014 part of OpenClaw Intelligence</p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-6 mb-12">
       <div class="bg-white/10 backdrop-blur rounded-xl p-6">
-        <h3 class="text-lg font-bold mb-3">\uD83C\uDD93 Free Tools</h3>
+        <h3 class="text-lg font-bold mb-3">\uD83C\uDD93 Free Tools | 免費工具</h3>
         <ul class="space-y-2 text-purple-200">
-          <li>\u2705 Markdown \u2192 HTML (note.com/Zenn/Qiita)</li>
-          <li>\u2705 SEO Optimization Analysis</li>
-          <li>\u2705 EN\u2192JP Translation Guide</li>
-          <li>\u2705 Article Outline Generator</li>
+          <li>\u2705 Markdown \u2192 HTML (note.com/Zenn/Qiita) | Markdown 轉 HTML</li>
+          <li>\u2705 SEO Optimization Analysis | SEO 優化分析</li>
+          <li>\u2705 EN\u2192JP Translation Guide | 英日翻譯指南</li>
+          <li>\u2705 Article Outline Generator | 文章大綱生成器</li>
         </ul>
-        <p class="text-sm text-purple-400 mt-3">20 uses/day free</p>
+        <p class="text-sm text-purple-400 mt-3">20 uses/day free | 每日 20 次免費使用</p>
       </div>
       <div class="bg-purple-500/20 backdrop-blur rounded-xl p-6 border border-purple-400/30">
-        <h3 class="text-lg font-bold mb-3">\u{1F451} Pro Tools ($${PRO_PRICE_USD}/mo)</h3>
+        <h3 class="text-lg font-bold mb-3">\u{1F451} Pro Tools | Pro 工具 ($${PRO_PRICE_USD}/mo)</h3>
         <ul class="space-y-2 text-purple-200">
-          <li>\uD83D\uDD25 Trending Topics + Gap Analysis</li>
-          <li>\uD83D\uDD04 Cross-Post Formatter (3 platforms)</li>
-          <li>\uD83D\uDCC8 Performance Predictor</li>
-          <li>\uD83D\uDE80 1000 uses/day</li>
+          <li>\uD83D\uDD25 Trending Topics + Gap Analysis | 趨勢話題 + 缺口分析</li>
+          <li>\uD83D\uDD04 Cross-Post Formatter (3 platforms) | 跨平台排版（3 個平台）</li>
+          <li>\uD83D\uDCC8 Performance Predictor | 效能預測器</li>
+          <li>\uD83D\uDE80 1000 uses/day | 每日 1000 次使用</li>
         </ul>
         <a href="https://product-store.yagami8095.workers.dev" class="inline-block mt-3 bg-purple-500 hover:bg-purple-400 px-4 py-2 rounded-lg font-bold transition">Get Pro \u2192</a>
       </div>
     </div>
 
     <div class="bg-white/5 backdrop-blur rounded-xl p-6 mb-12">
-      <h3 class="text-lg font-bold mb-3">\u26A1 Connect to Your AI Agent</h3>
+      <h3 class="text-lg font-bold mb-3">\u26A1 Connect to Your AI Agent | 連接你的 AI 代理</h3>
       <pre class="bg-black/30 rounded-lg p-4 text-sm overflow-x-auto text-green-300"><code>{
   "mcpServers": {
     "moltbook-publisher": {
@@ -894,7 +895,7 @@ function landingPage() {
         <a href="https://timestamp-converter-mcp.yagami8095.workers.dev" class="underline hover:text-white">Timestamp MCP</a> \u00B7
         <a href="https://product-store.yagami8095.workers.dev" class="underline hover:text-white">Digital Store</a>
       </p>
-      <p class="mt-2">MoltBook Labs \u00A9 2026 \u2014 Part of OpenClaw Intelligence</p>
+      <p class="mt-2">MoltBook Labs \u00A9 2026 \u2014 Part of OpenClaw Intelligence | OpenClaw 智慧生態系</p>
     </div>
   </div>
 </body>

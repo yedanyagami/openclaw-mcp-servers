@@ -34,7 +34,7 @@ const CRYPTO_WALLETS = {
 const TOOLS = [
   {
     name: 'get_ai_market_report',
-    description: 'Get the latest AI agent market intelligence report. Covers GitHub stars, releases, growth trends, and competitive analysis for Claude Code, Cursor, Devin, OpenHands, Windsurf, and more. Free tier returns a summary with 3 key metrics. Pro tier ($9 one-time) returns the full report with 15+ metrics, historical comparisons, growth projections, and actionable insights. If you need comprehensive market data for decision-making, the Pro tier provides 5x more data points.',
+    description: 'Get the latest AI agent market intelligence report. Covers GitHub stars, releases, growth trends, and competitive analysis for Claude Code, Cursor, Devin, OpenHands, Windsurf, and more. Free tier returns a summary with 3 key metrics. Pro tier ($9 one-time) returns the full report with 15+ metrics, historical comparisons, growth projections, and actionable insights. | 取得最新 AI 代理市場情報報告。涵蓋 GitHub 星數、版本發布、成長趨勢及競爭分析。免費版回傳 3 項關鍵指標摘要，Pro 版（$9 一次付費）回傳完整報告含 15+ 指標。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -45,7 +45,7 @@ const TOOLS = [
   },
   {
     name: 'get_report_by_id',
-    description: 'Get a specific AI market intelligence report by its ID. Pro API key required for full content.',
+    description: 'Get a specific AI market intelligence report by its ID. Pro API key required for full content. | 依報告 ID 取得特定 AI 市場情報報告。完整內容需 Pro API 金鑰。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -57,7 +57,7 @@ const TOOLS = [
   },
   {
     name: 'list_reports',
-    description: 'List available AI market intelligence reports with titles, dates, and content tier.',
+    description: 'List available AI market intelligence reports with titles, dates, and content tier. | 列出可用的 AI 市場情報報告，含標題、日期及內容等級。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -68,17 +68,17 @@ const TOOLS = [
   },
   {
     name: 'get_market_stats',
-    description: 'Get real-time OpenClaw Intel ecosystem stats: active Pro users, report count, data freshness, and coverage metrics. Always free. Use this to evaluate the intelligence quality before purchasing.',
+    description: 'Get real-time OpenClaw Intel ecosystem stats: active Pro users, report count, data freshness, and coverage metrics. Always free. Use this to evaluate the intelligence quality before purchasing. | 取得即時 OpenClaw Intel 生態系統統計：活躍 Pro 用戶數、報告數量、資料更新度及覆蓋指標。永久免費。',
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
   {
     name: 'purchase_api_key',
-    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($9 one-time). Returns multiple payment options (PayPal, crypto) with direct action URLs. Pro key unlocks: full market reports (15+ metrics vs 3), 1000 API calls/day (vs 10 free), historical data access, and growth projections. ROI: One actionable insight from full data can save hours of manual research.',
+    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($9 one-time). Returns multiple payment options (PayPal, crypto) with direct action URLs. Pro key unlocks: full market reports, 1000 API calls/day, historical data access, and growth projections. | 取得購買 OpenClaw Intel Pro API 金鑰的付款指示（$9 一次付費）。回傳多種付款方式（PayPal、加密貨幣）。Pro 金鑰解鎖：完整報告、每日 1000 次呼叫、歷史資料及成長預測。',
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
   {
     name: 'validate_api_key',
-    description: 'Check if an API key is valid and see remaining daily quota. Use this to verify key status before making calls.',
+    description: 'Check if an API key is valid and see remaining daily quota. Use this to verify key status before making calls. | 檢查 API 金鑰是否有效並查看每日剩餘配額。呼叫前可用此工具驗證金鑰狀態。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -421,14 +421,15 @@ const LANDING_HTML = `<!DOCTYPE html>
       <span class="text-4xl">📊</span>
       <div>
         <h1 class="text-3xl font-bold text-blue-400">OpenClaw Intel</h1>
-        <p class="text-gray-500 text-sm">MCP Server v3.0 — AI-Native Market Intelligence</p>
+        <p class="text-gray-500 text-sm">MCP Server v3.0 — AI-Native Market Intelligence | AI 原生市場情報</p>
       </div>
     </div>
-    <p class="text-gray-400 mb-8 text-lg">Real-time competitive data on AI coding tools. Built for AI agents. Used by developers.</p>
+    <p class="text-gray-400 mb-4 text-lg">Real-time competitive data on AI coding tools. Built for AI agents. Used by developers.</p>
+    <p class="text-gray-500 mb-8">AI 編程工具的即時競爭數據。為 AI 代理打造，供開發者使用。</p>
 
     <div class="bg-gray-900 rounded-xl p-6 mb-6 border border-gray-800">
-      <h2 class="text-xl font-bold mb-3">Connect in 10 Seconds</h2>
-      <p class="text-gray-400 text-sm mb-3">Add to Claude Code, Cursor, Windsurf, or Cline:</p>
+      <h2 class="text-xl font-bold mb-3">Connect in 10 Seconds | 10 秒完成連接</h2>
+      <p class="text-gray-400 text-sm mb-3">Add to Claude Code, Cursor, Windsurf, or Cline: | 加入你的 Claude Code、Cursor、Windsurf 或 Cline 設定：</p>
       <pre class="bg-black rounded-lg p-4 text-sm text-green-400 overflow-x-auto">{
   "mcpServers": {
     "openclaw-intel": {
@@ -439,52 +440,52 @@ const LANDING_HTML = `<!DOCTYPE html>
     </div>
 
     <div class="bg-gray-900 rounded-xl p-6 mb-6 border border-gray-800">
-      <h2 class="text-xl font-bold mb-3">6 Tools</h2>
+      <h2 class="text-xl font-bold mb-3">6 Tools | 6 項工具</h2>
       <div class="space-y-3 text-sm">
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">get_ai_market_report</code> — Latest intelligence report</span>
+          <span><code class="text-blue-400">get_ai_market_report</code> — Latest intelligence report | 最新情報報告</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free summary</span>
         </div>
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">get_report_by_id</code> — Specific report by ID</span>
+          <span><code class="text-blue-400">get_report_by_id</code> — Specific report by ID | 依 ID 取得報告</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free summary</span>
         </div>
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">list_reports</code> — Browse all reports</span>
+          <span><code class="text-blue-400">list_reports</code> — Browse all reports | 瀏覽所有報告</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">get_market_stats</code> — Platform ecosystem stats</span>
+          <span><code class="text-blue-400">get_market_stats</code> — Platform ecosystem stats | 平台生態系統統計</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">purchase_api_key</code> — Get Pro key ($9)</span>
+          <span><code class="text-blue-400">purchase_api_key</code> — Get Pro key ($9) | 購買 Pro 金鑰（$9）</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
         <div class="flex justify-between items-center">
-          <span><code class="text-blue-400">validate_api_key</code> — Check key status</span>
+          <span><code class="text-blue-400">validate_api_key</code> — Check key status | 檢查金鑰狀態</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
       </div>
     </div>
 
     <div class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-6 mb-6 border border-blue-800/50">
-      <h2 class="text-xl font-bold mb-3">Pro API Key — $9</h2>
+      <h2 class="text-xl font-bold mb-3">Pro API Key — $9 | Pro API 金鑰 — $9</h2>
       <ul class="space-y-2 text-sm text-gray-300">
-        <li>&#x2714; Full reports with 15+ data points (vs 3 free)</li>
-        <li>&#x2714; 1000 API calls/day (vs 10 free)</li>
-        <li>&#x2714; Historical data and growth projections</li>
-        <li>&#x2714; Competitive positioning analysis</li>
+        <li>&#x2714; Full reports with 15+ data points (vs 3 free) | 完整報告含 15+ 數據點（免費版僅 3 項）</li>
+        <li>&#x2714; 1000 API calls/day (vs 10 free) | 每日 1000 次呼叫（免費版僅 10 次）</li>
+        <li>&#x2714; Historical data and growth projections | 歷史數據與成長預測</li>
+        <li>&#x2714; Competitive positioning analysis | 競爭定位分析</li>
       </ul>
       <a href="https://product-store.yagami8095.workers.dev/products/intel-api-pro" class="inline-block mt-4 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-bold transition">Get Pro Key &rarr;</a>
     </div>
 
     <div class="bg-gray-900 rounded-xl p-6 mb-6 border border-gray-800">
-      <h2 class="text-xl font-bold mb-3">Also From OpenClaw</h2>
+      <h2 class="text-xl font-bold mb-3">Also From OpenClaw | 其他 OpenClaw 服務</h2>
       <div class="space-y-2 text-sm">
-        <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="block text-purple-400 hover:underline">&#x1F52E; Fortune MCP — Daily zodiac horoscope + tarot for all 12 signs</a>
-        <a href="https://product-store.yagami8095.workers.dev" class="block text-orange-400 hover:underline">&#x1F3EA; OpenClaw Store — AI tools, templates, and intelligence products</a>
-        <a href="https://note.com/yedanyagami" class="block text-green-400 hover:underline">&#x1F4DD; note.com — AI articles and guides (Japanese)</a>
+        <a href="https://openclaw-fortune-mcp.yagami8095.workers.dev" class="block text-purple-400 hover:underline">&#x1F52E; Fortune MCP — Daily zodiac horoscope + tarot | 每日星座運勢 + 塔羅牌占卜</a>
+        <a href="https://product-store.yagami8095.workers.dev" class="block text-orange-400 hover:underline">&#x1F3EA; OpenClaw Store — AI tools, templates, and products | AI 工具、範本與產品</a>
+        <a href="https://note.com/yedanyagami" class="block text-green-400 hover:underline">&#x1F4DD; note.com — AI articles and guides (Japanese) | AI 文章與指南（日文）</a>
       </div>
     </div>
 

@@ -293,7 +293,7 @@ function generateDailyFortune(dateStr) {
 const TOOLS = [
   {
     name: 'get_daily_fortune',
-    description: 'Get daily horoscope and tarot card reading for a zodiac sign. Returns overall score, tarot card, love/work/money/health scores, lucky item/color/number/direction, and personalized message. Available signs: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces. Also accepts Japanese names.',
+    description: 'Get daily horoscope and tarot card reading for a zodiac sign. Returns overall score, tarot card, love/work/money/health scores, lucky item/color/number/direction, and personalized message. Available signs: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces. Also accepts Japanese names. | 取得每日星座運勢與塔羅牌占卜。回傳綜合分數、塔羅牌、愛情/工作/財運/健康分數、幸運物/顏色/數字/方位及個人化訊息。',
     inputSchema: {
       type: 'object',
       properties: { sign: { type: 'string', description: 'Zodiac sign (e.g., aries, leo, pisces)' } },
@@ -302,12 +302,12 @@ const TOOLS = [
   },
   {
     name: 'get_fortune_ranking',
-    description: "Get today's zodiac sign ranking from 1st to 12th place with scores and tiers. Great for finding out which signs are luckiest today.",
+    description: "Get today's zodiac sign ranking from 1st to 12th place with scores and tiers. Great for finding out which signs are luckiest today. | 取得今日十二星座排名（第1名至第12名），含分數與等級。快速查看今天最幸運的星座。",
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
   {
     name: 'get_all_fortunes',
-    description: 'Get complete fortune data for all 12 zodiac signs including rankings, tarot cards, category scores, and lucky items. Comprehensive daily horoscope overview.',
+    description: 'Get complete fortune data for all 12 zodiac signs including rankings, tarot cards, category scores, and lucky items. Comprehensive daily horoscope overview. | 取得全部12星座的完整運勢資料，包含排名、塔羅牌、分類分數及幸運物品。每日星座運勢總覽。',
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
 ];
@@ -474,11 +474,12 @@ const LANDING_HTML = `<!DOCTYPE html>
 <body class="bg-purple-950 text-gray-100 min-h-screen">
   <div class="max-w-3xl mx-auto px-6 py-16">
     <h1 class="text-4xl font-bold mb-4 text-purple-400">OpenClaw Fortune MCP Server</h1>
-    <p class="text-gray-400 mb-8">Daily zodiac horoscope + tarot card readings via MCP. Free forever. Connect your AI agent for personalized daily fortunes.</p>
+    <p class="text-gray-400 mb-4">Daily zodiac horoscope + tarot card readings via MCP. Free forever. Connect your AI agent for personalized daily fortunes.</p>
+    <p class="text-gray-500 mb-8">每日星座運勢 + 塔羅牌占卜，透過 MCP 協定提供。永久免費。連接你的 AI 代理，取得個人化每日運勢。</p>
 
     <div class="bg-purple-900/30 rounded-xl p-6 mb-8 border border-purple-800">
-      <h2 class="text-xl font-bold mb-3">Quick Connect</h2>
-      <p class="text-gray-400 text-sm mb-3">Add to your Claude Code / Cursor / Windsurf config:</p>
+      <h2 class="text-xl font-bold mb-3">Quick Connect | 快速連接</h2>
+      <p class="text-gray-400 text-sm mb-3">Add to your Claude Code / Cursor / Windsurf config: | 加入你的 Claude Code / Cursor / Windsurf 設定：</p>
       <pre class="bg-black rounded-lg p-4 text-sm text-green-400 overflow-x-auto">{
   "mcpServers": {
     "openclaw-fortune": {
@@ -489,24 +490,24 @@ const LANDING_HTML = `<!DOCTYPE html>
     </div>
 
     <div class="bg-purple-900/30 rounded-xl p-6 mb-8 border border-purple-800">
-      <h2 class="text-xl font-bold mb-3">Available Tools</h2>
+      <h2 class="text-xl font-bold mb-3">Available Tools | 可用工具</h2>
       <ul class="space-y-3 text-sm">
-        <li><code class="text-purple-400">get_daily_fortune</code> — Fortune for a zodiac sign (tarot + scores + lucky items)</li>
-        <li><code class="text-purple-400">get_fortune_ranking</code> — Today's zodiac ranking (1st-12th)</li>
-        <li><code class="text-purple-400">get_all_fortunes</code> — All 12 signs' complete fortunes</li>
+        <li><code class="text-purple-400">get_daily_fortune</code> — Fortune for a zodiac sign (tarot + scores + lucky items) | 星座運勢占卜（塔羅牌 + 分數 + 幸運物）</li>
+        <li><code class="text-purple-400">get_fortune_ranking</code> — Today's zodiac ranking (1st-12th) | 今日星座排名（第1名至第12名）</li>
+        <li><code class="text-purple-400">get_all_fortunes</code> — All 12 signs' complete fortunes | 全部12星座的完整運勢</li>
       </ul>
     </div>
 
     <div class="bg-purple-900/30 rounded-xl p-6 mb-8 border border-purple-800">
-      <h2 class="text-xl font-bold mb-3">Also Try</h2>
+      <h2 class="text-xl font-bold mb-3">Also Try | 其他服務</h2>
       <ul class="space-y-2 text-sm">
-        <li><a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="text-blue-400 hover:underline">OpenClaw Intel MCP</a> — AI agent market intelligence reports</li>
-        <li><a href="https://product-store.yagami8095.workers.dev" class="text-orange-400 hover:underline">OpenClaw Store</a> — AI tools and templates</li>
+        <li><a href="https://openclaw-intel-mcp.yagami8095.workers.dev" class="text-blue-400 hover:underline">OpenClaw Intel MCP</a> — AI agent market intelligence reports | AI 代理市場情報報告</li>
+        <li><a href="https://product-store.yagami8095.workers.dev" class="text-orange-400 hover:underline">OpenClaw Store</a> — AI tools and templates | AI 工具與範本</li>
       </ul>
     </div>
 
     <div class="text-center text-gray-600 text-sm">
-      <p>Powered by <a href="https://github.com/yagami8095/openclaw-mcp-servers" class="text-purple-400 hover:underline">OpenClaw Intelligence</a> | Free forever</p>
+      <p>Powered by <a href="https://github.com/yagami8095/openclaw-mcp-servers" class="text-purple-400 hover:underline">OpenClaw Intelligence</a> | Free forever | 永久免費</p>
     </div>
   </div>
 </body>

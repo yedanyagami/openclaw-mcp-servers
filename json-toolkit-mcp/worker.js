@@ -936,7 +936,7 @@ function mergeSchemas(schemas) {
 const TOOLS = [
   {
     name: 'json_format',
-    description: 'Pretty-print or minify JSON. Specify indent level (default 2) or set minify=true to compact JSON into a single line.',
+    description: 'Pretty-print or minify JSON. Specify indent level (default 2) or set minify=true to compact JSON into a single line. | 美化列印或壓縮 JSON。可指定縮排層級（預設 2）或設定 minify=true 壓縮為單行。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -949,7 +949,7 @@ const TOOLS = [
   },
   {
     name: 'json_validate',
-    description: 'Validate a JSON string. Returns valid=true with type info on success, or valid=false with line, column, error message, and a suggestion for fixing common mistakes.',
+    description: 'Validate a JSON string. Returns valid=true with type info on success, or valid=false with line, column, error message, and a suggestion for fixing common mistakes. | 驗證 JSON 字串。成功回傳 valid=true 及型別資訊，失敗回傳行號、欄位、錯誤訊息及修正建議。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -960,7 +960,7 @@ const TOOLS = [
   },
   {
     name: 'json_diff',
-    description: 'Compare two JSON values and return a structured diff showing added paths, removed paths, and changed values. Supports nested objects and arrays.',
+    description: 'Compare two JSON values and return a structured diff showing added paths, removed paths, and changed values. Supports nested objects and arrays. | 比較兩個 JSON 值，回傳結構化差異：新增路徑、移除路徑及變更值。支援巢狀物件與陣列。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -972,7 +972,7 @@ const TOOLS = [
   },
   {
     name: 'json_query',
-    description: 'Query JSON data using JSONPath-like syntax. Supports: root ($), dot notation ($.a.b), bracket notation ($["key"]), array index ($[0]), wildcard (*), deep scan (..), slice ([1:3]), filter ([?(@.age>18)]), and union ([0,1]).',
+    description: 'Query JSON data using JSONPath-like syntax. Supports: root ($), dot notation ($.a.b), bracket notation ($["key"]), array index ($[0]), wildcard (*), deep scan (..), slice ([1:3]), filter ([?(@.age>18)]), and union ([0,1]). | 使用類 JSONPath 語法查詢 JSON 資料。支援根節點、點記法、括號記法、陣列索引、萬用字元、深度掃描、切片、篩選及聯集。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -984,7 +984,7 @@ const TOOLS = [
   },
   {
     name: 'json_transform',
-    description: 'Transform JSON data. Operations: "flatten" (nested→flat with dot keys), "unflatten" (flat→nested), "pick" (keep only specified keys), "omit" (remove specified keys), "rename" (rename keys via a map). Use options.deep=true for recursive key operations.',
+    description: 'Transform JSON data. Operations: "flatten" (nested to flat with dot keys), "unflatten" (flat to nested), "pick" (keep only specified keys), "omit" (remove specified keys), "rename" (rename keys via a map). Use options.deep=true for recursive key operations. | 轉換 JSON 資料。操作：flatten（巢狀轉扁平）、unflatten（扁平轉巢狀）、pick（保留指定鍵）、omit（移除指定鍵）、rename（重新命名鍵）。支援 deep 遞迴操作。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1007,7 +1007,7 @@ const TOOLS = [
   },
   {
     name: 'json_schema_generate',
-    description: 'Generate a JSON Schema (draft-07 compatible) from a sample JSON object. Infers types, required fields, formats (date-time, email, uri, uuid), and nested structure. Ideal for API documentation or validation setup.',
+    description: 'Generate a JSON Schema (draft-07 compatible) from a sample JSON object. Infers types, required fields, formats (date-time, email, uri, uuid), and nested structure. Ideal for API documentation or validation setup. | 從範例 JSON 物件生成 JSON Schema（相容 draft-07）。自動推斷型別、必填欄位、格式（日期時間、Email、URI、UUID）及巢狀結構。適用於 API 文件或驗證設定。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1204,12 +1204,12 @@ async function handleMcpRequest(req, kv, clientIp, _proKeyInfo, apiKey) {
 
 function buildLandingHtml() {
   const tools = [
-    { name: 'json_format',          desc: 'Pretty-print or minify JSON with configurable indentation (1-8 spaces)' },
-    { name: 'json_validate',        desc: 'Validate JSON with detailed error info including line, column, and fix suggestions' },
-    { name: 'json_diff',            desc: 'Compare two JSON objects — shows added, removed, and changed paths' },
-    { name: 'json_query',           desc: 'Query JSON with JSONPath syntax: dot notation, wildcards, filters, slices, deep scan' },
-    { name: 'json_transform',       desc: 'Transform JSON: flatten/unflatten, pick/omit keys, rename keys (with deep option)' },
-    { name: 'json_schema_generate', desc: 'Generate JSON Schema from sample data — infers types, formats, required fields' },
+    { name: 'json_format',          desc: 'Pretty-print or minify JSON with configurable indentation | 美化列印或壓縮 JSON（可設定縮排）' },
+    { name: 'json_validate',        desc: 'Validate JSON with detailed error info and fix suggestions | 驗證 JSON 並提供詳細錯誤資訊及修正建議' },
+    { name: 'json_diff',            desc: 'Compare two JSON objects — shows added, removed, and changed paths | 比較兩個 JSON 物件的差異' },
+    { name: 'json_query',           desc: 'Query JSON with JSONPath syntax: wildcards, filters, deep scan | 使用 JSONPath 語法查詢 JSON 資料' },
+    { name: 'json_transform',       desc: 'Transform JSON: flatten, unflatten, pick, omit, rename keys | 轉換 JSON：扁平化、還原、挑選、排除、重命名' },
+    { name: 'json_schema_generate', desc: 'Generate JSON Schema from sample data | 從範例資料生成 JSON Schema' },
   ];
 
   const toolsHtml = tools.map(t => `
@@ -1301,20 +1301,23 @@ function buildLandingHtml() {
     <!-- Hero -->
     <div class="mb-12 text-center">
       <div class="inline-block bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-800/50 rounded-2xl px-6 py-2 mb-6">
-        <span class="text-cyan-400 text-sm font-medium">Free Tier: 20 requests/day per IP</span>
+        <span class="text-cyan-400 text-sm font-medium">Free Tier: 20 requests/day per IP | 免費方案：每 IP 每日 20 次請求</span>
       </div>
       <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
         JSON Toolkit MCP Server
       </h1>
       <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-        6 powerful JSON utilities for AI agents — format, validate, diff, query, transform, and generate schemas from JSON data.
+        6 powerful JSON utilities for AI agents — format, validate, diff, query, transform, and generate schemas.
+      </p>
+      <p class="text-gray-500 text-base max-w-2xl mx-auto mt-2">
+        為 AI 代理打造的 6 款強大 JSON 工具 — 格式化、驗證、比較、查詢、轉換及生成 Schema。
       </p>
     </div>
 
     <!-- Quick Connect -->
     <div class="bg-gray-900 rounded-2xl p-6 mb-8 border border-cyan-900/40 shadow-lg shadow-cyan-950/20">
-      <h2 class="text-lg font-bold mb-1 text-white">Quick Connect</h2>
-      <p class="text-gray-500 text-sm mb-4">Add to your Claude Code / Cursor / Windsurf / Cline MCP config:</p>
+      <h2 class="text-lg font-bold mb-1 text-white">Quick Connect | 快速連接</h2>
+      <p class="text-gray-500 text-sm mb-4">Add to your Claude Code / Cursor / Windsurf / Cline MCP config: | 加入你的 MCP 設定檔：</p>
       <pre class="bg-gray-950 rounded-xl p-4 text-sm text-cyan-300 overflow-x-auto border border-cyan-900/30">{
   "mcpServers": {
     "json-toolkit": {
@@ -1328,7 +1331,7 @@ function buildLandingHtml() {
 
     <!-- Tools -->
     <div class="bg-gray-900 rounded-2xl p-6 mb-8 border border-cyan-900/40">
-      <h2 class="text-lg font-bold mb-4 text-white">6 Free Tools</h2>
+      <h2 class="text-lg font-bold mb-4 text-white">6 Free Tools | 6 款免費工具</h2>
       <ul class="divide-y divide-cyan-900/30">
         ${toolsHtml}
       </ul>
@@ -1336,7 +1339,7 @@ function buildLandingHtml() {
 
     <!-- Usage Examples -->
     <div class="bg-gray-900 rounded-2xl p-6 mb-8 border border-cyan-900/40">
-      <h2 class="text-lg font-bold mb-4 text-white">Example Tool Calls</h2>
+      <h2 class="text-lg font-bold mb-4 text-white">Example Tool Calls | 工具呼叫範例</h2>
       <div class="space-y-4">
         <div>
           <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">json_query — JSONPath filter</p>
@@ -1370,24 +1373,24 @@ function buildLandingHtml() {
 
     <!-- Rate Limits -->
     <div class="bg-gray-900 rounded-2xl p-6 mb-8 border border-cyan-900/40">
-      <h2 class="text-lg font-bold mb-3 text-white">Rate Limits</h2>
+      <h2 class="text-lg font-bold mb-3 text-white">Rate Limits | 速率限制</h2>
       <div class="grid grid-cols-2 gap-4 text-sm">
         <div class="bg-gray-800/50 rounded-xl p-4">
           <div class="text-2xl font-bold text-cyan-400">20</div>
-          <div class="text-gray-400 mt-1">tool calls / day</div>
-          <div class="text-gray-600 text-xs mt-1">per IP address, resets midnight UTC</div>
+          <div class="text-gray-400 mt-1">tool calls / day | 每日呼叫次數</div>
+          <div class="text-gray-600 text-xs mt-1">per IP, resets midnight UTC | 每 IP，UTC 午夜重置</div>
         </div>
         <div class="bg-gray-800/50 rounded-xl p-4">
           <div class="text-2xl font-bold text-teal-400">6</div>
-          <div class="text-gray-400 mt-1">tools available</div>
-          <div class="text-gray-600 text-xs mt-1">all free, no API key required</div>
+          <div class="text-gray-400 mt-1">tools available | 可用工具數</div>
+          <div class="text-gray-600 text-xs mt-1">all free, no API key | 全部免費，無需 API 金鑰</div>
         </div>
       </div>
     </div>
 
     <!-- Ecosystem -->
     <div class="bg-gray-900 rounded-2xl p-6 mb-8 border border-cyan-900/40">
-      <h2 class="text-lg font-bold mb-4 text-white">OpenClaw MCP Ecosystem</h2>
+      <h2 class="text-lg font-bold mb-4 text-white">OpenClaw MCP Ecosystem | OpenClaw MCP 生態系</h2>
       <ul class="divide-y divide-cyan-900/30">
         ${ecosystemHtml}
       </ul>

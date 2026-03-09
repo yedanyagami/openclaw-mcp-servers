@@ -719,7 +719,7 @@ function tool_regex_extract({ pattern, text, flags = 'g' }) {
 
 const TOOLS = {
   regex_test: {
-    description: 'Test a regex pattern against input text. Returns matches (full match + groups), match count, and positions.',
+    description: 'Test a regex pattern against input text. Returns matches (full match + groups), match count, and positions. | 測試正規表達式。回傳匹配結果（完整匹配+群組）、匹配數量及位置。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -732,7 +732,7 @@ const TOOLS = {
     handler: tool_regex_test,
   },
   regex_explain: {
-    description: 'Explain a regex pattern in plain English, token by token.',
+    description: 'Explain a regex pattern in plain English, token by token. | 以白話英文逐一解釋正規表達式的每個語法單元。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -743,7 +743,7 @@ const TOOLS = {
     handler: tool_regex_explain,
   },
   regex_build: {
-    description: 'Build a regex from a natural language description (e.g., "match email addresses"). Returns pattern, explanation, and test examples.',
+    description: 'Build a regex from a natural language description (e.g., "match email addresses"). Returns pattern, explanation, and test examples. | 從自然語言描述建立正規表達式（如「匹配 Email 地址」）。回傳模式、說明及測試範例。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -760,7 +760,7 @@ const TOOLS = {
     handler: tool_regex_build,
   },
   regex_replace: {
-    description: 'Apply a regex find-and-replace on text.',
+    description: 'Apply a regex find-and-replace on text. | 對文字套用正規表達式尋找與取代。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -774,7 +774,7 @@ const TOOLS = {
     handler: tool_regex_replace,
   },
   regex_extract: {
-    description: 'Extract all matches from text with named capture group support.',
+    description: 'Extract all matches from text with named capture group support. | 從文字中擷取所有匹配結果，支援具名捕獲群組。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -988,6 +988,9 @@ function landingPage() {
       <p class="text-gray-300 text-base max-w-xl mx-auto mt-3">
         A utility MCP server for AI agents that need to build, test, and explain regular expression patterns.
       </p>
+      <p class="text-gray-400 text-sm max-w-xl mx-auto mt-2">
+        為 AI 代理打造的正規表達式工具伺服器 — 建立、測試及解釋 Regex 模式。
+      </p>
       <div class="mt-4 flex justify-center gap-3 flex-wrap">
         <span class="px-3 py-1 rounded-full bg-emerald-800 text-emerald-200 text-sm">MCP 2025-03-26</span>
         <span class="px-3 py-1 rounded-full bg-emerald-800 text-emerald-200 text-sm">20 req/day free</span>
@@ -998,23 +1001,23 @@ function landingPage() {
 
     <!-- MCP Endpoint -->
     <div class="card rounded-xl p-5 mb-8">
-      <h2 class="text-emerald-300 font-semibold text-lg mb-3">MCP Endpoint</h2>
+      <h2 class="text-emerald-300 font-semibold text-lg mb-3">MCP Endpoint | MCP 端點</h2>
       <div class="code-block rounded-lg p-3 font-mono text-sm text-emerald-400 break-all">
         POST https://regex-engine-mcp.yagami8095.workers.dev/mcp
       </div>
-      <p class="text-gray-400 text-sm mt-2">Connect with any MCP-compatible AI client (Claude Desktop, OpenHands, etc.)</p>
+      <p class="text-gray-400 text-sm mt-2">Connect with any MCP-compatible AI client | 使用任何相容 MCP 的 AI 客戶端連接</p>
     </div>
 
     <!-- Tools -->
     <div class="mb-8">
-      <h2 class="text-emerald-300 font-semibold text-lg mb-4">Available Tools</h2>
+      <h2 class="text-emerald-300 font-semibold text-lg mb-4">Available Tools | 可用工具</h2>
       <div class="grid gap-3">
         ${[
-          { name: 'regex_test', desc: 'Test a pattern against text — returns matches, positions, and capture groups' },
-          { name: 'regex_explain', desc: 'Token-by-token plain English explanation of any regex pattern' },
-          { name: 'regex_build', desc: 'Build a regex from natural language (email, URL, IP, phone, date, and 15+ more)' },
-          { name: 'regex_replace', desc: 'Find-and-replace with regex — supports backreferences like $1, $2' },
-          { name: 'regex_extract', desc: 'Extract all matches with named capture group support' },
+          { name: 'regex_test', desc: 'Test a pattern against text — returns matches, positions, and capture groups | 測試模式 — 回傳匹配、位置及捕獲群組' },
+          { name: 'regex_explain', desc: 'Token-by-token plain English explanation of any regex pattern | 逐一解釋正規表達式的每個語法單元' },
+          { name: 'regex_build', desc: 'Build a regex from natural language (email, URL, IP, phone, etc.) | 從自然語言建立 Regex（Email、URL、IP、電話等）' },
+          { name: 'regex_replace', desc: 'Find-and-replace with regex — supports backreferences $1, $2 | 正規表達式尋找與取代 — 支援反向參照' },
+          { name: 'regex_extract', desc: 'Extract all matches with named capture group support | 擷取所有匹配結果，支援具名捕獲群組' },
         ]
           .map(
             (t) =>
@@ -1029,7 +1032,7 @@ function landingPage() {
 
     <!-- Quick Example -->
     <div class="card rounded-xl p-5 mb-8">
-      <h2 class="text-emerald-300 font-semibold text-lg mb-3">Quick Start</h2>
+      <h2 class="text-emerald-300 font-semibold text-lg mb-3">Quick Start | 快速開始</h2>
       <div class="code-block rounded-lg p-4 font-mono text-xs text-gray-300 overflow-x-auto">
 <pre>{
   "jsonrpc": "2.0",
@@ -1048,7 +1051,7 @@ function landingPage() {
 
     <!-- Ecosystem -->
     <div class="card rounded-xl p-5 mb-8">
-      <h2 class="text-emerald-300 font-semibold text-lg mb-4">OpenClaw MCP Ecosystem</h2>
+      <h2 class="text-emerald-300 font-semibold text-lg mb-4">OpenClaw MCP Ecosystem | OpenClaw MCP 生態系</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
         ${[
           { name: 'Regex Engine', url: 'regex-engine-mcp', current: true },
@@ -1079,7 +1082,7 @@ function landingPage() {
     <!-- Footer -->
     <div class="text-center text-gray-500 text-sm mt-8">
       <p>Regex Engine MCP v1.0.0 · <a href="https://product-store.yagami8095.workers.dev" class="text-emerald-400 hover:underline" target="_blank">OpenClaw Store</a></p>
-      <p class="mt-1">20 requests/day free · Rate limited per IP</p>
+      <p class="mt-1">20 requests/day free · Rate limited per IP | 每日 20 次免費請求 · 依 IP 限速</p>
     </div>
   </div>
 </body>

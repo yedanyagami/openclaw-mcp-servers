@@ -541,6 +541,53 @@ function catalogPage(env) {
         <a href="/auth/login" class="btn" style="background:#fff;color:#ff4500;font-size:1.1rem;padding:16px 40px;text-decoration:none;display:inline-block;border-radius:8px;font-weight:bold;">Start Free Trial &rarr;</a>
       </div>
 
+      <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:32px; margin:24px 0;">
+        <h3 style="color:#fff; margin-bottom:8px; text-align:center; font-size:1.4rem;">Compare Plans | 方案比較</h3>
+        <p style="color:#888; text-align:center; font-size:0.85rem; margin-bottom:24px;">Choose the plan that fits your workflow | 選擇適合你工作流程的方案</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:12px; padding:24px; text-align:center;">
+            <p style="color:#888; font-size:0.75rem; letter-spacing:2px; margin-bottom:4px;">FREE</p>
+            <p style="color:#fff; font-size:2rem; font-weight:bold;">$0</p>
+            <p style="color:#666; font-size:0.8rem; margin-bottom:16px;">forever | 永久</p>
+            <div style="text-align:left; font-size:0.85rem; color:#aaa; line-height:2;">
+              <p>&#10003; 9 MCP servers</p>
+              <p>&#10003; 49 tools</p>
+              <p>&#10003; 10 calls/day</p>
+              <p style="color:#555;">&#10007; Priority routing</p>
+              <p style="color:#555;">&#10007; Support</p>
+            </div>
+            <a href="https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers" class="btn" style="background:#333;color:#fff;text-decoration:none;display:block;margin-top:16px;padding:10px;border-radius:8px;font-size:0.85rem;" target="_blank">Get Started</a>
+          </div>
+          <div style="background:#1a1a2e; border:2px solid #ff6b35; border-radius:12px; padding:24px; text-align:center; position:relative;">
+            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#ff6b35;color:#fff;padding:2px 16px;border-radius:12px;font-size:0.7rem;font-weight:bold;">MOST POPULAR</div>
+            <p style="color:#ff6b35; font-size:0.75rem; letter-spacing:2px; margin-bottom:4px;">PRO</p>
+            <p style="color:#fff; font-size:2rem; font-weight:bold;">$9</p>
+            <p style="color:#666; font-size:0.8rem; margin-bottom:16px;">one-time | 一次性</p>
+            <div style="text-align:left; font-size:0.85rem; color:#aaa; line-height:2;">
+              <p style="color:#4caf50;">&#10003; 9 MCP servers</p>
+              <p style="color:#4caf50;">&#10003; 49 tools</p>
+              <p style="color:#4caf50;">&#10003; <b style="color:#ff6b35;">1,000</b> calls/day</p>
+              <p style="color:#4caf50;">&#10003; Single API key</p>
+              <p style="color:#555;">&#10007; Priority routing</p>
+            </div>
+            <a href="/products/ecosystem-pro" class="btn" style="background:#ff6b35;color:#fff;text-decoration:none;display:block;margin-top:16px;padding:10px;border-radius:8px;font-size:0.85rem;font-weight:bold;">Get Pro &rarr;</a>
+          </div>
+          <div style="background:#151515; border:1px solid #FFD700; border-radius:12px; padding:24px; text-align:center;">
+            <p style="color:#FFD700; font-size:0.75rem; letter-spacing:2px; margin-bottom:4px;">ENTERPRISE</p>
+            <p style="color:#fff; font-size:2rem; font-weight:bold;">$99</p>
+            <p style="color:#666; font-size:0.8rem; margin-bottom:16px;">/month | 每月</p>
+            <div style="text-align:left; font-size:0.85rem; color:#aaa; line-height:2;">
+              <p style="color:#4caf50;">&#10003; All 49 tools</p>
+              <p style="color:#4caf50;">&#10003; <b style="color:#FFD700;">10,000</b> calls/day</p>
+              <p style="color:#4caf50;">&#10003; Priority routing</p>
+              <p style="color:#4caf50;">&#10003; Custom endpoint</p>
+              <p style="color:#4caf50;">&#10003; 24h email support</p>
+            </div>
+            <a href="/products/enterprise-bundle" class="btn" style="background:#FFD700;color:#1a1a2e;text-decoration:none;display:block;margin-top:16px;padding:10px;border-radius:8px;font-size:0.85rem;font-weight:bold;">Contact Sales</a>
+          </div>
+        </div>
+      </div>
+
       <div style="background:#0d1117; border:1px solid #30363d; border-radius:12px; padding:24px; margin:24px 0;">
         <h3 style="color:#fff; margin-bottom:16px; text-align:center;">🔌 Free MCP Servers — Connect in Seconds | 免費 MCP 伺服器 — 秒速連接</h3>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
@@ -553,6 +600,41 @@ function catalogPage(env) {
             <p style="color:#9c27b0; font-weight:bold;">🔮 OpenClaw Fortune</p>
             <p style="color:#888; font-size:0.85rem; margin:8px 0;">Daily zodiac horoscope + tarot readings for all 12 signs. | 每日星座運勢 + 塔羅牌占卜，12 星座全覆蓋。</p>
             <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#2196f3; font-weight:bold;">🧰 JSON Toolkit</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Format, validate, diff, query, transform JSON. | JSON 格式化、驗證、差異比較、查詢、轉換。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://json-toolkit-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#4caf50; font-weight:bold;">🔤 Regex Engine</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Test, explain, build regex from English. | 測試、解釋、從自然語言建立正規表達式。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://regex-engine-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#e91e63; font-weight:bold;">🎨 Color Palette</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">WCAG contrast, harmonies, gradients, Tailwind. | WCAG 對比度、配色、漸層、Tailwind。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://color-palette-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#ff9800; font-weight:bold;">⏰ Timestamp</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Unix/ISO convert, timezone, cron parse. | Unix/ISO 轉換、時區、Cron 解析。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://timestamp-converter-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#00bcd4; font-weight:bold;">✨ Prompt Enhancer</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Optimize, score, convert AI prompts. | AI 提示詞優化、評分、格式轉換。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#795548; font-weight:bold;">📖 MoltBook Publisher</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">MD to HTML, SEO meta, translation, outlines. | Markdown 轉 HTML、SEO 優化、翻譯、大綱。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp</code>
+          </div>
+          <div style="background:#151515; border:1px solid #2a2a2a; border-radius:8px; padding:16px;">
+            <p style="color:#607d8b; font-weight:bold;">🤖 AgentForge Compare</p>
+            <p style="color:#888; font-size:0.85rem; margin:8px 0;">Side-by-side AI tool comparison. | AI 工具並排比較。</p>
+            <code style="background:#000; display:block; padding:8px; border-radius:4px; font-size:0.7rem; color:#4caf50; word-break:break-all; margin-top:8px;">https://agentforge-compare-mcp.yagami8095.workers.dev/mcp</code>
           </div>
         </div>
         <p style="text-align:center; margin-top:16px; font-size:0.8rem; color:#666;">Works with Claude Code, Cursor, Windsurf, Cline — just add the URL to your MCP config<br>
