@@ -41,7 +41,7 @@ This project supports English, 繁體中文, and 日本語.
 | Uptime | **99.9%** (global CDN) | Depends on your infra |
 | Latency | **<100ms** (edge compute) | 200-500ms (centralized) |
 | Free tier | **Yes** (daily limits) | Most require API keys |
-| Pro upgrade | **$9/mo** = ALL 9 servers | Per-server pricing |
+| Pro upgrade | **$29/mo** = ALL 9 servers, 50K calls | Per-server pricing |
 
 ---
 
@@ -52,7 +52,7 @@ Your support helps keep these 9 MCP servers running and free for everyone!
 - **[Sponsor on GitHub](https://github.com/sponsors/yedanyagamiai-cmd)** - Monthly support with perks
 - **[Buy me a coffee on Ko-fi](https://ko-fi.com/openclaw)** - One-time tips & support
 - **[PayPal Tip](https://paypal.me/Yagami8095)** - Direct support via PayPal
-- **[Get Pro API Key](https://paypal.me/Yagami8095/9)** - $9/month for 1000 calls/day across all servers
+- **[Get Pro API Key](https://product-store.yagami8095.workers.dev/products/ecosystem-pro)** - $29/month for 50K calls/mo across all servers
 
 ## Install in Cursor (One Click)
 
@@ -201,7 +201,7 @@ Add to `claude_desktop_config.json`:
 | `get_trending_topics` | Trending on note.com/Zenn/Qiita | **Pro** |
 | `cross_post_format` | Format for all 3 platforms | **Pro** |
 | `analyze_article_performance` | Predict performance before publish | **Pro** |
-| `purchase_pro_key` | Unlock Pro features ($9/mo) | — |
+| `purchase_pro_key` | Unlock Pro features ($29/mo) | — |
 
 ### AI Tool Compare — 5 tools
 
@@ -221,32 +221,20 @@ Add to `claude_desktop_config.json`:
 
 <table>
 <tr><th>Tier</th><th>Cost</th><th>What you get</th></tr>
-<tr><td><strong>Free</strong></td><td>$0</td><td>Limited daily calls per server (see table above)</td></tr>
-<tr><td><strong>Pro</strong></td><td><strong>$9/mo</strong></td><td>1,000 calls/day across ALL 9 servers + Pro-only tools</td></tr>
-<tr><td><strong>x402</strong></td><td>$0.05/call</td><td>Pay-per-call with USDC on Base L2 (auto-pay, no signup)</td></tr>
+<tr><td><strong>Free</strong></td><td>$0</td><td>1,000 calls/month across 3 servers</td></tr>
+<tr><td><strong>Pro</strong></td><td><strong>$29/mo</strong></td><td>50,000 calls/month across ALL 9 servers + Pro-only tools</td></tr>
+<tr><td><strong>Enterprise</strong></td><td><strong>$99/mo</strong></td><td>500,000 calls/month + priority routing + 24h support</td></tr>
+<tr><td><strong>Credit Pack</strong></td><td>$29 one-time</td><td>5,000 credits (never expire)</td></tr>
 </table>
 
 ### Get Pro Key
 
 | Method | Link |
 |--------|------|
-| **Stripe** (Card) | [Buy Pro Key - $9/mo](https://buy.stripe.com/4gw5na5U19SP9TW288) |
-| **PayPal** | [paypal.me/Yagami8095/9](https://paypal.me/Yagami8095/9) |
 | **Product Store** | [product-store.yagami8095.workers.dev](https://product-store.yagami8095.workers.dev) |
+| **PayPal** | [paypal.me/Yagami8095/29](https://paypal.me/Yagami8095/29) |
 
-After payment, email **yagami8095@gmail.com** with your receipt. API key delivered within 24h.
-
-### Intel Pro (Advanced)
-
-Deep AI market analysis powered by DeepSeek R1:
-
-| Tier | Cost | Access |
-|------|------|--------|
-| Free | $0 | 5 queries/day |
-| Pro | $19/mo | Unlimited + deep analysis |
-| Agent | $0.05/query | API access for AI agents |
-
-[Intel Pro Dashboard](https://openclaw-intel-pro.onrender.com)
+After payment, your Pro API key is generated instantly. Questions? Email **yagami8095@gmail.com**.
 
 ### x402 Auto-Pay
 
@@ -301,7 +289,7 @@ All servers run on Cloudflare Workers (edge compute, 300+ PoPs worldwide). Strea
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-red)](https://github.com/sponsors/yedanyagamiai-cmd)
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-blue)](https://paypal.me/Yagami8095)
-[![Pro Key](https://img.shields.io/badge/Pro_Key-%249%2Fmo-green)](https://buy.stripe.com/4gw5na5U19SP9TW288)
+[![Pro Key](https://img.shields.io/badge/Pro_Key-%2429%2Fmo-green)](https://product-store.yagami8095.workers.dev/products/ecosystem-pro)
 
 ## License
 
