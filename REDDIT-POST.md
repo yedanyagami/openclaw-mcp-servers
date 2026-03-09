@@ -1,14 +1,14 @@
-# [Project] I built 49 AI tools as MCP servers on Cloudflare Workers — free tier, zero setup, paste URL and go
+# [Project] I built 49 AI tools as MCP servers on Cloudflare Workers — $0/mo infra, paste a URL and go
 
-Hey everyone! I've been building MCP (Model Context Protocol) servers that run on Cloudflare Workers and wanted to share what I've learned.
+Hey everyone! Solo developer here. I built 9 MCP servers with 49 specialized tools on Cloudflare Workers edge compute, and the total infrastructure cost is $0/month. Wanted to share the project and what I learned.
 
 ## The Problem
 
-Every time I switch between Claude Code, Cursor, and Windsurf, I need the same utility tools — JSON formatting, regex testing, color palettes, timestamp conversion. Installing npm packages per-project is tedious, and they break across different MCP clients.
+Using Claude Code (71% of AI agent users btw), Cursor, and Windsurf daily — I kept needing the same utilities: JSON formatting, regex testing, color palettes, timestamp conversion. Installing npm packages per-project is tedious, they break across MCP clients, and they clutter every project.
 
 ## The Solution
 
-I put 49 tools across 9 MCP servers on Cloudflare Workers. They use Streamable HTTP transport, so you just paste a URL into any MCP client config. No installation, no Docker, no API keys for free tier.
+49 tools across 9 MCP servers on Cloudflare Workers. Streamable HTTP transport means you paste ONE URL into your MCP client config. No npm install, no Docker, no API keys for free tier. Works globally with <100ms latency (300+ edge PoPs).
 
 ## Quick start (literally 10 seconds):
 
@@ -43,24 +43,38 @@ Add to your MCP config:
 - Streamable HTTP transport fits perfectly
 - KV for rate limiting, D1 for state
 
-## Pricing
+## Pricing (market-validated)
 
-- **Free**: 10-50 calls/day (enough for personal projects)
-- **Pro**: $9 one-time for 1000 calls/day across everything
-- **x402**: Pay-per-call with USDC (experimental)
+| Tier | Price | What you get |
+|------|-------|-------------|
+| Free | $0 | 1,000 calls/month, 3 servers |
+| Pro | $29/mo | 50,000 calls/month, all 9 servers |
+| Credit Pack | $29 one-time | 5,000 credits (never expire) |
+| Enterprise | $99/mo | 500K calls/month + support |
+
+For comparison: Composio charges $29/mo for generic connectors. We charge $29/mo for 49 specialized AI tools.
+
+## Being transparent about numbers
+
+- Built over ~3 months solo
+- $0 infrastructure cost
+- 7 historical orders, $172 total revenue
+- Currently rebuilding from $0 MRR after payment restructuring
 
 GitHub: https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers (MIT)
+Store: https://product-store.yagami8095.workers.dev
 
-Works with Claude Code, Cursor, Windsurf, Cline, and any MCP-compatible client. Also published on Smithery and 8 other MCP directories.
+Works with Claude Code, Cursor, Windsurf, Cline, and any MCP-compatible client.
 
-Would love feedback on the tool selection and architecture! What tools would you want to see added?
+**What tools would you want to see added?** I'm looking for the utilities you reach for most often when coding with AI assistants.
 
 ---
 
 **Best subreddits to post:**
-- r/ClaudeAI
+- r/ClaudeAI (primary — 71% of AI agent users use Claude Code)
 - r/MCP
 - r/LocalLLaMA
 - r/ChatGPTCoding
 - r/SideProject
 - r/webdev
+- r/indiehackers
