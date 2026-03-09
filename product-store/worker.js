@@ -1646,6 +1646,119 @@ function handleTokushoho() {
   });
 }
 
+// ============================================================
+// FREE TOOL LANDING PAGES
+// ============================================================
+function freeToolPage(title, opts) {
+  const toolsList = opts.tools.map(t => {
+    const [name, ...desc] = t.split(' — ');
+    return `<li style="padding:8px 0;border-bottom:1px solid #1a1a1a;"><code style="background:#1a1a1a;padding:2px 8px;border-radius:4px;color:#ff6b35;">${name}</code> — ${desc.join(' — ')}</li>`;
+  }).join('');
+
+  return baseHTML(`${title} — Free MCP Server | OpenClaw`, `
+<div class="hero">
+  <h1>${opts.emoji} ${title}</h1>
+  <p style="font-size:1.2rem;max-width:700px;margin:0 auto 16px;">${opts.tagline}</p>
+  <p style="color:#888;">${opts.description}</p>
+</div>
+<div class="container" style="max-width:800px;">
+  <div style="background:#0d1117;border:2px solid #ff6b35;border-radius:12px;padding:24px;margin:24px 0;">
+    <h3 style="color:#ff6b35;margin-bottom:12px;">Connect in 10 seconds</h3>
+    <p style="color:#888;font-size:0.85rem;margin-bottom:16px;">Add to your MCP client config (Claude Code, Cursor, Windsurf, etc.):</p>
+    <pre style="background:#000;padding:16px;border-radius:8px;overflow-x:auto;font-size:0.9rem;color:#e0e0e0;"><code>{
+  "${opts.serverName}": {
+    "type": "streamable-http",
+    "url": "${opts.mcpUrl}"
+  }
+}</code></pre>
+    <p style="color:#4caf50;font-size:0.85rem;margin-top:12px;">No API key needed for free tier. 1,000 calls/month.</p>
+  </div>
+
+  <h2 style="margin:32px 0 16px;">Available Tools (${opts.tools.length})</h2>
+  <ul style="list-style:none;padding:0;">${toolsList}</ul>
+
+  <div style="background:#1a1a1a;border-radius:12px;padding:24px;margin:32px 0;text-align:center;">
+    <h3 style="margin-bottom:12px;">Need more calls?</h3>
+    <p style="color:#888;margin-bottom:16px;">Free: 1,000 calls/month | Pro: 50,000 calls/month across all 9 servers</p>
+    <a href="/products/ecosystem-pro" class="btn btn-stripe" style="text-decoration:none;">Get Pro — $29/mo</a>
+  </div>
+
+  <div style="margin:32px 0;">
+    <h3 style="margin-bottom:16px;">All 9 MCP Servers</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+      <a href="/tools/json" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">🔧 JSON Toolkit (6)</a>
+      <a href="/tools/regex" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">🔍 Regex Engine (5)</a>
+      <a href="/tools/color" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">🎨 Color Palette (5)</a>
+      <a href="/tools/timestamp" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">⏰ Timestamp (5)</a>
+      <a href="/tools/fortune" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">🔮 Fortune & Tarot (3)</a>
+      <a href="https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">✨ Prompt Enhancer (6)</a>
+      <a href="https://openclaw-intel-mcp.yagami8095.workers.dev/mcp" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">📊 Market Intel (6)</a>
+      <a href="https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">📝 Publisher (8)</a>
+      <a href="https://agentforge-compare-mcp.yagami8095.workers.dev/mcp" style="background:#111;padding:12px;border-radius:8px;color:#e0e0e0;text-decoration:none;border:1px solid #222;">⚔️ AI Compare (5)</a>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:32px 0;padding:24px;background:#0d1117;border-radius:12px;">
+    <p style="color:#888;font-size:0.9rem;">
+      <a href="https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers" style="color:#ff6b35;">GitHub</a> &middot;
+      <a href="/" style="color:#ff6b35;">Store</a> &middot;
+      <a href="/tools" style="color:#ff6b35;">All Free Tools</a>
+    </p>
+  </div>
+</div>`);
+}
+
+function freeToolsIndexPage() {
+  const servers = [
+    { path: '/tools/json', emoji: '🔧', name: 'JSON Toolkit', tools: 6, desc: 'Format, validate, diff, query, transform, schema' },
+    { path: '/tools/regex', emoji: '🔍', name: 'Regex Engine', tools: 5, desc: 'Test, explain, build from English, replace, extract' },
+    { path: '/tools/color', emoji: '🎨', name: 'Color Palette', tools: 5, desc: 'Harmonies, WCAG contrast, CSS gradients, Tailwind' },
+    { path: '/tools/timestamp', emoji: '⏰', name: 'Timestamp Converter', tools: 5, desc: 'Unix/ISO convert, timezone, cron parse, duration' },
+    { path: '/tools/fortune', emoji: '🔮', name: 'Fortune & Tarot', tools: 3, desc: 'Daily horoscope, zodiac rankings, tarot readings' },
+  ];
+
+  const cards = servers.map(s => `
+    <a href="${s.path}" style="display:block;background:#111;border:1px solid #222;border-radius:12px;padding:24px;text-decoration:none;color:#e0e0e0;transition:border-color 0.2s;">
+      <div style="font-size:2rem;margin-bottom:8px;">${s.emoji}</div>
+      <h3 style="color:#ff6b35;margin-bottom:4px;">${s.name}</h3>
+      <p style="color:#888;font-size:0.85rem;margin-bottom:8px;">${s.desc}</p>
+      <span style="background:#1a1a1a;padding:2px 8px;border-radius:4px;font-size:0.75rem;color:#4caf50;">${s.tools} free tools</span>
+    </a>`).join('');
+
+  return baseHTML('Free MCP Tools — 49 AI Tools for Developers | OpenClaw', `
+<div class="hero">
+  <h1>🛠️ Free MCP Tools for Developers</h1>
+  <p style="font-size:1.2rem;max-width:700px;margin:0 auto 16px;">49 specialized AI tools across 9 MCP servers. Zero setup — paste a URL and connect.</p>
+  <p style="color:#888;">Works with Claude Code, Cursor, Windsurf, Cline, and any MCP-compatible client.</p>
+  <div style="margin-top:16px;">
+    <span style="background:rgba(76,175,80,0.15);border:1px solid rgba(76,175,80,0.3);padding:6px 14px;border-radius:8px;font-size:0.85rem;color:#4caf50;">Free: 1,000 calls/month</span>
+    <span style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.3);padding:6px 14px;border-radius:8px;font-size:0.85rem;color:#ff6b35;margin-left:8px;">Pro: 50,000 calls/month — $29/mo</span>
+  </div>
+</div>
+<div class="container" style="max-width:900px;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:32px 0;">
+    ${cards}
+  </div>
+
+  <div style="background:#0d1117;border:2px solid #ff6b35;border-radius:12px;padding:32px;margin:32px 0;text-align:center;">
+    <h2 style="margin-bottom:8px;">Quick Start — Connect All 9 Servers</h2>
+    <p style="color:#888;margin-bottom:16px;">Add to your MCP client config:</p>
+    <pre style="background:#000;padding:16px;border-radius:8px;overflow-x:auto;font-size:0.8rem;color:#e0e0e0;text-align:left;"><code>{
+  "json-toolkit": { "type": "streamable-http", "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp" },
+  "regex-engine": { "type": "streamable-http", "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp" },
+  "color-palette": { "type": "streamable-http", "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp" },
+  "timestamp": { "type": "streamable-http", "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp" },
+  "fortune": { "type": "streamable-http", "url": "https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp" }
+}</code></pre>
+  </div>
+
+  <div style="text-align:center;margin:32px 0;">
+    <p style="color:#888;margin-bottom:16px;">Need more tools and higher limits?</p>
+    <a href="/products/ecosystem-pro" class="btn btn-stripe" style="text-decoration:none;">Get Pro — $29/mo (all 9 servers, 50K calls)</a>
+  </div>
+</div>`);
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -1691,7 +1804,7 @@ export default {
       if (path === '/buy/pro' && method === 'GET') {
         return new Response(null, {
           status: 302,
-          headers: { ...CORS, 'Location': 'https://paypal.me/Yagami8095/9' }
+          headers: { ...CORS, 'Location': 'https://paypal.me/Yagami8095/29' }
         });
       }
 
@@ -1843,7 +1956,8 @@ export default {
 ## Quick Start
 Add to MCP config: {"url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"}
 
-## Pro: $9/month, 1000 calls/day all servers
+## Free: 1,000 calls/month across 3 servers
+## Pro: $29/month, 50,000 calls/month all 9 servers
 https://product-store.yagami8095.workers.dev/products/ecosystem-pro
 
 ## Source: https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers`, {
@@ -1873,6 +1987,62 @@ https://product-store.yagami8095.workers.dev/products/ecosystem-pro
 </table>
 <p style="margin-top:40px;color:#888;font-size:13px;">Last updated | 最後更新: 2026-03-07 | <a href="/" style="color:#6c5ce7;">Back to Store | 返回商店</a></p>
 </div>`));
+      }
+
+      // === FREE TOOL LANDING PAGES ===
+      if (path === '/tools/json' && method === 'GET') {
+        return htmlResponse(freeToolPage('JSON Toolkit MCP', {
+          emoji: '🔧',
+          tagline: 'JSON validation, formatting, diffing, querying — as an MCP tool for your AI coding assistant',
+          description: 'Connect to Claude Code, Cursor, or Windsurf in 10 seconds. Zero install, zero config.',
+          tools: ['json_format — Pretty-print any JSON', 'json_validate — Validate with detailed error messages', 'json_diff — Compare two JSON objects', 'json_query — JMESPath queries on JSON data', 'json_transform — Transform JSON with mapping rules', 'json_schema — Auto-generate JSON Schema from data'],
+          mcpUrl: 'https://json-toolkit-mcp.yagami8095.workers.dev/mcp',
+          serverName: 'json-toolkit',
+          tryExample: '{"url":"https://json-toolkit-mcp.yagami8095.workers.dev/mcp","method":"POST","body":{"jsonrpc":"2.0","method":"tools/call","params":{"name":"json_format","arguments":{"json":"{\\\"name\\\":\\\"test\\\",\\\"nested\\\":{\\\"a\\\":1}}"}},"id":1}}',
+        }));
+      }
+      if (path === '/tools/regex' && method === 'GET') {
+        return htmlResponse(freeToolPage('Regex Engine MCP', {
+          emoji: '🔍',
+          tagline: 'Test, explain, and build regex patterns — powered by MCP for AI assistants',
+          description: 'Natural language to regex. Regex to explanation. Test against strings. All inside your AI editor.',
+          tools: ['regex_test — Test patterns against strings with match details', 'regex_explain — Human-readable explanation of any regex', 'regex_build — Generate regex from natural language description', 'regex_replace — Find and replace with regex patterns', 'regex_extract — Extract all matches from text'],
+          mcpUrl: 'https://regex-engine-mcp.yagami8095.workers.dev/mcp',
+          serverName: 'regex-engine',
+        }));
+      }
+      if (path === '/tools/color' && method === 'GET') {
+        return htmlResponse(freeToolPage('Color Palette MCP', {
+          emoji: '🎨',
+          tagline: 'Color harmonies, WCAG contrast checking, CSS gradients — MCP tools for designers and developers',
+          description: 'Generate palettes, check accessibility contrast ratios, convert between formats, lookup Tailwind colors.',
+          tools: ['color_convert — Convert between HEX, RGB, HSL, and more', 'color_palette — Generate harmonious color palettes', 'color_contrast — WCAG 2.1 contrast ratio checking', 'color_gradient — Generate CSS gradient code', 'color_tailwind — Lookup Tailwind CSS color values'],
+          mcpUrl: 'https://color-palette-mcp.yagami8095.workers.dev/mcp',
+          serverName: 'color-palette',
+        }));
+      }
+      if (path === '/tools/timestamp' && method === 'GET') {
+        return htmlResponse(freeToolPage('Timestamp Converter MCP', {
+          emoji: '⏰',
+          tagline: 'Unix/ISO timestamps, timezone conversion, cron parsing — MCP tools for time handling',
+          description: 'Auto-detect format, convert between timezones, parse cron expressions, format durations.',
+          tools: ['convert_timestamp — Auto-detect and convert Unix/ISO timestamps', 'timezone_convert — Convert between any timezones', 'cron_parse — Parse and explain cron expressions', 'duration_format — Human-readable duration formatting', 'time_diff — Calculate time differences'],
+          mcpUrl: 'https://timestamp-converter-mcp.yagami8095.workers.dev/mcp',
+          serverName: 'timestamp-converter',
+        }));
+      }
+      if (path === '/tools/fortune' && method === 'GET') {
+        return htmlResponse(freeToolPage('Fortune & Tarot MCP', {
+          emoji: '🔮',
+          tagline: 'Daily horoscope, zodiac rankings, tarot readings — the fun MCP server for AI assistants',
+          description: 'Add some magic to your AI coding assistant. Get daily fortunes, zodiac compatibility, and tarot insights.',
+          tools: ['get_fortune_ranking — Today\'s zodiac luck ranking for all 12 signs', 'get_horoscope — Detailed daily horoscope for any zodiac sign', 'get_tarot_reading — Draw tarot cards with AI-powered interpretations'],
+          mcpUrl: 'https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp',
+          serverName: 'fortune',
+        }));
+      }
+      if (path === '/tools' && method === 'GET') {
+        return htmlResponse(freeToolsIndexPage());
       }
 
       return htmlResponse(notFoundPage(), 404);
