@@ -31,8 +31,8 @@ const PRODUCTS = {
       '🟣 Data Analysis (10) — CSV analysis, A/B testing, ML, anomaly detection | 數據分析（10 個）— CSV 分析、A/B 測試、ML、異常偵測',
       '🔴 Productivity (10) — Task management, learning, decision-making, goal setting | 生產力（10 個）— 任務管理、學習、決策、目標設定',
     ],
-    price_usd: 19,
-    price_jpy: 2980,
+    price_usd: 29,
+    price_jpy: 4480,
     currency: 'USD',
     format: 'HTML/PDF',
     file_key: 'products/prompt-collection-50',
@@ -52,8 +52,8 @@ const PRODUCTS = {
       '☁️ Cloudflare Workers — API, DB, Storage | Cloudflare Workers — API、資料庫、儲存',
       '🔧 Troubleshooting — Real errors and solutions | 疑難排解 — 實際錯誤與解決方法',
     ],
-    price_usd: 15,
-    price_jpy: 1980,
+    price_usd: 24,
+    price_jpy: 3480,
     currency: 'USD',
     format: 'HTML/PDF',
     file_key: 'products/automation-guide',
@@ -73,8 +73,8 @@ const PRODUCTS = {
       '⚡ Cut work time by 6x with automation | 自動化將工作時間縮短為 1/6',
       '📋 3-point checklist for content that sells | 暢銷內容的 3 大條件清單',
     ],
-    price_usd: 12,
-    price_jpy: 1480,
+    price_usd: 19,
+    price_jpy: 2980,
     currency: 'USD',
     format: 'HTML/PDF',
     file_key: 'products/side-income-roadmap',
@@ -85,17 +85,17 @@ const PRODUCTS = {
   'intel-api-pro': {
     id: 'intel-api-pro',
     name: 'OpenClaw Intel Pro API Key | OpenClaw 情報專業版 API 金鑰',
-    tagline: 'Full AI market intelligence for your agent or app | 為你的 AI 代理或應用提供完整市場情報',
+    tagline: 'Full AI market intelligence for your agent or app — $14/mo | 為你的 AI 代理或應用提供完整市場情報 — $14/月',
     description: 'Unlock full AI agent market reports, 1000 API calls/day, and priority access to new intelligence tools. Works with any MCP client (Claude Code, Cursor, Windsurf, Cline) or direct REST API. | 解鎖完整 AI 代理市場報告、每日 1000 次 API 呼叫、優先存取新情報工具。支援任何 MCP 用戶端或 REST API。',
     features: [
       '📊 Full market intelligence reports (not just summaries) | 完整市場情報報告（非僅摘要）',
-      '🔑 1000 API calls per day (vs 3 free) | 每日 1000 次 API 呼叫（免費版僅 3 次）',
+      '🔑 1000 API calls per day (vs 10 free) | 每日 1000 次 API 呼叫（免費版 10 次）',
       '⚡ Priority access to new intelligence tools | 優先存取新情報工具',
       '🤖 Works with MCP clients + REST API | 支援 MCP 用戶端 + REST API',
       '📧 Email support | 電子郵件支援',
     ],
-    price_usd: 9,
-    price_jpy: 1380,
+    price_usd: 14,
+    price_jpy: 2100,
     currency: 'USD',
     format: 'API_KEY',
     type: 'api_key',
@@ -116,8 +116,8 @@ const PRODUCTS = {
       '📖 Step-by-step guide (EN/ZH) with real deployment examples | 逐步指南（英文/中文）含真實部署範例',
       '🔧 Cross-promo & upgradeSignal patterns for AI-native marketing | 交叉推廣與升級訊號模式，AI 原生行銷',
     ],
-    price_usd: 29,
-    price_jpy: 4480,
+    price_usd: 39,
+    price_jpy: 5800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/mcp-starter-kit',
@@ -128,18 +128,18 @@ const PRODUCTS = {
   'ecosystem-pro': {
     id: 'ecosystem-pro',
     name: 'OpenClaw Ecosystem Pro | OpenClaw 生態系專業版',
-    tagline: 'All 9 MCP servers, 1000 calls/day — one-time $9 | 全部 9 個 MCP 伺服器，每日 1000 次呼叫 — 一次性 $9',
-    description: 'Unlock the full OpenClaw MCP ecosystem. 49 tools across 9 Cloudflare Workers edge servers. Pro API key with 1000 calls/day per server (vs 3 free). | 解鎖完整 OpenClaw MCP 生態系。跨 9 個 Cloudflare Workers 邊緣伺服器的 49 個工具。專業版 API 金鑰每伺服器每日 1000 次呼叫（免費版僅 3 次）。',
+    tagline: 'All 9 MCP servers, 1000 calls/day — $14/mo (50% cheaper than competitors) | 全部 9 個 MCP 伺服器，每日 1000 次呼叫 — $14/月（比競品便宜 50%）',
+    description: 'Unlock the full OpenClaw MCP ecosystem. 49 tools across 9 Cloudflare Workers edge servers. Pro API key with 1000 calls/day per server (vs 10 free). Half the price of Composio ($29) and Glama ($26). | 解鎖完整 OpenClaw MCP 生態系。跨 9 個 Cloudflare Workers 邊緣伺服器的 49 個工具。專業版 API 金鑰每伺服器每日 1000 次呼叫（免費版 10 次）。價格僅為 Composio ($29) 和 Glama ($26) 的一半。',
     features: [
       '🔓 All 9 MCP servers unlocked (49 tools) | 全部 9 個 MCP 伺服器解鎖（49 個工具）',
-      '📊 1000 calls/day per server (vs 3 free) | 每伺服器每日 1000 次呼叫（免費版僅 3 次）',
+      '📊 1000 calls/day per server (vs 10 free) | 每伺服器每日 1000 次呼叫（免費版 10 次）',
       '⚡ Edge-deployed on Cloudflare Workers (<50ms) | 部署於 Cloudflare Workers 邊緣節點（<50ms）',
       '🔑 Single Pro API key works across all servers | 單一專業版 API 金鑰通用所有伺服器',
-      '💰 One-time $9 (no subscription, no recurring) | 一次性 $9（無訂閱、無續費）',
+      '💰 $14/mo — 50% cheaper than Composio, Glama, Arcade | $14/月 — 比 Composio、Glama、Arcade 便宜 50%',
       '🤖 Works with Claude Code, Cursor, Windsurf, Cline | 支援 Claude Code、Cursor、Windsurf、Cline',
     ],
-    price_usd: 9,
-    price_jpy: 1380,
+    price_usd: 14,
+    price_jpy: 2100,
     currency: 'USD',
     format: 'API_KEY',
     type: 'api_key',
@@ -150,7 +150,7 @@ const PRODUCTS = {
   'intel-annual-pass': {
     id: 'intel-annual-pass',
     name: 'OpenClaw Intel Pro Annual Pass | OpenClaw 情報專業版年票',
-    tagline: '12 months of full AI market intelligence — save 27% | 12 個月完整 AI 市場情報 — 省 27%',
+    tagline: '12 months of full AI market intelligence — save 30% vs monthly | 12 個月完整 AI 市場情報 — 比月付省 30%',
     description: '12-month premium access to OpenClaw Intel. Unlimited API calls, full market reports, priority access to new tools, and exclusive monthly deep-dive analysis. Best value for serious AI developers and analysts. | 12 個月 OpenClaw Intel 高級存取權。無限 API 呼叫、完整市場報告、優先存取新工具、每月獨家深度分析。專業 AI 開發者和分析師的最佳選擇。',
     features: [
       '📊 Unlimited full market intelligence reports (no daily cap) | 無限完整市場情報報告（無每日上限）',
@@ -160,8 +160,8 @@ const PRODUCTS = {
       '📧 Priority email support | 優先電子郵件支援',
       '💾 Full report archive access (6+ months of historical data) | 完整報告存檔存取（6 個月以上歷史資料）',
     ],
-    price_usd: 79,
-    price_jpy: 11800,
+    price_usd: 119,
+    price_jpy: 17800,
     currency: 'USD',
     format: 'API_KEY',
     type: 'subscription',
@@ -204,8 +204,8 @@ const PRODUCTS = {
       '💰 Monetization flow — PayPal + Stripe checkout out of the box | 變現流程 — 開箱即用 PayPal + Stripe 結帳',
       '📖 Step-by-step guide: zero to deployed in under 2 hours | 逐步指南：從零到部署不到 2 小時',
     ],
-    price_usd: 49,
-    price_jpy: 7480,
+    price_usd: 69,
+    price_jpy: 9800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/agent-builder-kit',
@@ -225,8 +225,8 @@ const PRODUCTS = {
       '🤖 Powered by DeepSeek R1 chain-of-thought (700B reasoning model) | 由 DeepSeek R1 思維鏈驅動（700B 推理模型）',
       '📄 Delivered as structured PDF report within 24 hours | 24 小時內交付結構化 PDF 報告',
     ],
-    price_usd: 79,
-    price_jpy: 11800,
+    price_usd: 99,
+    price_jpy: 14800,
     currency: 'USD',
     format: 'SERVICE',
     type: 'service',
@@ -246,8 +246,8 @@ const PRODUCTS = {
       '📊 Usage dashboard — calls/day, errors, top tools | 使用儀表板 — 每日呼叫、錯誤、熱門工具',
       '🤖 Works with Python, Node.js, curl, or any HTTP client | 支援 Python、Node.js、curl 或任何 HTTP 用戶端',
     ],
-    price_usd: 29,
-    price_jpy: 4480,
+    price_usd: 14,
+    price_jpy: 2100,
     currency: 'USD',
     format: 'API_KEY',
     type: 'subscription',
@@ -268,8 +268,8 @@ const PRODUCTS = {
       '☁️ Cloudflare Workers monetization — MCP servers that earn while you sleep | Cloudflare Workers 變現 — 讓 MCP 伺服器在你睡覺時賺錢',
       '📱 Telegram bot integration — alerts, commands, revenue tracking | Telegram 機器人整合 — 警報、指令、營收追蹤',
     ],
-    price_usd: 149,
-    price_jpy: 22000,
+    price_usd: 199,
+    price_jpy: 29800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/revenue-automation-masterclass',
@@ -289,8 +289,8 @@ const PRODUCTS = {
       '📱 Telegram bot integration — instant alerts for high-value opportunities | Telegram 機器人整合 — 高價值機會即時警報',
       '🚀 One-command deploy script — all 6 workers live in under 5 minutes | 一鍵部署腳本 — 6 個 Workers 5 分鐘內上線',
     ],
-    price_usd: 59,
-    price_jpy: 8800,
+    price_usd: 79,
+    price_jpy: 11800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/ooda-system-blueprint',
@@ -310,8 +310,8 @@ const PRODUCTS = {
       '💰 Revenue sentinel — auto-detect orders, track income, daily reports | 營收哨兵 — 自動偵測訂單、追蹤收入、每日報告',
       '📊 Fleet dashboard API — JSON endpoints for monitoring all workers | 艦隊儀表板 API — 用於監控所有 Workers 的 JSON 端點',
     ],
-    price_usd: 39,
-    price_jpy: 5800,
+    price_usd: 59,
+    price_jpy: 8800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/ai-fleet-deployment',
@@ -331,8 +331,8 @@ const PRODUCTS = {
       '📋 CLAUDE.md templates — project memory that actually works | CLAUDE.md 模板 — 真正有效的專案記憶',
       '📖 Power-user guide — keyboard shortcuts, context management, parallel agents | 進階使用者指南 — 鍵盤快捷鍵、上下文管理、平行代理',
     ],
-    price_usd: 29,
-    price_jpy: 4480,
+    price_usd: 39,
+    price_jpy: 5800,
     currency: 'USD',
     format: 'ZIP',
     file_key: 'products/claude-code-pro-toolkit',
@@ -513,15 +513,15 @@ function catalogPage(env) {
       <div style="background:linear-gradient(135deg,#ff1744,#d500f9);border-radius:12px;padding:24px;margin:24px 0;text-align:center;border:2px solid #ff1744;position:relative;overflow:hidden;animation:pulse 2s infinite;">
         <style>@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(255,23,68,0.3)}50%{box-shadow:0 0 40px rgba(255,23,68,0.6)}}</style>
         <div style="position:absolute;top:10px;right:-30px;background:#fff;color:#ff1744;padding:4px 40px;font-size:0.75rem;font-weight:bold;transform:rotate(45deg);letter-spacing:2px;">FLASH SALE</div>
-        <p style="color:rgba(255,255,255,0.8);font-size:0.8rem;letter-spacing:3px;margin-bottom:8px;">LIMITED TIME OFFER | 限時優惠</p>
-        <h2 style="color:#fff;margin-bottom:8px;font-size:1.6rem;">All 49 AI Tools — Just $9 (One-Time) | 全部 49 個 AI 工具 — 僅 $9（一次性）</h2>
-        <p style="color:rgba(255,255,255,0.9);margin-bottom:16px;font-size:1rem;">9 MCP servers. 1000 calls/day. No subscription. No recurring fees.<br><span style="font-size:0.9rem;">9 個 MCP 伺服器。每日 1000 次呼叫。無訂閱。無月費。</span></p>
+        <p style="color:rgba(255,255,255,0.8);font-size:0.8rem;letter-spacing:3px;margin-bottom:8px;">50% CHEAPER THAN COMPETITORS | 比競品便宜 50%</p>
+        <h2 style="color:#fff;margin-bottom:8px;font-size:1.6rem;">All 49 AI Tools — $14/mo (Half of Composio & Glama) | 全部 49 個 AI 工具 — $14/月（競品一半）</h2>
+        <p style="color:rgba(255,255,255,0.9);margin-bottom:16px;font-size:1rem;">9 MCP servers. 1000 calls/day. Composio charges $29. Glama charges $26. We charge $14.<br><span style="font-size:0.9rem;">9 個 MCP 伺服器。每日 1000 次呼叫。Composio 收 $29、Glama 收 $26、我們只收 $14。</span></p>
         <div style="display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
           <div style="background:rgba(0,0,0,0.3);padding:12px 20px;border-radius:8px;">
-            <span style="text-decoration:line-through;color:rgba(255,255,255,0.5);font-size:1.1rem;">$49</span>
-            <span style="color:#FFD700;font-size:1.8rem;font-weight:bold;margin-left:8px;">$9</span>
+            <span style="text-decoration:line-through;color:rgba(255,255,255,0.5);font-size:1.1rem;">$29/mo</span>
+            <span style="color:#FFD700;font-size:1.8rem;font-weight:bold;margin-left:8px;">$14/mo</span>
           </div>
-          <span style="color:#FFD700;font-size:0.9rem;font-weight:bold;">Save 82% | 節省 82%</span>
+          <span style="color:#FFD700;font-size:0.9rem;font-weight:bold;">Save 50% vs competitors | 比競品省 50%</span>
         </div>
         <a href="/products/ecosystem-pro" class="btn" style="background:#FFD700;color:#1a1a2e;font-size:1.1rem;padding:14px 40px;text-decoration:none;display:inline-block;border-radius:8px;font-weight:bold;box-shadow:0 4px 15px rgba(255,215,0,0.4);">Get Pro Now | 立即獲取 &rarr;</a>
         <p style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin-top:12px;">Works with Claude Code, Cursor, Windsurf, Cline | 支援 Claude Code、Cursor、Windsurf、Cline</p>
@@ -561,8 +561,8 @@ function catalogPage(env) {
           <div style="background:#1a1a2e; border:2px solid #ff6b35; border-radius:12px; padding:24px; text-align:center; position:relative;">
             <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#ff6b35;color:#fff;padding:2px 16px;border-radius:12px;font-size:0.7rem;font-weight:bold;">MOST POPULAR</div>
             <p style="color:#ff6b35; font-size:0.75rem; letter-spacing:2px; margin-bottom:4px;">PRO</p>
-            <p style="color:#fff; font-size:2rem; font-weight:bold;">$9</p>
-            <p style="color:#666; font-size:0.8rem; margin-bottom:16px;">one-time | 一次性</p>
+            <p style="color:#fff; font-size:2rem; font-weight:bold;">$14</p>
+            <p style="color:#666; font-size:0.8rem; margin-bottom:16px;">/month | 每月</p>
             <div style="text-align:left; font-size:0.85rem; color:#aaa; line-height:2;">
               <p style="color:#4caf50;">&#10003; 9 MCP servers</p>
               <p style="color:#4caf50;">&#10003; 49 tools</p>
@@ -1791,7 +1791,7 @@ export default {
           ).bind(apiKey, email || null, payment_method, payment_id).run();
 
           const productNames = { 'intel-api-pro': 'OpenClaw Intel Pro API Key', 'ecosystem-pro': 'OpenClaw Ecosystem Pro (All 9 MCP Servers)' };
-          const productAmounts = { 'intel-api-pro': 900, 'ecosystem-pro': 900 };
+          const productAmounts = { 'intel-api-pro': 1400, 'ecosystem-pro': 1400 };
 
           await env.DB.prepare(
             "INSERT INTO orders (order_id, product_id, product_name, amount, currency, payment_method, payment_id, status, download_token) VALUES (?, ?, ?, ?, 'USD', ?, ?, 'pending_verification', ?)"
