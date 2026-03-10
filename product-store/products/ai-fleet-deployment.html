@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Fleet Deployment Kit | AI 艦隊部署套件</title>
+<style>
+  @page { margin: 15mm; }
+  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
+  h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+  h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
+  h3 { color: #444; margin-top: 30px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+  .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+  th { background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+  .notice { text-align: center; color: #999; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<h1>AI Fleet Deployment Kit</h1>
+<h1 style="font-size:1.4rem;">AI 艦隊部署套件</h1>
+<p class="subtitle">6 autonomous AI workers on Cloudflare free tier — zero DevOps<br>在 Cloudflare 免費方案上部署 6 個自主 AI 工作者</p>
+<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<hr>
+
+<h2>Fleet Overview</h2>
+<table>
+<tr><th>Worker</th><th>Role</th><th>Cron</th><th>Key Features</th></tr>
+<tr><td>Orchestrator</td><td>Commander</td><td>*/15 min</td><td>OODA loop, task dispatch, confidence scoring</td></tr>
+<tr><td>Intel Ops</td><td>Scout</td><td>*/30 min</td><td>5-source intel sweep, AI analysis</td></tr>
+<tr><td>Cloud Executor</td><td>Soldier</td><td>*/2 min</td><td>Task execution, lesson recording</td></tr>
+<tr><td>Health Commander</td><td>Medic</td><td>*/10 min</td><td>Endpoint monitoring, auto-restart, SLA</td></tr>
+<tr><td>Revenue Sentinel</td><td>CFO</td><td>*/3 hr</td><td>Order detection, income tracking, alerts</td></tr>
+<tr><td>Content Engine</td><td>Marketing</td><td>2x daily</td><td>AI content generation, social media</td></tr>
+</table>
+
+<h2>1. Quick Start (5 Minutes)</h2>
+<pre><code># 1. Clone the templates
+git clone https://github.com/YOUR/fleet-templates.git
+cd fleet-templates
+
+# 2. Create D1 database
+npx wrangler d1 create my-fleet-db
+# Copy the database_id
+
+# 3. Create KV namespace
+npx wrangler kv namespace create FLEET_KV
+# Copy the id
+
+# 4. Update all wrangler.toml files with your IDs
+./setup.sh YOUR_DB_ID YOUR_KV_ID
+
+# 5. Run database migrations
+npx wrangler d1 execute my-fleet-db --file schema.sql
+
+# 6. Deploy all workers
+./deploy.sh
+
+# 7. Set authentication secrets
+FLEET_TOKEN=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 40)
+for w in orchestrator intel-ops cloud-executor health-commander revenue-sentinel content-engine; do
+  echo "$FLEET_TOKEN" | npx wrangler secret put FLEET_AUTH_TOKEN --name "my-$w"
+done</code></pre>
+
+<h2>2. Worker Templates</h2>
+
+<h3>2.1 Health Commander — Self-Healing Pattern</h3>
+<pre><code>// health-commander/worker.js
+const ENDPOINTS = [
+  { name: 'orchestrator', url: 'https://my-orchestrator.YOUR.workers.dev/health' },
+  { name: 'intel-ops', url: 'https://my-intel-ops.YOUR.workers.dev/health' },
+  { name: 'executor', url: 'https://my-cloud-executor.YOUR.workers.dev/health' },
+  { name: 'revenue', url: 'https://my-revenue-sentinel.YOUR.workers.dev/health' },
+  { name: 'content', url: 'https://my-content-engine.YOUR.workers.dev/health' },
+];
+
+export default {
+  async scheduled(event, env) {
+    const results = [];
+
+    for (const ep of ENDPOINTS) {
+      const start = Date.now();
+      try {
+        const resp = await fetch(ep.url, { signal: AbortSignal.timeout(5000) });
+        const latency = Date.now() - start;
+        const ok = resp.status === 200;
+
+        results.push({ name: ep.name, ok, latency, status: resp.status });
+
+        if (!ok) {
+          // Auto-restart attempt (3 retries)
+          for (let i = 0; i &lt; 3; i++) {
+            await new Promise(r => setTimeout(r, 2000));
+            const retry = await fetch(ep.url, { signal: AbortSignal.timeout(5000) });
+            if (retry.status === 200) { results.at(-1).recovered = true; break; }
+          }
+        }
+
+        // Store SLA data
+        await env.DB.prepare(
+          'INSERT INTO fleet_events (worker_id, event_type, severity, data) VALUES (?,?,?,?)'
+        ).bind(ep.name, 'health_check', ok ? 'info' : 'critical',
+          JSON.stringify({ latency, status: resp.status })
+        ).run();
+      } catch (e) {
+        results.push({ name: ep.name, ok: false, error: e.message });
+      }
+    }
+
+    // Alert on failures
+    const failures = results.filter(r => !r.ok);
+    if (failures.length > 0) {
+      await sendTelegram(env,
+        `🚨 Fleet Health Alert\n${failures.map(f => `❌ ${f.name}: ${f.error || f.status}`).join('\n')}`
+      );
+    }
+  },
+};</code></pre>
+
+<h3>2.2 Revenue Sentinel — Order Detection</h3>
+<pre><code>// revenue-sentinel/worker.js
+export default {
+  async scheduled(event, env) {
+    // Check Stripe for new payments
+    const resp = await fetch('https://api.stripe.com/v1/charges?limit=10', {
+      headers: { 'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}` },
+    });
+    const charges = await resp.json();
+
+    for (const charge of charges.data) {
+      // Check if already recorded
+      const existing = await env.DB.prepare(
+        'SELECT id FROM revenue_ledger WHERE stripe_charge_id = ?'
+      ).bind(charge.id).first();
+
+      if (!existing &amp;&amp; charge.paid) {
+        await env.DB.prepare(
+          'INSERT INTO revenue_ledger (stripe_charge_id, amount, currency, product, created_at) VALUES (?,?,?,?,?)'
+        ).bind(charge.id, charge.amount / 100, charge.currency,
+          charge.metadata?.product_id || 'unknown', charge.created
+        ).run();
+
+        await sendTelegram(env,
+          `💰 New Order: $${charge.amount / 100} — ${charge.metadata?.product_id || 'unknown'}`
+        );
+      }
+    }
+
+    // Daily summary (at midnight UTC)
+    if (new Date().getHours() === 0) {
+      const today = new Date().toISOString().slice(0, 10);
+      const daily = await env.DB.prepare(
+        'SELECT SUM(amount) as total, COUNT(*) as orders FROM revenue_ledger WHERE created_at LIKE ?'
+      ).bind(`${today}%`).first();
+
+      await sendTelegram(env,
+        `📊 Daily Revenue: $${daily.total || 0} (${daily.orders || 0} orders)`
+      );
+    }
+  },
+};</code></pre>
+
+<h2>3. Database Schema</h2>
+<pre><code>-- schema.sql — Complete fleet database
+CREATE TABLE fleet_tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  priority INTEGER DEFAULT 5,
+  payload TEXT,
+  status TEXT DEFAULT 'pending',
+  worker_id TEXT,
+  result TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  completed_at TEXT
+);
+
+CREATE TABLE fleet_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  worker_id TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  severity TEXT DEFAULT 'info',
+  data TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE intel_feed (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  title TEXT,
+  url TEXT,
+  score INTEGER DEFAULT 0,
+  raw TEXT,
+  analyzed INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE revenue_ledger (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  stripe_charge_id TEXT UNIQUE,
+  amount REAL NOT NULL,
+  currency TEXT DEFAULT 'usd',
+  product TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE fleet_metrics (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  worker_id TEXT NOT NULL,
+  metric TEXT NOT NULL,
+  value REAL NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+-- Indexes for performance
+CREATE INDEX idx_tasks_status ON fleet_tasks(status, priority DESC);
+CREATE INDEX idx_events_worker ON fleet_events(worker_id, created_at);
+CREATE INDEX idx_intel_date ON intel_feed(created_at);
+CREATE INDEX idx_revenue_date ON revenue_ledger(created_at);</code></pre>
+
+<h2>4. Fleet Dashboard API</h2>
+<pre><code>// Add to any worker — /dashboard endpoint
+async function handleDashboard(env) {
+  const [tasks, events, revenue] = await Promise.all([
+    env.DB.prepare(`
+      SELECT status, COUNT(*) as count FROM fleet_tasks
+      WHERE created_at > datetime('now', '-24 hours') GROUP BY status
+    `).all(),
+    env.DB.prepare(`
+      SELECT worker_id, severity, COUNT(*) as count FROM fleet_events
+      WHERE created_at > datetime('now', '-24 hours') GROUP BY worker_id, severity
+    `).all(),
+    env.DB.prepare(`
+      SELECT SUM(amount) as total, COUNT(*) as orders FROM revenue_ledger
+      WHERE created_at > datetime('now', '-24 hours')
+    `).first(),
+  ]);
+
+  return Response.json({
+    tasks: tasks.results,
+    health: events.results,
+    revenue: { total: revenue?.total || 0, orders: revenue?.orders || 0 },
+    timestamp: new Date().toISOString(),
+  });
+}</code></pre>
+
+<hr>
+<div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
+<h2>Thank you for your purchase!</h2>
+<p>感謝您的購買！</p>
+<p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
+<p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
+</div>
+</body>
+</html>

@@ -193,12 +193,18 @@ async function fetchBunshinHealth(KV) {
   const cached = await kvGet(KV, cacheKey);
   if (cached) return cached;
 
-  const result = await fetchWithTimeout(BUNSHIN_URL, 8000);
+  let result = await fetchWithTimeout(BUNSHIN_URL, 8000);
+  // Fallback to D1 mirror if Bunshin is down
+  if (!result.ok) {
+    result = await fetchWithTimeout('https://bunshin-mirror.yagami8095.workers.dev/health', 5000);
+    result.source = 'mirror';
+  }
   const bunshin = {
     reachable: result.ok,
     status: result.status,
     latency: result.latency,
     data: result.data,
+    source: result.source || 'primary',
     fetchedAt: new Date().toISOString()
   };
 

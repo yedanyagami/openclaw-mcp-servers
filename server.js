@@ -29,7 +29,8 @@ const IDENTITY = {
   philosophy: 'When the master rests, the shadow works. When the master returns, the shadow reports.',
 };
 
-const AUTH_TOKEN = process.env.AUTH_TOKEN || 'openclaw-bunshin-2026';
+const AUTH_TOKEN = process.env.AUTH_TOKEN || '';
+if (!AUTH_TOKEN) console.warn('WARNING: AUTH_TOKEN not set — all authenticated requests will be rejected');
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '7848052227';
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';

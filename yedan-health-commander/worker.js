@@ -12,7 +12,8 @@
  */
 
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
+const TELEGRAM_CHAT_ID = '7848052227';
 
 const ALL_ENDPOINTS = [
   // Fleet Workers
@@ -23,7 +24,7 @@ const ALL_ENDPOINTS = [
   { id: 'cloud-executor', url: 'https://yedan-cloud-executor.yagami8095.workers.dev/health', category: 'fleet' },
 
   // DANSIN Cloud Brain (VM2 24/7)
-  { id: 'dansin-gateway', url: 'http://161.33.7.159/health', category: 'fleet' },
+  // dansin-gateway added dynamically from env.YEDAN_GATEWAY_URL
 
   // MCP Servers (Revenue-critical)
   { id: 'json-toolkit', url: 'https://json-toolkit-mcp.yagami8095.workers.dev/health', category: 'mcp' },
@@ -51,6 +52,15 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Auth check for mutating endpoints
+    const PROTECTED = ['/execute', '/sweep'];
+    if (PROTECTED.includes(url.pathname)) {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
@@ -70,6 +80,8 @@ export default {
         return await getUptimeReport(env);
       case '/incidents':
         return await getIncidents(env);
+      case '/logs':
+        return await getLogs(env, url);
       case '/ping':
         return json({ pong: true, brain: 'health-commander', ts: Date.now() });
       default:
@@ -87,8 +99,12 @@ async function healthSweep(env) {
   let totalUp = 0, totalDown = 0;
   const incidents = [];
 
+  // Dynamically add gateway if configured
+  const endpoints = [...ALL_ENDPOINTS];
+  if (env.YEDAN_GATEWAY_URL) endpoints.push({ id: 'dansin-gateway', url: `${env.YEDAN_GATEWAY_URL}/health`, category: 'fleet' });
+
   // Check all endpoints in parallel
-  const checks = ALL_ENDPOINTS.map(async (ep) => {
+  const checks = endpoints.map(async (ep) => {
     const checkStart = Date.now();
     try {
       const resp = await fetch(ep.url, {
@@ -197,6 +213,12 @@ async function healthSweep(env) {
     ).run();
   } catch {}
 
+  // Auto-heal: retry failed endpoints with wake-up pings
+  const downEndpoints = incidents.filter(i => i.type === 'endpoint_down' || i.type === 'unreachable');
+  if (downEndpoints.length > 0) {
+    await autoHeal(env, downEndpoints, endpoints);
+  }
+
   // Alert if critical incidents
   if (incidents.some(i => i.severity === 'critical')) {
     await escalateAlert(env, incidents.filter(i => i.severity === 'critical'), sla);
@@ -213,6 +235,25 @@ async function healthSweep(env) {
     critical_incidents: incidents.filter(i => i.severity === 'critical').length,
     duration_ms: duration
   }, env);
+
+  // Write incidents to Graph RAG
+  if (incidents.length > 0) {
+    try {
+      const entities = incidents.slice(0, 5).map(i => ({
+        id: `incident-${i.endpoint}-${Date.now()}`,
+        type: 'event',
+        name: `${i.type}: ${i.endpoint}`,
+        properties: { severity: i.severity, latency: i.latency_ms },
+        summary: i.message
+      }));
+      await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+        body: JSON.stringify({ entities, relationships: [], source: 'health-commander' }),
+        signal: AbortSignal.timeout(5000)
+      });
+    } catch {}
+  }
 }
 
 function calculateCategorySLA(results, category) {
@@ -272,25 +313,23 @@ async function logIncident(env, incident) {
 }
 
 async function escalateAlert(env, criticalIncidents, sla) {
-  // Report critical alerts to Bunshin for Telegram forwarding
+  // Direct Telegram alert (don't rely on Bunshin — it might be the one that's down)
+  const down = criticalIncidents.map(i => i.endpoint).join(', ');
+  const msg = `🚨 CRITICAL ALERT\n${criticalIncidents.length} services down: ${down}\nSLA: Fleet ${sla.fleet}% | MCP ${sla.mcp}% | Overall ${sla.overall}%`;
+  await sendTelegram(env, msg);
+
+  // Also report to Bunshin (with mirror fallback)
+  const payload = JSON.stringify({
+    key: 'health-alert-critical',
+    value: { alert: 'CRITICAL', incidents: criticalIncidents, sla, timestamp: new Date().toISOString(), action_required: true },
+    context: `CRITICAL ALERT: ${criticalIncidents.length} critical incidents detected`
+  });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({
-        key: 'health-alert-critical',
-        value: {
-          alert: 'CRITICAL',
-          incidents: criticalIncidents,
-          sla,
-          timestamp: new Date().toISOString(),
-          action_required: true
-        },
-        context: `CRITICAL ALERT: ${criticalIncidents.length} critical incidents detected`
-      }),
-      signal: AbortSignal.timeout(8000)
-    });
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
   } catch {}
+  try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
 }
 
 async function handleTask(request, env) {
@@ -357,19 +396,93 @@ async function getIncidents(env) {
   return json({ incidents: results });
 }
 
-async function reportBunshin(key, value, env) {
+async function getLogs(env, url) {
+  const worker = url.searchParams.get('worker') || null;
+  const severity = url.searchParams.get('severity') || null;
+  const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 200);
+
+  let query = `SELECT * FROM fleet_events WHERE 1=1`;
+  const binds = [];
+  if (worker) { query += ` AND worker_id = ?`; binds.push(worker); }
+  if (severity) { query += ` AND severity = ?`; binds.push(severity); }
+  query += ` ORDER BY created_at DESC LIMIT ?`;
+  binds.push(limit);
+
+  const { results } = await env.ARMY_DB.prepare(query).bind(...binds).all().catch(() => ({ results: [] }));
+
+  // Auto-cleanup: delete metrics older than 7 days
+  try { await env.ARMY_DB.exec(`DELETE FROM fleet_metrics WHERE recorded_at < datetime('now', '-7 days')`); } catch {}
+  try { await env.ARMY_DB.exec(`DELETE FROM fleet_events WHERE created_at < datetime('now', '-7 days')`); } catch {}
+
+  return json({ logs: results, count: results.length });
+}
+
+// === Telegram (with 5-min dedup) ===
+async function sendTelegram(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN) return;
+  const dedupKey = `alert:last:health:${text.slice(0, 30).replace(/\W/g, '')}`;
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
+    const last = await env.ARMY_KV.get(dedupKey);
+    if (last) return;
+    await env.ARMY_KV.put(dedupKey, Date.now().toString(), { expirationTtl: 300 });
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key, value, context: 'Health Commander report' }),
-      signal: AbortSignal.timeout(8000)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
+      signal: AbortSignal.timeout(5000)
     });
   } catch {}
 }
 
+async function autoHeal(env, downEndpoints, allEndpoints) {
+  const healed = [];
+  for (const incident of downEndpoints) {
+    const ep = allEndpoints.find(e => e.id === incident.endpoint);
+    if (!ep) continue;
+
+    // Try 3 wake-up pings with increasing delay
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const resp = await fetch(ep.url, {
+          signal: AbortSignal.timeout(5000),
+          headers: { 'User-Agent': 'YedanAutoHeal/1.0' }
+        });
+        if (resp.ok) {
+          healed.push(ep.id);
+          await logIncident(env, {
+            endpoint: ep.id,
+            type: 'auto_healed',
+            severity: 'info',
+            message: `${ep.id} recovered after ${attempt} wake-up ping(s)`
+          });
+          break;
+        }
+      } catch {}
+      if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
+    }
+  }
+
+  if (healed.length > 0) {
+    await env.ARMY_KV.put('health:last-heal', JSON.stringify({
+      timestamp: new Date().toISOString(),
+      healed,
+      attempted: downEndpoints.map(i => i.endpoint)
+    }), { expirationTtl: 3600 });
+  }
+}
+
+async function reportBunshin(key, value, env) {
+  const payload = JSON.stringify({ key, value, context: 'Health Commander report' });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
+  try {
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
+  } catch {}
+  try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }

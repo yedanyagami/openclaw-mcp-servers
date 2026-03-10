@@ -6,7 +6,7 @@ compatibility_date = "2024-09-23"
 
 [vars]
 NOTION_DATABASE_ID = "31ed9d87-d173-81b5-93ca-c18b24e99b73"
-WARROOM_AUTH_TOKEN = "openclaw-warroom-2026"
+# WARROOM_AUTH_TOKEN set via `wrangler secret put`
 
 [observability]
 enabled = true

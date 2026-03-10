@@ -9,7 +9,8 @@
 
 const PRODUCT_STORE = 'https://product-store.yagami8095.workers.dev';
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
+const TELEGRAM_CHAT_ID = '7848052227';
 
 // ====== FULL PRODUCT CATALOG (15 Products) ======
 const PRODUCT_CATALOG = {
@@ -47,6 +48,14 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const PROTECTED = ['/execute', '/scan'];
+    if (PROTECTED.includes(url.pathname)) {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
@@ -151,7 +160,7 @@ async function checkProductStore(env, log) {
         ).bind('product-store', parseFloat(order.amount) || 0, order.order_id, order.product || 'unknown').run();
       }
 
-      // Alert Bunshin about new revenue!
+      // Alert Bunshin + Telegram about new revenue!
       if (newOrders.length > 0) {
         const newAmount = newOrders.reduce((s, o) => s + (parseFloat(o.amount) || 0), 0);
         await reportBunshin('revenue-alert', {
@@ -161,6 +170,15 @@ async function checkProductStore(env, log) {
           total_revenue: totalRevenue,
           orders: newOrders.map(o => ({ id: o.order_id, amount: o.amount, product: o.product }))
         }, env);
+
+        // Direct Telegram notification for new revenue
+        const products = newOrders.map(o => `${o.product}: $${o.amount}`).join('\n');
+        await sendTelegram(env, `💰 NEW REVENUE!\n${newOrders.length} new order(s) +$${newAmount.toFixed(2)}\n${products}\nTotal: $${totalRevenue.toFixed(2)}`);
+
+        // Write to Graph RAG
+        for (const o of newOrders) {
+          await writeToGraphRAG(env, 'new_order', { amount: o.amount, product: o.product, order_id: o.order_id });
+        }
       }
     }
 
@@ -270,20 +288,68 @@ async function getRevenueReport(env) {
   return json({ summary, entries: results });
 }
 
-async function reportBunshin(key, value, env) {
+// === Telegram (with 5-min dedup) ===
+async function sendTelegram(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN) return;
+  const dedupKey = `alert:last:revenue:${text.slice(0, 30).replace(/\W/g, '')}`;
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
+    const last = await env.ARMY_KV.get(dedupKey);
+    if (last) return;
+    await env.ARMY_KV.put(dedupKey, Date.now().toString(), { expirationTtl: 300 });
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key, value, context: `Revenue Sentinel report` }),
-      signal: AbortSignal.timeout(8000)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
+      signal: AbortSignal.timeout(5000)
     });
   } catch {}
 }
 
+// === Graph RAG Integration ===
+async function writeToGraphRAG(env, eventType, data) {
+  try {
+    const entities = [{
+      id: `revenue-${eventType}-${Date.now()}`,
+      type: 'event',
+      name: `Revenue ${eventType} ${new Date().toISOString().slice(0, 16)}`,
+      properties: { event_type: eventType, ...data },
+      summary: `Revenue ${eventType}: ${data.amount ? '$' + data.amount : ''} ${data.product || ''}`
+    }];
+    const relationships = [
+      { source: 'yedan-revenue-sentinel', target: entities[0].id, type: 'generates', layer: 'temporal' }
+    ];
+    if (data.product) {
+      entities.push({
+        id: data.product,
+        type: 'product',
+        name: PRODUCT_CATALOG[data.product]?.name || data.product,
+        properties: { price: PRODUCT_CATALOG[data.product]?.price, category: PRODUCT_CATALOG[data.product]?.category },
+        summary: `Product: ${PRODUCT_CATALOG[data.product]?.name || data.product}`
+      });
+      relationships.push({ source: entities[0].id, target: data.product, type: 'processes', layer: 'causal' });
+    }
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ entities, relationships, source: 'revenue-sentinel' }),
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+}
+
+async function reportBunshin(key, value, env) {
+  const payload = JSON.stringify({ key, value, context: 'Revenue Sentinel report' });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
+  try {
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
+  } catch {}
+  try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }
 

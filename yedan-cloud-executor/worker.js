@@ -13,7 +13,7 @@
  */
 
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
 const TELEGRAM_CHAT_ID = '7848052227';
 
 const EXECUTABLE_TYPES = [
@@ -24,6 +24,14 @@ const EXECUTABLE_TYPES = [
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Auth check for mutating endpoints
+    if (url.pathname === '/execute') {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
@@ -64,6 +72,10 @@ async function handleDispatchedTask(request, env) {
         ).bind(JSON.stringify(result).slice(0, 500), task_id).run();
       } catch {}
     }
+
+    // Write to Graph RAG + evolve lesson
+    await writeToGraphRAG(env, 'task_completed', { task_id, task_type: type, status: 'completed' });
+    await recordLesson(env, task_id, type, result);
 
     return json({ ok: true, task_id, result });
   } catch (e) {
@@ -149,15 +161,13 @@ async function executionCycle(env) {
   };
   await env.KV.put('executor:last-run', JSON.stringify(runInfo), { expirationTtl: 86400 });
 
-  // Report to Bunshin
+  // Report to Bunshin (with D1 mirror fallback)
+  const bPayload = JSON.stringify({ key: 'cloud-executor-status', value: runInfo, context: 'OODA ACT Layer' });
+  const bHeaders = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key: 'cloud-executor-status', value: runInfo, context: 'OODA ACT Layer' }),
-      signal: AbortSignal.timeout(5000)
-    });
-  } catch {}
+    const bRes = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers: bHeaders, body: bPayload, signal: AbortSignal.timeout(5000) });
+    if (!bRes.ok) throw new Error('not ok');
+  } catch { try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers: bHeaders, body: bPayload, signal: AbortSignal.timeout(5000) }); } catch {} }
 
   return runInfo;
 }
@@ -316,7 +326,7 @@ async function healthPatrol(env) {
 async function fetchBunshinTasks(env) {
   try {
     const resp = await fetch(`${BUNSHIN_URL}/api/tasks?status=pending`, {
-      headers: { 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
+      headers: { 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` },
       signal: AbortSignal.timeout(8000)
     });
     if (!resp.ok) return [];
@@ -329,7 +339,7 @@ async function reportTaskResult(taskId, status, result, env) {
   try {
     await fetch(`${BUNSHIN_URL}/api/tasks/${taskId}`, {
       method: 'PUT',
-      headers: { 'Authorization': `Bearer ${BUNSHIN_AUTH}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, result: String(result).slice(0, 500) }),
       signal: AbortSignal.timeout(5000)
     });
@@ -367,8 +377,53 @@ async function getStatus(env) {
   });
 }
 
+// === Self-Evolving Lesson Recording ===
+async function recordLesson(env, taskId, taskType, result) {
+  try {
+    const resultObj = typeof result === 'object' ? result : { raw: String(result) };
+    const isSuccess = resultObj.status && !resultObj.status.includes('failed') && !resultObj.status.includes('error');
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/evolve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({
+        agent_id: 'yedan-cloud-executor',
+        situation: `Task ${taskType}: ${taskId}`,
+        action_taken: resultObj.action_taken || resultObj.status || 'executed',
+        outcome: JSON.stringify(resultObj).slice(0, 300),
+        score: isSuccess ? 1 : -1
+      }),
+      signal: AbortSignal.timeout(3000)
+    });
+  } catch {}
+}
+
+// === Graph RAG Integration ===
+async function writeToGraphRAG(env, eventType, data) {
+  try {
+    const entities = [{
+      id: `executor-${eventType}-${Date.now()}`,
+      type: 'event',
+      name: `Executor ${eventType} ${new Date().toISOString().slice(0, 16)}`,
+      properties: { event_type: eventType, ...data },
+      summary: `ACT ${eventType}: ${data.task_type || ''} → ${data.status || ''}`
+    }];
+    const relationships = [
+      { source: 'yedan-cloud-executor', target: entities[0].id, type: 'generates', layer: 'temporal' }
+    ];
+    if (data.task_id) {
+      relationships.push({ source: entities[0].id, target: `task-${data.task_id}`, type: 'processes', layer: 'causal' });
+    }
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ entities, relationships, source: 'cloud-executor' }),
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }

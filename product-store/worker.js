@@ -1075,8 +1075,8 @@ async function handleDownload(token, env) {
   let content = await env.KV.get(product.file_key);
 
   if (!content) {
-    // Fallback: generate content on-the-fly
-    content = generatePromptCollectionHTML();
+    // Fallback: generate product-specific content on-the-fly
+    content = generateProductHTML(tokenData.product_id, product);
   }
 
   // Increment download count
@@ -1084,11 +1084,25 @@ async function handleDownload(token, env) {
   const remaining = Math.max(0, (new Date(tokenData.expires_at).getTime() - Date.now()) / 1000);
   await env.KV.put(`download:${token}`, JSON.stringify(tokenData), { expirationTtl: Math.ceil(remaining) });
 
+  // Product-specific filenames
+  const FILENAMES = {
+    'prompt-collection-50': 'AI_Prompt_Collection_50.html',
+    'automation-guide': 'Build_24_7_AI_System_Guide.html',
+    'side-income-roadmap': 'AI_Side_Income_Roadmap.html',
+    'mcp-starter-kit': 'MCP_Server_Starter_Kit.html',
+    'agent-builder-kit': 'AI_Agent_Builder_Kit.html',
+    'revenue-automation-masterclass': 'Revenue_Automation_Masterclass.html',
+    'ooda-system-blueprint': 'OODA_System_Blueprint.html',
+    'ai-fleet-deployment': 'AI_Fleet_Deployment_Kit.html',
+    'claude-code-pro-toolkit': 'Claude_Code_Pro_Toolkit.html',
+  };
+  const filename = FILENAMES[tokenData.product_id] || `${tokenData.product_id}.html`;
+
   // Serve the file
   return new Response(content, {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      'Content-Disposition': `attachment; filename="AI_Prompt_Collection_50.html"`,
+      'Content-Disposition': `attachment; filename="${filename}"`,
       'Cache-Control': 'no-store',
     },
   });
@@ -1294,29 +1308,37 @@ async function handleAPIOrders(request, env) {
 // ============================================================
 // INLINE PRODUCT CONTENT (Prompt Collection)
 // ============================================================
-function generatePromptCollectionHTML() {
-  // This generates the prompt collection content inline
-  // Used as fallback when KV doesn't have the content
+function generateProductHTML(productId, product) {
+  const name = product?.name || productId;
+  const features = (product?.features || []).map(f => `<li>${f}</li>`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>50 Battle-Tested AI Prompts | 實戰 AI 提示詞 50 選</title>
+<title>${name}</title>
 <style>
   @page { margin: 20mm; }
-  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7; background: #fff; }
-  h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
-  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7; background: #fff; }
+  h1 { text-align: center; font-size: 1.8rem; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+  .features { background: #f8f9fa; padding: 20px 30px; border-radius: 8px; margin: 20px 0; }
+  .features li { margin: 8px 0; }
+  .notice { text-align: center; color: #999; font-size: 0.9rem; margin: 30px 0 10px; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 30px 0; }
 </style>
 </head>
 <body>
-<h1>🚀 50 Battle-Tested AI Prompts | 實戰 AI 提示詞 50 選</h1>
-<p class="subtitle">ChatGPT / Claude / DeepSeek compatible — copy & paste ready | 複製貼上即可使用的實踐模板集</p>
-<p style="text-align:center; color:#999;">This product is for authorized purchasers only. Redistribution prohibited. | 本產品僅限正式購買者閱覽，禁止再散佈。</p>
-<p style="text-align:center; color:#999;">&copy; 2026 OpenClaw Intelligence</p>
-<hr style="margin:40px 0;">
-<p style="text-align:center;">Loading content... Please wait. | 內容載入中…請稍候。</p>
-<p style="text-align:center;">If issues persist: Yagami8095@gmail.com | 如問題持續：Yagami8095@gmail.com</p>
+<h1>${product?.emoji || ''} ${name}</h1>
+<p class="subtitle">${product?.tagline || ''}</p>
+<p class="notice">This product is for authorized purchasers only. Redistribution prohibited. | 本產品僅限正式購買者閱覽，禁止再散佈。</p>
+<hr>
+<h2>What's Included | 包含內容</h2>
+<p>${product?.description || ''}</p>
+<div class="features"><ul>${features}</ul></div>
+<hr>
+<p class="notice">Full content is being prepared and will be delivered to your email within 24 hours.<br>完整內容正在準備中，將在 24 小時內發送至您的電子郵件。</p>
+<p class="notice">Contact: Yagami8095@gmail.com | 聯繫：Yagami8095@gmail.com</p>
+<p class="notice">&copy; 2026 OpenClaw Intelligence</p>
 </body>
 </html>`;
 }

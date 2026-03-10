@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OODA Autonomous Intelligence System Blueprint | OODA 自主情報系統藍圖</title>
+<style>
+  @page { margin: 15mm; }
+  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
+  h1 { text-align: center; font-size: 1.8rem; margin-bottom: 8px; }
+  h2 { color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 6px; margin-top: 50px; }
+  h3 { color: #444; margin-top: 30px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+  .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .warn { background: #ffebee; border-left: 4px solid #d32f2f; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+  th { background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+  .notice { text-align: center; color: #999; font-size: 0.85rem; }
+  .arch { background: #f8f9fa; padding: 20px; border-radius: 8px; font-family: monospace; white-space: pre; font-size: 0.85rem; line-height: 1.4; overflow-x: auto; }
+</style>
+</head>
+<body>
+<h1>OODA Autonomous Intelligence System Blueprint</h1>
+<h1 style="font-size:1.3rem;">OODA 自主情報系統藍圖</h1>
+<p class="subtitle">Military-grade OODA loop with 6 AI workers — $0/month hosting<br>用 6 個 AI 工作者建置軍事級 OODA 迴圈 — 每月 $0 託管</p>
+<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<hr>
+
+<h2>System Architecture</h2>
+<div class="arch">
+                    ┌──────────────────────┐
+                    │   ORCHESTRATOR v3.0   │
+                    │  Plan → Act → Reflect │
+                    └──────────┬───────────┘
+                               │
+           ┌───────────────────┼───────────────────┐
+           │                   │                   │
+    ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐
+    │  INTEL OPS   │    │   CONTENT   │    │  REVENUE    │
+    │  (OBSERVE)   │    │   ENGINE    │    │  SENTINEL   │
+    │              │    │  (ACT)      │    │  (OBSERVE)  │
+    └──────┬──────┘    └──────┬──────┘    └──────┬──────┘
+           │                   │                   │
+    ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐
+    │   HEALTH    │    │   CLOUD     │    │  GRAPH RAG  │
+    │  COMMANDER  │    │  EXECUTOR   │    │  (MEMORY)   │
+    │  (MONITOR)  │    │  (ACT)      │    │             │
+    └─────────────┘    └─────────────┘    └─────────────┘
+           │                   │                   │
+           └───────────────────┼───────────────────┘
+                               │
+                    ┌──────────▼───────────┐
+                    │     D1 Database       │
+                    │   + KV Cache + R2     │
+                    └──────────────────────┘
+</div>
+
+<h2>1. The OODA Loop Explained</h2>
+
+<h3>1.1 OBSERVE — Intel Collection</h3>
+<p>Gather intelligence from free APIs every 30 minutes:</p>
+<pre><code>// yedan-intel-ops/worker.js (simplified)
+const INTEL_SOURCES = [
+  {
+    name: 'hackernews',
+    url: 'https://hacker-news.firebaseio.com/v0/topstories.json',
+    parser: parseHN,
+    interval: 30, // minutes
+  },
+  {
+    name: 'github-trending',
+    url: 'https://api.github.com/search/repositories?q=mcp+server&sort=stars&order=desc',
+    parser: parseGitHub,
+    interval: 60,
+  },
+  {
+    name: 'npm-new',
+    url: 'https://registry.npmjs.org/-/v1/search?text=mcp+server&size=20',
+    parser: parseNPM,
+    interval: 120,
+  },
+];
+
+async function observe(env) {
+  const intel = [];
+  for (const source of INTEL_SOURCES) {
+    try {
+      const resp = await fetch(source.url, { signal: AbortSignal.timeout(5000) });
+      const data = await resp.json();
+      intel.push(...source.parser(data));
+    } catch (e) {
+      // Log but don't fail — resilience
+      console.error(`${source.name} failed: ${e.message}`);
+    }
+  }
+
+  // Store raw intel
+  const batch = intel.map(item =>
+    env.DB.prepare('INSERT INTO intel_feed (source, title, url, score, raw) VALUES (?,?,?,?,?)')
+      .bind(item.source, item.title, item.url, item.score, JSON.stringify(item))
+  );
+  await env.DB.batch(batch);
+
+  return intel;
+}</code></pre>
+
+<h3>1.2 ORIENT — AI Analysis</h3>
+<pre><code>// yedan-orchestrator/worker.js (simplified)
+async function orient(env, intel) {
+  const prompt = `You are a strategic AI analyst. Analyze this intelligence:
+
+${JSON.stringify(intel.slice(0, 20), null, 2)}
+
+Rate each item 1-10 on:
+- opportunity_score: Business potential
+- threat_score: Competitive threat level
+- urgency: Time sensitivity
+- confidence: How confident are you (0.0-1.0)
+
+Return JSON array of scored items with recommended actions.`;
+
+  // Use free Groq API
+  const analysis = await callGroq(env, prompt);
+  return JSON.parse(analysis);
+}</code></pre>
+
+<h3>1.3 DECIDE — Task Creation</h3>
+<pre><code>async function decide(env, scoredItems) {
+  const tasks = [];
+
+  for (const item of scoredItems) {
+    const effectiveScore = Math.round(item.opportunity_score * item.confidence);
+
+    // Skip low-value or low-confidence items
+    if (effectiveScore &lt; 5) continue;
+
+    // Check failure patterns (circuit breaker)
+    const failCount = parseInt(await env.KV.get(`fail:${item.type}`) || '0');
+    if (failCount >= 3) continue; // Skip failing task types for 1 hour
+
+    tasks.push({
+      type: mapToTaskType(item),
+      priority: effectiveScore,
+      payload: item,
+      source: 'orchestrator-decide',
+    });
+  }
+
+  // Store tasks in D1
+  for (const task of tasks.sort((a, b) => b.priority - a.priority)) {
+    await env.DB.prepare(
+      'INSERT INTO fleet_tasks (type, priority, payload, status) VALUES (?,?,?,?)'
+    ).bind(task.type, task.priority, JSON.stringify(task.payload), 'pending').run();
+  }
+
+  return tasks;
+}</code></pre>
+
+<h3>1.4 ACT — Task Execution</h3>
+<pre><code>// yedan-cloud-executor/worker.js (simplified)
+async function execute(env) {
+  // Pull highest-priority pending task
+  const task = await env.DB.prepare(
+    'SELECT * FROM fleet_tasks WHERE status = ? ORDER BY priority DESC LIMIT 1'
+  ).bind('pending').first();
+
+  if (!task) return { status: 'idle' };
+
+  // Mark as in-progress
+  await env.DB.prepare('UPDATE fleet_tasks SET status = ?, worker_id = ? WHERE id = ?')
+    .bind('in_progress', 'cloud-executor', task.id).run();
+
+  try {
+    const result = await executeTask(env, task);
+
+    // Mark complete
+    await env.DB.prepare('UPDATE fleet_tasks SET status = ?, result = ? WHERE id = ?')
+      .bind('completed', JSON.stringify(result), task.id).run();
+
+    // Record lesson for self-evolution
+    await recordLesson(env, task, result, true);
+
+    return result;
+  } catch (error) {
+    await env.DB.prepare('UPDATE fleet_tasks SET status = ?, result = ? WHERE id = ?')
+      .bind('failed', error.message, task.id).run();
+
+    await recordLesson(env, task, { error: error.message }, false);
+    throw error;
+  }
+}</code></pre>
+
+<h3>1.5 REFLECT — Self-Evolution (v3.0)</h3>
+<pre><code>async function reflect(env) {
+  // Analyze completed and failed tasks from last cycle
+  const recent = await env.DB.prepare(`
+    SELECT type, status, COUNT(*) as count,
+      AVG(CASE WHEN status='completed' THEN 1.0 ELSE 0.0 END) as success_rate
+    FROM fleet_tasks
+    WHERE created_at > datetime('now', '-6 hours')
+    GROUP BY type, status
+  `).all();
+
+  // Update failure patterns
+  for (const row of recent.results) {
+    if (row.status === 'failed' &amp;&amp; row.count >= 3) {
+      await env.KV.put(`fail:${row.type}`, String(row.count), { expirationTtl: 3600 });
+    }
+  }
+
+  // Write feedback to Graph RAG for cross-agent learning
+  await writeReflectionToGraphRAG(env, recent.results);
+
+  return { reflected: recent.results.length, patterns: recent.results };
+}</code></pre>
+
+<h2>2. D1 Database Schema</h2>
+<pre><code>-- Full schema for OODA fleet
+CREATE TABLE fleet_tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  priority INTEGER DEFAULT 5,
+  payload TEXT,
+  status TEXT DEFAULT 'pending',
+  worker_id TEXT,
+  result TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  completed_at TEXT
+);
+
+CREATE TABLE intel_feed (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  title TEXT NOT NULL,
+  url TEXT,
+  score INTEGER DEFAULT 0,
+  raw TEXT,
+  analyzed INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE fleet_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  worker_id TEXT NOT NULL,
+  event_type TEXT NOT NULL,
+  severity TEXT DEFAULT 'info',
+  data TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE agent_lessons (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  agent_id TEXT NOT NULL,
+  situation TEXT NOT NULL,
+  action_taken TEXT,
+  outcome TEXT,
+  score INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_tasks_status ON fleet_tasks(status, priority DESC);
+CREATE INDEX idx_intel_source ON intel_feed(source, created_at);
+CREATE INDEX idx_events_worker ON fleet_events(worker_id, created_at);
+CREATE INDEX idx_lessons_agent ON agent_lessons(agent_id, created_at);</code></pre>
+
+<h2>3. Deploy Script</h2>
+<pre><code>#!/bin/bash
+# deploy-fleet.sh — Deploy all 6 OODA workers in under 5 minutes
+
+set -e
+
+WORKERS=(
+  "yedan-orchestrator"
+  "yedan-intel-ops"
+  "yedan-cloud-executor"
+  "yedan-health-commander"
+  "yedan-revenue-sentinel"
+  "yedan-content-engine"
+)
+
+echo "Deploying OODA Fleet..."
+
+for worker in "${WORKERS[@]}"; do
+  echo "Deploying $worker..."
+  cd "$worker"
+  npx wrangler deploy
+  cd ..
+  echo "$worker deployed."
+done
+
+echo ""
+echo "Setting secrets..."
+for worker in "${WORKERS[@]}"; do
+  echo "$FLEET_TOKEN" | npx wrangler secret put FLEET_AUTH_TOKEN --name "$worker"
+done
+
+echo ""
+echo "All 6 workers deployed. Verify:"
+for worker in "${WORKERS[@]}"; do
+  STATUS=$(curl -s "https://${worker}.YOUR.workers.dev/health" | jq -r '.ok // "FAIL"')
+  echo "  $worker: $STATUS"
+done</code></pre>
+
+<h2>4. Cron Schedule</h2>
+<table>
+<tr><th>Worker</th><th>Cron</th><th>Function</th></tr>
+<tr><td>Intel Ops</td><td><code>*/30 * * * *</code></td><td>Sweep 5 free APIs for intel</td></tr>
+<tr><td>Orchestrator</td><td><code>*/15 * * * *</code></td><td>OODA cycle: Orient → Decide → Act</td></tr>
+<tr><td>Cloud Executor</td><td><code>*/2 * * * *</code></td><td>Pull and execute pending tasks</td></tr>
+<tr><td>Health Commander</td><td><code>*/10 * * * *</code></td><td>Ping all endpoints, alert on failure</td></tr>
+<tr><td>Revenue Sentinel</td><td><code>0 */3 * * *</code></td><td>Check Stripe for new orders</td></tr>
+<tr><td>Content Engine</td><td><code>0 9,21 * * *</code></td><td>Generate marketing content</td></tr>
+</table>
+
+<div class="warn">Important: All endpoints must be protected with FLEET_AUTH_TOKEN. Never expose /execute, /dispatch, or /sweep without authentication.</div>
+
+<hr>
+<div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
+<h2>Thank you for your purchase!</h2>
+<p>感謝您的購買！</p>
+<p style="color:#666;">Full course: <a href="https://openclaw-product-store.yagami8095.workers.dev/">Revenue Automation Masterclass ($149)</a></p>
+<p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
+<p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
+</div>
+</body>
+</html>

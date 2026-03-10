@@ -11,7 +11,8 @@
  */
 
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
+const TELEGRAM_CHAT_ID = '7848052227';
 const MOLTBOOK_API = 'https://moltbook-publisher-mcp.yagami8095.workers.dev';
 const PRODUCT_STORE = 'https://product-store.yagami8095.workers.dev';
 const X402_GATEWAY = 'https://openclaw-x402-gateway.yagami8095.workers.dev';
@@ -59,6 +60,14 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const PROTECTED = ['/execute', '/generate'];
+    if (PROTECTED.includes(url.pathname)) {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
@@ -146,6 +155,12 @@ async function contentCycle(env) {
     }
 
     await updateHeartbeat(env, start);
+
+    // Telegram notification for generated content
+    if (content) {
+      await sendTelegram(env, `📝 Content Generated\nType: ${contentType.type}\nTitle: ${content.title || 'untitled'}`);
+      await writeToGraphRAG(env, 'generated', { title: content.title, category: contentType.type, product_id: content.product_id });
+    }
 
     // Report to Bunshin
     await reportBunshin('content-engine-status', {
@@ -498,19 +513,60 @@ async function logEvent(env, eventType, severity, message) {
   } catch {}
 }
 
-async function reportBunshin(key, value, env) {
+// === Telegram (with 5-min dedup) ===
+async function sendTelegram(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN) return;
+  const dedupKey = `alert:last:content:${text.slice(0, 30).replace(/\W/g, '')}`;
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
+    const last = await env.ARMY_KV.get(dedupKey);
+    if (last) return;
+    await env.ARMY_KV.put(dedupKey, Date.now().toString(), { expirationTtl: 300 });
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key, value, context: 'Content Engine v2.0 report' }),
-      signal: AbortSignal.timeout(8000)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
+      signal: AbortSignal.timeout(5000)
     });
   } catch {}
 }
 
+// === Graph RAG Integration ===
+async function writeToGraphRAG(env, eventType, data) {
+  try {
+    const entities = [{
+      id: `content-${eventType}-${Date.now()}`,
+      type: 'event',
+      name: `Content ${eventType} ${new Date().toISOString().slice(0, 16)}`,
+      properties: { event_type: eventType, ...data },
+      summary: `Content ${eventType}: ${data.title || ''} (${data.category || ''})`
+    }];
+    const relationships = [
+      { source: 'yedan-content-engine', target: entities[0].id, type: 'generates', layer: 'temporal' }
+    ];
+    if (data.product_id) {
+      relationships.push({ source: entities[0].id, target: data.product_id, type: 'processes', layer: 'causal' });
+    }
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ entities, relationships, source: 'content-engine' }),
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+}
+
+async function reportBunshin(key, value, env) {
+  const payload = JSON.stringify({ key, value, context: 'Content Engine v2.0 report' });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
+  try {
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
+  } catch {}
+  try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }

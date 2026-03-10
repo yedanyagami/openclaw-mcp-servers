@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MCP Server Starter Kit | MCP 伺服器開發入門套件</title>
+<style>
+  @page { margin: 15mm; }
+  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
+  h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+  h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
+  h3 { color: #444; margin-top: 30px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.9rem; }
+  .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .warn { background: #fff3e0; border-left: 4px solid #ff9800; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+  th { background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+  .notice { text-align: center; color: #999; font-size: 0.85rem; }
+  .file-tree { background: #f8f9fa; padding: 16px 24px; border-radius: 8px; font-family: monospace; white-space: pre; }
+</style>
+</head>
+<body>
+<h1>MCP Server Starter Kit</h1>
+<h1 style="font-size:1.4rem;">MCP 伺服器開發入門套件</h1>
+<p class="subtitle">Build &amp; deploy your own MCP server in 30 minutes<br>30 分鐘內建置並部署你自己的 MCP 伺服器</p>
+<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<hr>
+
+<h2>1. Project Structure</h2>
+<div class="file-tree">
+mcp-server/
+├── worker.js          # Main MCP server (JSON-RPC 2.0)
+├── wrangler.toml      # Cloudflare configuration
+├── schema.sql         # D1 database migrations
+├── landing.html       # Conversion-optimized landing page
+├── package.json       # Dependencies
+└── README.md          # Quick start guide
+</div>
+
+<h2>2. Complete Worker Template</h2>
+<pre><code>// worker.js — Production-ready MCP Server Template
+// MCP Protocol: 2025-03-26 | JSON-RPC 2.0
+
+const SERVER_INFO = {
+  name: 'your-mcp-server',
+  version: '1.0.0',
+  description: 'Your MCP server description',
+};
+
+const TOOLS = [
+  {
+    name: 'your_tool_name',
+    description: 'What this tool does — be specific for AI discovery',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'The search query' },
+        limit: { type: 'number', description: 'Max results (default: 10)' },
+      },
+      required: ['query'],
+    },
+  },
+];
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    // Landing page
+    if (url.pathname === '/' &amp;&amp; request.method === 'GET') {
+      return new Response(LANDING_HTML, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      });
+    }
+
+    // Health check
+    if (url.pathname === '/health') {
+      return Response.json({ ok: true, version: SERVER_INFO.version });
+    }
+
+    // MCP endpoint (JSON-RPC 2.0)
+    if (request.method !== 'POST') {
+      return Response.json({ error: 'Method not allowed' }, { status: 405 });
+    }
+
+    // Rate limiting
+    const rateLimitResult = await checkRateLimit(request, env);
+    if (!rateLimitResult.ok) {
+      return Response.json({
+        jsonrpc: '2.0',
+        error: { code: -32000, message: rateLimitResult.message },
+        id: null,
+      }, { status: 429 });
+    }
+
+    const body = await request.json();
+    const { method, params, id } = body;
+
+    try {
+      let result;
+      switch (method) {
+        case 'initialize':
+          result = {
+            protocolVersion: '2025-03-26',
+            capabilities: { tools: { listChanged: false } },
+            serverInfo: SERVER_INFO,
+          };
+          break;
+
+        case 'tools/list':
+          result = { tools: TOOLS };
+          break;
+
+        case 'tools/call':
+          result = await handleToolCall(params, env, rateLimitResult);
+          break;
+
+        default:
+          return Response.json({
+            jsonrpc: '2.0',
+            error: { code: -32601, message: `Unknown method: ${method}` },
+            id,
+          });
+      }
+
+      return Response.json({ jsonrpc: '2.0', result, id });
+    } catch (error) {
+      return Response.json({
+        jsonrpc: '2.0',
+        error: { code: -32603, message: error.message },
+        id,
+      }, { status: 500 });
+    }
+  },
+};
+
+// Tool execution
+async function handleToolCall(params, env, rateLimit) {
+  const { name, arguments: args } = params;
+
+  switch (name) {
+    case 'your_tool_name': {
+      // YOUR TOOL LOGIC HERE
+      const results = await yourToolFunction(args.query, args.limit || 10, env);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(results, null, 2),
+        }],
+      };
+    }
+
+    default:
+      throw new Error(`Unknown tool: ${name}`);
+  }
+}
+
+// Rate limiting (Pro tier: 1000/day, Free: 3/day)
+async function checkRateLimit(request, env) {
+  const apiKey = request.headers.get('X-API-Key') || '';
+  const isPro = apiKey &amp;&amp; await env.KV?.get(`prokey:${apiKey}`);
+  const limit = isPro ? 1000 : 3;
+  const tier = isPro ? 'pro' : 'free';
+
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const key = isPro ? `rate:pro:${apiKey}` : `rate:free:${ip}`;
+  const today = new Date().toISOString().slice(0, 10);
+  const rateKey = `${key}:${today}`;
+
+  const current = parseInt(await env.KV?.get(rateKey) || '0');
+  if (current >= limit) {
+    return {
+      ok: false,
+      message: isPro
+        ? `Pro rate limit: ${limit}/day reached. Resets at midnight UTC.`
+        : `Free tier: ${limit} calls/day. Upgrade: YOUR_STORE_URL`,
+    };
+  }
+
+  await env.KV?.put(rateKey, String(current + 1), { expirationTtl: 86400 });
+  return { ok: true, tier, remaining: limit - current - 1 };
+}</code></pre>
+
+<h2>3. D1 Database Schema</h2>
+<pre><code>-- schema.sql
+CREATE TABLE IF NOT EXISTS data (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  key TEXT NOT NULL UNIQUE,
+  value TEXT NOT NULL,
+  metadata TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_data_key ON data(key);
+CREATE INDEX idx_data_created ON data(created_at);
+
+-- Usage tracking
+CREATE TABLE IF NOT EXISTS usage_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  api_key TEXT,
+  tool_name TEXT NOT NULL,
+  ip_hash TEXT,
+  tier TEXT DEFAULT 'free',
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX idx_usage_date ON usage_log(created_at);</code></pre>
+
+<h2>4. Wrangler Configuration</h2>
+<pre><code># wrangler.toml
+name = "your-mcp-server"
+main = "worker.js"
+compatibility_date = "2026-03-01"
+account_id = "YOUR_ACCOUNT_ID"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "your-mcp-db"
+database_id = "YOUR_DB_ID"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "YOUR_KV_ID"
+
+[triggers]
+crons = ["0 */6 * * *"]  # Optional: scheduled tasks</code></pre>
+
+<h2>5. Monetization: Payment Flow</h2>
+<pre><code>// Stripe Checkout integration
+async function handleCheckout(request, env) {
+  // 1. Create Stripe Payment Link (one-time setup in Stripe Dashboard)
+  // 2. On successful payment, Stripe webhook fires
+  // 3. Generate Pro API key
+  // 4. Store in KV with customer email
+  // 5. Email key to customer
+
+  const apiKey = 'pro_' + crypto.randomUUID().replace(/-/g, '');
+  await env.KV.put(`prokey:${apiKey}`, JSON.stringify({
+    email: customerEmail,
+    created: new Date().toISOString(),
+    plan: 'pro',
+    calls_per_day: 1000,
+  }), { expirationTtl: 365 * 86400 }); // 1 year
+
+  return apiKey;
+}</code></pre>
+
+<h2>6. Deploy in 30 Seconds</h2>
+<pre><code># 1. Install dependencies
+npm install
+
+# 2. Create D1 database
+npx wrangler d1 create your-mcp-db
+# Copy database_id to wrangler.toml
+
+# 3. Create KV namespace
+npx wrangler kv namespace create KV
+# Copy id to wrangler.toml
+
+# 4. Run schema
+npx wrangler d1 execute your-mcp-db --file schema.sql
+
+# 5. Deploy!
+npx wrangler deploy
+
+# Your MCP server is live at:
+# https://your-mcp-server.YOUR.workers.dev</code></pre>
+
+<h2>7. Smithery Publishing</h2>
+<pre><code># smithery.yaml (place in repo root)
+name: your-mcp-server
+description: "Your tool description for AI discovery"
+author: your-name
+version: 1.0.0
+endpoint: https://your-mcp-server.YOUR.workers.dev
+tools:
+  - name: your_tool_name
+    description: "Tool description"
+pricing:
+  free: 3 calls/day
+  pro: 1000 calls/day ($9 one-time)
+
+# Submit at: https://smithery.ai/submit</code></pre>
+
+<div class="tip">Smithery gets your tool discovered by Claude Code, Cursor, Windsurf, and Cline users automatically. This is the highest-converting distribution channel for MCP tools in 2026.</div>
+
+<h2>8. Cross-Promotion Pattern</h2>
+<pre><code>// Add to your free-tier responses:
+const UPSELL = {
+  free_limit: `Free tier: 3 calls/day. Upgrade to Pro (1000/day): YOUR_STORE_URL`,
+  pro_feature: `This feature requires Pro tier. Get it: YOUR_STORE_URL`,
+};
+
+// In tool response (when near limit):
+if (rateLimit.remaining &lt;= 1 &amp;&amp; rateLimit.tier === 'free') {
+  result.content.push({
+    type: 'text',
+    text: `\n---\n${UPSELL.free_limit}`,
+  });
+}</code></pre>
+
+<hr>
+<div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
+<h2>Thank you for your purchase!</h2>
+<p>感謝您的購買！</p>
+<p style="color:#666;">Next step: <a href="https://openclaw-product-store.yagami8095.workers.dev/">AI Agent Builder Kit ($49)</a> for advanced patterns</p>
+<p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
+<p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
+</div>
+</body>
+</html>

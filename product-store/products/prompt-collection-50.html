@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>50 Battle-Tested AI Prompts | 實戰 AI 提示詞 50 選</title>
+<style>
+  @page { margin: 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.7; background: #fff; }
+  h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+  h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
+  h3 { color: #555; margin-top: 30px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  .prompt-box { background: #f8f9fa; border-left: 4px solid #1a73e8; padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.95rem; white-space: pre-wrap; }
+  .prompt-label { font-weight: bold; color: #1a73e8; margin-bottom: 4px; font-family: sans-serif; }
+  .tip { background: #fff3cd; padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-size: 0.9rem; }
+  .notice { text-align: center; color: #999; font-size: 0.85rem; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+  .toc { background: #f0f4ff; padding: 20px 30px; border-radius: 8px; margin: 20px 0; }
+  .toc a { color: #1a73e8; text-decoration: none; }
+  .toc li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<h1>🚀 50 Battle-Tested AI Prompts</h1>
+<h1 style="font-size:1.5rem;">實戰 AI 提示詞 50 選</h1>
+<p class="subtitle">ChatGPT / Claude / DeepSeek compatible — copy &amp; paste ready<br>複製貼上即可使用的實踐模板集</p>
+<p class="notice">This product is for authorized purchasers only. Redistribution prohibited.<br>本產品僅限正式購買者閱覽，禁止再散佈。 &copy; 2026 OpenClaw Intelligence</p>
+<hr>
+
+<div class="toc">
+<strong>Table of Contents | 目錄</strong>
+<ol>
+<li><a href="#coding">🟢 Coding Prompts (10)</a></li>
+<li><a href="#business">🔵 Business Prompts (10)</a></li>
+<li><a href="#writing">🟠 Writing Prompts (10)</a></li>
+<li><a href="#data">🟣 Data Analysis Prompts (10)</a></li>
+<li><a href="#productivity">🔴 Productivity Prompts (10)</a></li>
+</ol>
+</div>
+
+<h2 id="coding">🟢 Category 1: Coding | 編碼 (10 Prompts)</h2>
+
+<h3>1. Bug Detective | 除錯偵探</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+You are a senior software engineer debugging a production issue. Analyze this code and:
+1. Identify all bugs (logic errors, edge cases, off-by-one, null refs)
+2. Rank them by severity (P0-P3)
+3. Provide the exact fix for each bug with explanation
+4. Suggest defensive coding patterns to prevent similar bugs
+
+Code:
+```
+[PASTE YOUR CODE HERE]
+```
+
+Error/symptom: [DESCRIBE THE ISSUE]</div>
+<div class="tip">💡 Tip: Include the error message and stack trace for best results. Works with any language.</div>
+
+<h3>2. Code Review Pro | 程式碼審查專家</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Act as a principal engineer conducting a thorough code review. Review this pull request for:
+
+1. **Correctness** — Logic errors, race conditions, edge cases
+2. **Security** — Injection, auth bypass, secrets exposure, OWASP Top 10
+3. **Performance** — N+1 queries, unnecessary allocations, algorithmic complexity
+4. **Maintainability** — Naming, structure, single responsibility, test coverage
+5. **API Design** — Backward compatibility, error handling, documentation
+
+For each issue, provide:
+- Severity: 🔴 Must Fix | 🟡 Should Fix | 🟢 Nit
+- Line reference
+- Suggested fix (show code)
+
+Code to review:
+```
+[PASTE CODE]
+```</div>
+
+<h3>3. Test Generator | 測試生成器</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Generate comprehensive tests for this code. Include:
+1. **Happy path** — Normal expected behavior (3-5 cases)
+2. **Edge cases** — Empty input, max values, boundary conditions (5+ cases)
+3. **Error cases** — Invalid input, network failures, timeouts (3-5 cases)
+4. **Integration** — End-to-end flow verification (2-3 cases)
+
+Use [Jest/pytest/Go test/YOUR FRAMEWORK] with descriptive test names.
+Follow AAA pattern (Arrange-Act-Assert).
+Mock external dependencies.
+
+Code to test:
+```
+[PASTE CODE]
+```</div>
+
+<h3>4. API Designer | API 設計師</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a RESTful API for [DESCRIBE YOUR SYSTEM]. Include:
+
+1. **Endpoints** — Method, path, request/response schema (JSON)
+2. **Authentication** — API key, OAuth 2.0, or JWT strategy
+3. **Rate Limiting** — Tier-based limits (free/pro/enterprise)
+4. **Error Handling** — Standard error response format with codes
+5. **Pagination** — Cursor-based for lists
+6. **Versioning** — URL path or header strategy
+7. **OpenAPI 3.0 spec** — Complete YAML
+
+Constraints: [LIST ANY CONSTRAINTS]
+Existing entities: [LIST YOUR DATA MODELS]</div>
+
+<h3>5. CI/CD Pipeline Builder | CI/CD 管線建置</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a production-grade CI/CD pipeline for a [LANGUAGE/FRAMEWORK] project deployed to [PLATFORM]. Include:
+
+1. **Build stage** — Install deps, compile, lint, type-check
+2. **Test stage** — Unit, integration, e2e (parallel where possible)
+3. **Security stage** — SAST, dependency audit, secret scanning
+4. **Deploy stage** — Staging → production with manual approval gate
+5. **Rollback** — Automatic rollback on health check failure
+6. **Notifications** — Slack/Telegram on success/failure
+
+Platform: [GitHub Actions / GitLab CI / CircleCI]
+Current setup: [DESCRIBE WHAT YOU HAVE]</div>
+
+<h3>6. Refactoring Advisor | 重構顧問</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze this code for refactoring opportunities. For each suggestion:
+1. What smell/antipattern you identified
+2. The refactoring technique to apply (Extract Method, Replace Conditional with Polymorphism, etc.)
+3. Before/after code showing the exact transformation
+4. Impact on testability, readability, and performance
+
+Prioritize suggestions by impact (high → low).
+Do NOT change external behavior (pure refactoring only).
+
+Code:
+```
+[PASTE CODE]
+```</div>
+
+<h3>7. Performance Optimizer | 效能優化器</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze this code for performance bottlenecks:
+
+1. **Time complexity** — Identify O(n²) or worse operations
+2. **Memory** — Unnecessary allocations, memory leaks, large copies
+3. **I/O** — Sequential calls that could be parallel, missing caching
+4. **Database** — N+1 queries, missing indexes, full table scans
+5. **Network** — Redundant API calls, missing connection pooling
+
+For each issue, show the optimized version with expected improvement (e.g., "3x faster for 10K items").
+
+Code:
+```
+[PASTE CODE]
+```
+Context: [LANGUAGE, FRAMEWORK, EXPECTED DATA SCALE]</div>
+
+<h3>8. Architecture Decision Record | 架構決策記錄</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create an Architecture Decision Record (ADR) for: [DESCRIBE THE DECISION]
+
+Format:
+## Title
+## Status: [Proposed/Accepted/Deprecated]
+## Context
+What is the issue? Why are we making this decision now?
+## Options Considered
+For each option: description, pros, cons, effort estimate
+## Decision
+Which option was chosen and why
+## Consequences
+What are the positive and negative effects?
+## Technical Details
+Implementation specifics, migration plan, rollback strategy
+
+My constraints: [LIST CONSTRAINTS]
+Current architecture: [DESCRIBE CURRENT STATE]</div>
+
+<h3>9. Database Schema Designer | 資料庫結構設計</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a database schema for [DESCRIBE YOUR APPLICATION]. Include:
+
+1. **Tables/Collections** — Name, columns, types, constraints
+2. **Relationships** — Foreign keys, junction tables, cardinality
+3. **Indexes** — For common query patterns you describe
+4. **Migrations** — SQL/ORM migration files
+5. **Sample queries** — 5 most common operations with EXPLAIN analysis
+
+Requirements:
+- [LIST YOUR ENTITIES AND RELATIONSHIPS]
+- Expected scale: [ROWS PER TABLE, READ/WRITE RATIO]
+- Database: [PostgreSQL/MySQL/SQLite/MongoDB]</div>
+
+<h3>10. Error Handling Framework | 錯誤處理框架</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a comprehensive error handling strategy for my [LANGUAGE] application:
+
+1. **Error hierarchy** — Custom exception/error classes with codes
+2. **Retry logic** — Exponential backoff with jitter for transient failures
+3. **Circuit breaker** — Protect against cascading failures
+4. **Logging** — Structured error logs with correlation IDs
+5. **User-facing errors** — i18n error messages, never expose internals
+6. **Monitoring** — Error rate alerting thresholds
+
+Current error handling: [DESCRIBE WHAT YOU HAVE]
+Common failure modes: [LIST KNOWN ISSUES]</div>
+
+<h2 id="business">🔵 Category 2: Business | 商業 (10 Prompts)</h2>
+
+<h3>11. Competitor Analysis | 競品分析</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Conduct a thorough competitor analysis for [YOUR PRODUCT/SERVICE]:
+
+1. **Direct competitors** — Top 5, their positioning, pricing, features
+2. **Indirect competitors** — Alternative solutions users might choose
+3. **Feature matrix** — Side-by-side comparison table
+4. **Pricing analysis** — Price points, billing models, free tier comparison
+5. **Strengths/Weaknesses** — SWOT for each competitor
+6. **Differentiation opportunities** — Where can we win?
+7. **Market gaps** — Unserved needs competitors are missing
+
+My product: [DESCRIBE YOUR PRODUCT]
+My target market: [DESCRIBE YOUR TARGET CUSTOMERS]
+My current positioning: [HOW YOU POSITION TODAY]</div>
+
+<h3>12. Customer Persona Builder | 客戶人物誌</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create 3 detailed customer personas for [YOUR PRODUCT]:
+
+For each persona include:
+1. **Demographics** — Name, age, role, company size, income
+2. **Goals** — What they're trying to achieve (3 goals)
+3. **Pain points** — Current frustrations (3 pains)
+4. **Decision factors** — What drives their purchase decision
+5. **Objections** — Why they might NOT buy (and how to overcome)
+6. **Channels** — Where they discover products (social, search, referral)
+7. **Quote** — A sentence they'd say that captures their mindset
+8. **Buying journey** — Trigger → Research → Evaluate → Purchase → Advocate
+
+Product: [DESCRIBE]
+Known customers: [ANY DATA YOU HAVE]</div>
+
+<h3>13. Pricing Strategy | 定價策略</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a pricing strategy for [YOUR PRODUCT]:
+
+1. **Value metric** — What should pricing be based on? (seats, usage, features)
+2. **Tier structure** — Free / Starter / Pro / Enterprise with feature gates
+3. **Price points** — Specific prices with psychological pricing applied
+4. **Annual vs Monthly** — Discount percentage and incentive structure
+5. **Competitive positioning** — Where we sit vs alternatives
+6. **Revenue projection** — Based on conversion rates: free→paid, monthly→annual
+7. **Expansion revenue** — Upsell and cross-sell paths
+8. **Anti-churn** — Features/limits that create switching costs
+
+My product: [DESCRIBE]
+Current pricing: [IF ANY]
+Target customers: [WHO]
+Competitors' pricing: [WHAT YOU KNOW]</div>
+
+<h3>14. OKR Framework | OKR 框架</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create quarterly OKRs for [YOUR TEAM/COMPANY]:
+
+For each Objective:
+- Clear, inspiring, qualitative statement
+- 3-5 Key Results (measurable, with specific numbers)
+- Confidence level (0.3 = stretch, 0.5 = ambitious, 0.7 = committed)
+- Owner and timeline
+- Leading indicators to track weekly
+
+Context:
+- Company stage: [STARTUP/GROWTH/MATURE]
+- Team size: [NUMBER]
+- Last quarter results: [HIGHLIGHTS]
+- This quarter priorities: [WHAT MATTERS MOST]
+- Constraints: [BUDGET, HEADCOUNT, TECH DEBT]
+
+Create 3 Objectives with 3-5 KRs each.</div>
+
+<h3>15. Go-To-Market Plan | 上市策略</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a go-to-market plan for [YOUR PRODUCT LAUNCH]:
+
+1. **Positioning statement** — For [target], who [need], [product] is a [category] that [benefit]
+2. **Launch timeline** — Pre-launch, launch day, post-launch (4-week plan)
+3. **Channel strategy** — Top 5 channels ranked by expected ROI
+4. **Content plan** — Blog posts, social media, email sequences
+5. **Partnerships** — Potential distribution partners and integration plays
+6. **Metrics** — Launch success criteria (signups, revenue, coverage)
+7. **Budget** — Channel-by-channel spend allocation
+8. **Risk mitigation** — What could go wrong and contingency plans
+
+Product: [DESCRIBE]
+Budget: [AMOUNT OR "$0"]
+Target: [FIRST 100 CUSTOMERS]
+Differentiator: [WHY YOU, WHY NOW]</div>
+
+<h3>16. Investor Pitch Deck Outline | 投資人簡報大綱</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a compelling pitch deck outline (12 slides) for [YOUR STARTUP]:
+
+1. **Title** — Company name, tagline, logo placement
+2. **Problem** — The pain point (with data to prove it's real)
+3. **Solution** — Your product in one sentence + demo screenshot
+4. **Market Size** — TAM/SAM/SOM with sources
+5. **Business Model** — How you make money
+6. **Traction** — Key metrics, growth rate, notable customers
+7. **Competition** — 2x2 matrix showing your positioning
+8. **Team** — Why THIS team wins
+9. **Technology** — Your moat/unfair advantage
+10. **Financials** — Revenue projections (3 years)
+11. **Ask** — How much, what for, expected milestones
+12. **Vision** — Where this goes in 5 years
+
+Company: [DESCRIBE]
+Stage: [PRE-SEED/SEED/SERIES A]
+Current metrics: [WHAT YOU HAVE]</div>
+
+<h3>17. Email Sequence Builder | 電子郵件序列</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a 5-email onboarding sequence for [YOUR PRODUCT]:
+
+For each email:
+1. **Subject line** — A/B variants (2 options)
+2. **Send timing** — Days after signup
+3. **Goal** — What action should the reader take?
+4. **Body** — Full email copy (150-200 words)
+5. **CTA** — Button text and destination
+6. **Segment** — Who gets this (all users vs specific behavior)
+
+Sequence goals:
+- Email 1: Welcome + quick win
+- Email 2: Core feature discovery
+- Email 3: Social proof / case study
+- Email 4: Advanced feature unlock
+- Email 5: Upgrade nudge or feedback request
+
+Product: [DESCRIBE]
+Average user journey: [DESCRIBE]</div>
+
+<h3>18. Customer Interview Script | 客戶訪談腳本</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a 30-minute customer interview script for [YOUR PRODUCT]:
+
+1. **Opening** (2 min) — Build rapport, set expectations
+2. **Current workflow** (5 min) — How they solve this problem today
+3. **Pain points** (8 min) — Dig into frustrations and workarounds
+4. **Solution reaction** (5 min) — Show concept/mockup, observe reaction
+5. **Pricing sensitivity** (5 min) — Willingness to pay, budget context
+6. **Closing** (5 min) — Next steps, referrals, thank you
+
+Rules:
+- Open-ended questions only (no yes/no)
+- Follow-up probes for each question
+- Note-taking template included
+- Red flag / green flag indicators
+
+Product: [DESCRIBE]
+Interview goal: [VALIDATE PROBLEM / TEST PRICING / FEATURE PRIORITIZATION]</div>
+
+<h3>19. Unit Economics Calculator | 單位經濟計算</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Calculate unit economics for [YOUR BUSINESS]:
+
+Compute and explain:
+1. **CAC** (Customer Acquisition Cost) — By channel
+2. **LTV** (Lifetime Value) — With assumptions stated
+3. **LTV:CAC Ratio** — Target >3x
+4. **Payback Period** — Months to recover CAC
+5. **Gross Margin** — Revenue minus COGS per customer
+6. **Net Revenue Retention** — Expansion vs churn
+7. **Monthly Burn** — Runway remaining
+8. **Break-even** — When does the business become profitable?
+
+My inputs:
+- Monthly revenue: [AMOUNT]
+- Number of customers: [COUNT]
+- Average monthly spend: [AMOUNT]
+- Monthly churn rate: [PERCENTAGE]
+- Marketing spend: [AMOUNT PER CHANNEL]
+- COGS per customer: [AMOUNT]</div>
+
+<h3>20. Partnership Proposal | 合作提案</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Draft a partnership proposal for [YOUR COMPANY] partnering with [TARGET COMPANY]:
+
+1. **Executive Summary** — One paragraph on why this partnership wins for both
+2. **Mutual Benefits** — 3 benefits for each side
+3. **Integration Plan** — Technical or business integration specifics
+4. **Revenue Share** — Proposed model (referral fee, rev share, co-sell)
+5. **Timeline** — Pilot → expand → scale (3 phases)
+6. **Success Metrics** — KPIs for evaluating the partnership
+7. **Next Steps** — Clear ask and meeting request
+
+Your company: [DESCRIBE]
+Target company: [DESCRIBE]
+Synergy: [WHY TOGETHER IS BETTER]</div>
+
+<h2 id="writing">🟠 Category 3: Writing | 寫作 (10 Prompts)</h2>
+
+<h3>21. SEO Blog Post | SEO 部落格文章</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a 1500-word SEO-optimized blog post on: [TOPIC]
+
+Requirements:
+1. **Title** — Include primary keyword, under 60 characters
+2. **Meta description** — 150-160 characters, compelling
+3. **Structure** — H1, H2s (4-6), H3s where needed
+4. **Opening** — Hook reader in first 2 sentences
+5. **Body** — Actionable advice, not generic filler
+6. **Internal links** — Suggest 2-3 places to link to [YOUR SITE PAGES]
+7. **CTA** — Natural call-to-action in conclusion
+8. **Keywords** — Primary: [KEYWORD], Secondary: [2-3 RELATED]
+
+Tone: [PROFESSIONAL / CASUAL / TECHNICAL]
+Target audience: [DESCRIBE]
+Competitor articles to beat: [URLs IF AVAILABLE]</div>
+
+<h3>22. Social Media Thread | 社群媒體串文</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a viral Twitter/X thread (10 tweets) about: [TOPIC]
+
+Rules:
+1. Tweet 1: Hook — bold claim or surprising stat (stop the scroll)
+2. Tweets 2-8: Value — actionable insights, one idea per tweet
+3. Tweet 9: Summary / key takeaway
+4. Tweet 10: CTA — follow, retweet, link to product
+5. Each tweet: under 280 characters
+6. Use line breaks for readability
+7. No hashtags (they reduce reach in 2026)
+8. Include 1-2 data points or examples
+
+Topic: [DESCRIBE]
+My expertise angle: [WHY I'M QUALIFIED]
+Link to include: [URL]</div>
+
+<h3>23. Sales Page Copy | 銷售頁文案</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write high-converting sales page copy for [YOUR PRODUCT]:
+
+Structure (AIDA framework):
+1. **Headline** — Big promise or transformation
+2. **Sub-headline** — Specifics + credibility
+3. **Problem agitation** — Paint the pain vividly (3 paragraphs)
+4. **Solution reveal** — Introduce your product as the answer
+5. **Features → Benefits** — 5 features, each with "so that..." benefit
+6. **Social proof** — Testimonial templates (3 styles)
+7. **Objection handling** — 5 common objections with responses
+8. **Guarantee** — Risk reversal statement
+9. **Price anchoring** — Compare to alternatives
+10. **CTA** — Urgency + clear button text
+
+Product: [DESCRIBE]
+Price: [AMOUNT]
+Target buyer: [DESCRIBE]</div>
+
+<h3>24. Technical Documentation | 技術文件</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write technical documentation for [YOUR API/LIBRARY/TOOL]:
+
+Include:
+1. **Quick Start** — Get from zero to "hello world" in under 5 minutes
+2. **Installation** — All supported methods (npm, pip, brew, docker)
+3. **Authentication** — How to get and use API keys
+4. **Core Concepts** — 3-5 key concepts the user must understand
+5. **API Reference** — Each endpoint/function with params, response, example
+6. **Code Examples** — Working examples in [LANGUAGES]
+7. **Error Reference** — Common errors with troubleshooting steps
+8. **FAQ** — 5 most common questions
+9. **Changelog** — Version history format
+
+Context: [DESCRIBE YOUR TOOL]
+Current docs: [LINK OR "NONE"]</div>
+
+<h3>25. Newsletter Edition | 電子報</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a weekly newsletter edition for [YOUR NEWSLETTER NAME]:
+
+Structure:
+1. **Subject line** — 2 A/B variants (one curiosity, one benefit)
+2. **Opening** — Personal hook or timely observation (2-3 sentences)
+3. **Main story** — Deep dive on [TOPIC] (300-400 words)
+4. **3 Quick links** — Curated with one-sentence commentary each
+5. **Tool of the week** — Product recommendation with why
+6. **Closing** — Personal sign-off + CTA (reply, share, try something)
+
+Tone: Smart friend sharing insights, not corporate broadcast
+Length: 500-700 words total
+Audience: [DESCRIBE]</div>
+
+<h3>26. Product Hunt Launch Copy | Product Hunt 發布文案</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write Product Hunt launch copy for [YOUR PRODUCT]:
+
+1. **Tagline** — Under 60 characters, clear value prop
+2. **Description** — 3 paragraphs: problem, solution, why now
+3. **First Comment** (Maker) — Personal story, why you built this, what's next
+4. **Gallery** — Suggest 5 screenshots/GIFs to include
+5. **FAQ** — 5 questions a PH user would ask
+6. **Upvote Request Template** — Message to send to your network
+
+Product: [DESCRIBE]
+Key differentiator: [WHAT MAKES YOU UNIQUE]
+Launch day: [DATE]</div>
+
+<h3>27. Case Study | 案例研究</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a compelling case study for [YOUR PRODUCT]:
+
+Structure:
+1. **Title** — "[Customer] achieved [Result] with [Product]"
+2. **Executive Summary** — 3-sentence overview
+3. **Challenge** — What problem did they face? (with metrics)
+4. **Solution** — How they implemented your product
+5. **Results** — Quantified outcomes (before/after)
+6. **Quote** — Customer testimonial (draft 2-3 options)
+7. **Key Takeaways** — 3 bullet points
+8. **CTA** — "Get similar results" with link
+
+Customer: [DESCRIBE OR USE HYPOTHETICAL]
+Industry: [THEIR INDUSTRY]
+Results: [METRICS YOU CAN SHARE]</div>
+
+<h3>28. README Generator | README 生成器</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Generate a professional GitHub README for [YOUR PROJECT]:
+
+Include:
+1. **Title + Badges** — Build status, version, license, downloads
+2. **One-liner** — What it does in one sentence
+3. **Features** — Bullet list of key capabilities
+4. **Quick Start** — 3-step setup (install, configure, run)
+5. **Usage Examples** — 3 real-world code examples
+6. **Configuration** — Environment variables and options table
+7. **API Reference** — Key functions/endpoints
+8. **Contributing** — How to contribute (setup, PR process)
+9. **License** — MIT/Apache 2.0/your choice
+10. **Credits** — Acknowledgments
+
+Project: [DESCRIBE]
+Tech stack: [LANGUAGES/FRAMEWORKS]
+License: [YOUR CHOICE]</div>
+
+<h3>29. Press Release | 新聞稿</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a press release for [YOUR ANNOUNCEMENT]:
+
+Format:
+1. **Headline** — Newsworthy, specific, under 80 characters
+2. **Sub-headline** — Supporting detail
+3. **Dateline** — City, Date
+4. **Lead paragraph** — Who, what, when, where, why (most important facts)
+5. **Body** — Supporting details, quotes, context (3-4 paragraphs)
+6. **Quote 1** — From your CEO/founder
+7. **Quote 2** — From a customer or partner
+8. **Boilerplate** — About your company (standard paragraph)
+9. **Contact** — Media contact information
+
+Announcement: [DESCRIBE]
+Company: [YOUR COMPANY]
+Key data points: [NUMBERS TO INCLUDE]</div>
+
+<h3>30. Video Script | 影片腳本</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Write a 3-minute YouTube video script for [TOPIC]:
+
+Format:
+1. **Hook** (0:00-0:15) — Bold statement or question to stop scrolling
+2. **Problem** (0:15-0:45) — Relatable pain point
+3. **Solution overview** (0:45-1:15) — Introduce your approach
+4. **Demo/Walkthrough** (1:15-2:15) — Step-by-step [DESCRIBE WHAT TO SHOW]
+5. **Results** (2:15-2:30) — Show the outcome
+6. **CTA** (2:30-2:45) — Subscribe, link in description
+7. **End screen** (2:45-3:00) — Related video suggestion
+
+Include: [SCREEN RECORDINGS / TALKING HEAD / B-ROLL] notes
+Title: 2 A/B options (one curiosity, one how-to)
+Thumbnail text suggestion: [3-5 WORDS]</div>
+
+<h2 id="data">🟣 Category 4: Data Analysis | 數據分析 (10 Prompts)</h2>
+
+<h3>31. CSV Data Explorer | CSV 資料探索</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze this CSV dataset and provide:
+
+1. **Summary Statistics** — Rows, columns, types, missing values
+2. **Distribution** — Key metrics (mean, median, std, quartiles) for numeric columns
+3. **Top Patterns** — 5 most interesting patterns or correlations
+4. **Anomalies** — Outliers and unexpected values
+5. **Visualization Suggestions** — What charts would best tell this data's story
+6. **Data Quality Issues** — Duplicates, inconsistencies, formatting problems
+7. **Actionable Insights** — 3 business recommendations from this data
+
+Data (paste first 50 rows):
+```csv
+[PASTE CSV DATA]
+```
+
+Context: [WHAT THIS DATA REPRESENTS]
+Questions I want answered: [YOUR SPECIFIC QUESTIONS]</div>
+
+<h3>32. A/B Test Analyzer | A/B 測試分析</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze this A/B test and determine if we should ship the change:
+
+Data:
+- Control: [VISITORS] visitors, [CONVERSIONS] conversions
+- Variant: [VISITORS] visitors, [CONVERSIONS] conversions
+- Test duration: [DAYS] days
+- Primary metric: [CONVERSION RATE / REVENUE / ENGAGEMENT]
+
+Calculate:
+1. Conversion rate for each group
+2. Relative lift (percentage improvement)
+3. Statistical significance (p-value using chi-squared)
+4. Confidence interval for the difference
+5. Required sample size for 95% confidence, 80% power
+6. Recommendation: Ship / Don't Ship / Run Longer
+
+Additional context: [SEASONAL EFFECTS, KNOWN BIASES]</div>
+
+<h3>33. SQL Query Optimizer | SQL 查詢優化</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Optimize this SQL query for performance:
+
+```sql
+[PASTE YOUR QUERY]
+```
+
+Table schemas:
+```sql
+[PASTE CREATE TABLE STATEMENTS]
+```
+
+Provide:
+1. **Execution plan analysis** — What's slow and why
+2. **Optimized query** — Rewritten for performance
+3. **Index recommendations** — CREATE INDEX statements
+4. **Estimated improvement** — Before/after complexity
+5. **Alternative approaches** — CTEs, window functions, materialized views
+6. **Caching strategy** — If applicable
+
+Database: [PostgreSQL/MySQL/SQLite]
+Table sizes: [APPROXIMATE ROW COUNTS]
+Current execution time: [MS/SECONDS]</div>
+
+<h3>34. Dashboard Design | 儀表板設計</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a metrics dashboard for [YOUR ROLE/TEAM]:
+
+1. **North Star Metric** — The one number that matters most
+2. **KPI Grid** (6-8 metrics) — Name, formula, target, data source
+3. **Layout** — Which metrics get large cards vs small
+4. **Charts** — What type for each metric (line, bar, funnel, gauge)
+5. **Filters** — Date range, segments, comparison periods
+6. **Alerts** — Thresholds that trigger notifications
+7. **Drill-downs** — What you click into from each metric
+8. **Refresh cadence** — Real-time vs hourly vs daily
+
+Role: [YOUR ROLE]
+Tools available: [METABASE / GRAFANA / CUSTOM / SHEETS]
+Data sources: [LIST YOUR DATA SOURCES]</div>
+
+<h3>35. ML Model Evaluator | ML 模型評估</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Evaluate my ML model's performance and suggest improvements:
+
+Results:
+- Accuracy: [VALUE]
+- Precision: [VALUE]
+- Recall: [VALUE]
+- F1 Score: [VALUE]
+- AUC-ROC: [VALUE]
+- Confusion matrix: [PASTE]
+
+Analyze:
+1. Is accuracy the right metric for this problem? Suggest alternatives
+2. Bias analysis — any class imbalance issues?
+3. Overfitting check — training vs validation gap
+4. Feature importance — which features matter most?
+5. Improvement suggestions — hyperparameter tuning, feature engineering, model architecture
+6. Production readiness — latency, monitoring, drift detection
+
+Model type: [ALGORITHM]
+Dataset size: [TRAIN/TEST SPLIT]
+Problem type: [CLASSIFICATION / REGRESSION / CLUSTERING]</div>
+
+<h3>36. Data Pipeline Design | 資料管線設計</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a data pipeline for [YOUR USE CASE]:
+
+1. **Source** — Where data comes from (APIs, databases, files, streams)
+2. **Ingestion** — Batch vs streaming, frequency, format
+3. **Transformation** — Cleaning, enrichment, aggregation steps
+4. **Storage** — Where processed data lives (warehouse, lake, cache)
+5. **Serving** — How consumers access it (API, dashboard, export)
+6. **Quality** — Data validation checks and alerts
+7. **Monitoring** — Pipeline health, SLA tracking, failure handling
+8. **Architecture diagram** — ASCII art showing the flow
+
+Scale: [EVENTS/DAY OR DATA VOLUME]
+Budget: [CLOUD SPEND LIMIT]
+Tech stack: [WHAT YOU ALREADY USE]</div>
+
+<h3>37. Anomaly Detection | 異常偵測</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze this time series data for anomalies:
+
+Data: [PASTE TIME SERIES — DATE, VALUE PAIRS]
+
+1. **Trend analysis** — Overall direction and rate of change
+2. **Seasonality** — Daily, weekly, monthly patterns
+3. **Anomalies** — Points that deviate >2 standard deviations
+4. **Root cause hypotheses** — What might explain each anomaly
+5. **Forecasting** — Predict next 7 data points with confidence intervals
+6. **Alert rules** — Thresholds for automated anomaly detection
+
+Context: [WHAT THIS METRIC REPRESENTS]
+Known events: [HOLIDAYS, LAUNCHES, OUTAGES THAT MIGHT AFFECT DATA]</div>
+
+<h3>38. Survey Results Analyzer | 問卷結果分析</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Analyze these survey results and extract actionable insights:
+
+Data:
+```
+[PASTE SURVEY RESPONSES — CAN BE RAW TEXT OR STRUCTURED]
+```
+
+Provide:
+1. **Quantitative summary** — Response rates, score distributions, NPS
+2. **Qualitative themes** — Top 5 themes from open-ended responses
+3. **Sentiment analysis** — Positive/negative/neutral breakdown
+4. **Segment analysis** — Differences between user groups
+5. **Priority matrix** — Impact vs frequency for issues mentioned
+6. **Recommendations** — Top 3 actions to take based on findings
+7. **Report template** — Executive summary for stakeholders
+
+Survey purpose: [WHAT YOU WANTED TO LEARN]
+Respondent count: [NUMBER]</div>
+
+<h3>39. Cohort Analysis | 群組分析</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Perform a cohort analysis on this user data:
+
+Data:
+```
+[PASTE: user_id, signup_date, activity_dates, revenue]
+```
+
+Calculate:
+1. **Retention curve** — Week-over-week retention by signup cohort
+2. **Revenue cohorts** — ARPU by cohort over time
+3. **Activation rate** — % completing key action within first week
+4. **Power users** — Characteristics of top 10% engaged users
+5. **Churn prediction** — Early signals of users about to churn
+6. **Visualization** — Cohort heatmap (describe the table)
+
+Metrics to focus on: [RETENTION / REVENUE / ENGAGEMENT]
+Key activation event: [WHAT ACTION DEFINES "ACTIVATED"]</div>
+
+<h3>40. Regression Analysis | 迴歸分析</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Perform a regression analysis to understand what drives [DEPENDENT VARIABLE]:
+
+Data:
+```
+[PASTE YOUR DATA — COLUMNS: DEPENDENT + INDEPENDENT VARIABLES]
+```
+
+Provide:
+1. **Correlation matrix** — Between all variables
+2. **Model selection** — Linear, polynomial, or logistic (with justification)
+3. **Coefficients** — Each variable's impact with confidence intervals
+4. **R-squared** — Model fit quality
+5. **Residual analysis** — Check for heteroscedasticity, normality
+6. **Feature importance** — Ranked by impact on outcome
+7. **Prediction formula** — The equation to use going forward
+8. **Limitations** — What this model cannot tell you
+
+Question: [WHAT ARE YOU TRYING TO PREDICT/EXPLAIN]</div>
+
+<h2 id="productivity">🔴 Category 5: Productivity | 生產力 (10 Prompts)</h2>
+
+<h3>41. Task Prioritization | 任務優先排序</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Help me prioritize my task list using the Eisenhower Matrix + ICE scoring:
+
+Tasks:
+[LIST ALL YOUR TASKS]
+
+For each task, evaluate:
+1. **Urgency** (1-10) — Time sensitivity
+2. **Impact** (1-10) — Business value if completed
+3. **Confidence** (1-10) — Likelihood of achieving expected result
+4. **Effort** (1-10) — Time and energy required (10 = easy, 1 = huge)
+5. **ICE Score** — (Impact × Confidence × Ease) / 10
+6. **Eisenhower Quadrant** — Do / Schedule / Delegate / Eliminate
+
+Output a prioritized table sorted by ICE score, with recommended time blocks.
+Flag any tasks that should be eliminated or delegated.
+
+My available hours this week: [NUMBER]
+My role: [YOUR ROLE]</div>
+
+<h3>42. Learning Roadmap | 學習路線圖</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a 90-day learning roadmap for mastering [SKILL/TECHNOLOGY]:
+
+Structure:
+- **Month 1: Foundation** — Core concepts, daily practice (30min/day)
+- **Month 2: Application** — Build 3 projects of increasing complexity
+- **Month 3: Mastery** — Advanced topics, contribute to open source, teach others
+
+For each week include:
+1. Learning objectives (2-3 specific goals)
+2. Resources (free whenever possible — YouTube, docs, blogs)
+3. Practice exercise (hands-on, not just reading)
+4. Milestone check — How to know you've mastered this week's content
+
+Current level: [BEGINNER / INTERMEDIATE / ADVANCED]
+Available time: [HOURS PER WEEK]
+Learning style: [VISUAL / HANDS-ON / READING / VIDEO]
+Goal: [WHY YOU'RE LEARNING THIS]</div>
+
+<h3>43. Decision Framework | 決策框架</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Help me make this decision: [DESCRIBE YOUR DECISION]
+
+Analyze using 3 frameworks:
+1. **Pros/Cons + Weights** — Weighted scoring (importance 1-5)
+2. **10/10/10 Rule** — How will I feel in 10 minutes, 10 months, 10 years?
+3. **Reversibility Matrix** — Is this a one-way or two-way door?
+
+For each option:
+- Best case scenario (and probability)
+- Worst case scenario (and probability)
+- Expected value calculation
+- Hidden costs or second-order effects
+- What information would change your recommendation?
+
+Options:
+[LIST YOUR OPTIONS]
+
+Constraints: [TIME, MONEY, RELATIONSHIPS, VALUES]
+Risk tolerance: [LOW / MEDIUM / HIGH]</div>
+
+<h3>44. Goal Setting (SMART+) | 目標設定</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Transform my vague goal into a SMART+ action plan:
+
+My goal: [YOUR VAGUE GOAL — e.g., "get healthier", "grow my business"]
+
+Create:
+1. **SMART Goal** — Specific, Measurable, Achievable, Relevant, Time-bound
+2. **Leading indicators** — 3 daily/weekly metrics that predict success
+3. **Lagging indicators** — Monthly outcome metrics
+4. **Habit stack** — Attach new habits to existing routines
+5. **Obstacle pre-mortem** — Top 5 things that will derail you + prevention
+6. **Accountability system** — How to stay on track
+7. **Milestone rewards** — Celebration points at 25/50/75/100%
+8. **90-day sprint plan** — Week-by-week breakdown
+
+Timeline: [DEADLINE]
+Past attempts: [WHAT YOU'VE TRIED BEFORE AND WHY IT FAILED]</div>
+
+<h3>45. Meeting Agenda | 會議議程</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Create a focused meeting agenda for: [MEETING PURPOSE]
+
+Format:
+1. **Pre-read** — What attendees should review before (with links)
+2. **Agenda items** — Each with: topic, owner, time allocation, desired outcome
+3. **Decision log** — Template for recording decisions made
+4. **Action items** — Template: task, owner, deadline
+5. **Parking lot** — Space for off-topic items to revisit later
+
+Rules:
+- Meeting should last [30/45/60] minutes max
+- Every item must have a clear "done" definition
+- Last 5 minutes reserved for action item review
+
+Attendees: [LIST ROLES]
+Recurring: [YES/NO — IF YES, WHAT FREQUENCY]
+Past meeting outcomes: [WHAT WORKED / WHAT DIDN'T]</div>
+
+<h3>46. Delegation Framework | 委派框架</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Help me delegate effectively. Analyze my task list and determine what to delegate:
+
+My tasks:
+[LIST ALL YOUR CURRENT TASKS]
+
+For each task, evaluate:
+1. **Can only I do this?** — Unique expertise or authority required
+2. **Teaching time vs doing time** — How long to teach vs just do it
+3. **Growth opportunity** — Would delegating help someone develop?
+4. **Risk level** — What's the worst case if done imperfectly?
+5. **Recommendation** — Keep / Delegate / Automate / Eliminate
+
+For tasks to delegate, create a briefing template:
+- Context (why this matters)
+- Expected output (specific deliverable)
+- Quality criteria (how to know it's good enough)
+- Deadline and check-in points
+- Authority level (decide alone vs check with me)
+
+My role: [YOUR ROLE]
+Team: [WHO CAN YOU DELEGATE TO]</div>
+
+<h3>47. Weekly Review | 週回顧</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Guide me through a weekly review (GTD-inspired):
+
+1. **Capture** — Brain dump everything on my mind (I'll list items)
+2. **Clarify** — For each item: Is it actionable? What's the next action?
+3. **Organize** — Sort into: Projects, Next Actions, Waiting For, Someday/Maybe
+4. **Reflect**:
+   - What went well this week? (3 wins)
+   - What didn't go well? (3 lessons)
+   - What am I grateful for?
+   - Am I working on the right things?
+5. **Engage** — Top 3 priorities for next week
+
+Current projects: [LIST]
+This week's accomplishments: [LIST]
+Stuck on: [WHAT'S BLOCKING YOU]
+Energy level: [LOW / MEDIUM / HIGH]</div>
+
+<h3>48. System Design | 系統設計</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Help me design a personal productivity system:
+
+Current tools: [LIST YOUR TOOLS — calendar, todo, notes, etc.]
+Pain points: [WHAT'S NOT WORKING]
+Work style: [MAKER SCHEDULE / MANAGER SCHEDULE / HYBRID]
+
+Design a system that covers:
+1. **Capture** — How to quickly capture ideas/tasks from any context
+2. **Process** — Daily inbox-zero routine (under 15 minutes)
+3. **Organize** — Folder/tag structure that scales
+4. **Review** — Daily (5 min), weekly (30 min), monthly (1 hour) routines
+5. **Execute** — Time-blocking strategy (deep work vs shallow work)
+6. **Reference** — Knowledge management (notes, bookmarks, files)
+
+Constraints:
+- Must work on [DEVICES]
+- Budget: [FREE / $X PER MONTH]
+- Must integrate with: [TOOLS]</div>
+
+<h3>49. Habit Tracker | 習慣追蹤</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Design a habit tracking system for these habits I want to build:
+
+Habits: [LIST YOUR DESIRED HABITS]
+
+For each habit:
+1. **Cue** — What triggers this habit? (time, location, preceding action)
+2. **Craving** — What reward am I seeking?
+3. **Response** — The minimal viable version (2-minute rule)
+4. **Reward** — Immediate satisfaction mechanism
+5. **Tracking method** — How to record completion
+6. **Streak recovery** — Rule for when you miss a day
+7. **Scaling plan** — How to increase intensity over 30/60/90 days
+
+Create a printable weekly tracker (ASCII table format).
+Include "never miss twice" and "identity-based" prompts.
+
+Current habits (good): [LIST]
+Current habits (bad to break): [LIST]</div>
+
+<h3>50. Negotiation Prep | 談判準備</h3>
+<div class="prompt-box"><div class="prompt-label">PROMPT:</div>
+Prepare me for this negotiation: [DESCRIBE THE NEGOTIATION]
+
+Create:
+1. **BATNA** — My Best Alternative to a Negotiated Agreement
+2. **ZOPA** — Zone of Possible Agreement (my range vs their likely range)
+3. **Anchoring strategy** — My opening position and justification
+4. **Concession plan** — What I can give up (ranked from easy to hard)
+5. **Their perspective** — What do they want? What pressures are they under?
+6. **Power analysis** — Who has leverage and why?
+7. **Script** — Opening statement (30 seconds)
+8. **Objection responses** — Top 5 pushbacks and my replies
+9. **Walk-away point** — Clear line I won't cross
+10. **Follow-up** — Email template for after the negotiation
+
+Context: [SALARY / CONTRACT / PARTNERSHIP / VENDOR]
+My goal: [IDEAL OUTCOME]
+Their likely position: [WHAT YOU KNOW ABOUT THEIR SIDE]</div>
+
+<hr>
+<div style="text-align:center; margin-top:60px; padding: 30px; background: #f0f4ff; border-radius: 12px;">
+<h2>Thank you for your purchase!</h2>
+<p>感謝您的購買！</p>
+<p style="color:#666;">Questions? Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
+<p style="color:#666;">Explore more AI tools: <a href="https://openclaw-product-store.yagami8095.workers.dev/">OpenClaw Store</a></p>
+<p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved. Redistribution prohibited.</p>
+</div>
+</body>
+</html>

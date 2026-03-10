@@ -7,7 +7,7 @@
  */
 
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
 const TELEGRAM_CHAT_ID = '7848052227';
 
 const OUR_MCP_SERVERS = [
@@ -23,6 +23,14 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const PROTECTED = ['/execute', '/sweep'];
+    if (PROTECTED.includes(url.pathname)) {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
@@ -107,6 +115,9 @@ async function intelSweep(env) {
     const msg = `OODA OBSERVE | ${totalItems} intel items collected in ${duration}ms\nGH:${sweepReport.sources.github} HN:${sweepReport.sources.hacker_news} npm:${sweepReport.sources.npm} HF:${sweepReport.sources.huggingface} SM:${sweepReport.sources.smithery}\nMCP: ${ownHealth.up}/${ownHealth.total} up`;
     await sendTelegram(env, msg);
   }
+
+  // Write to Graph RAG
+  await writeIntelToGraphRAG(env, sweepReport);
 
   // Report to Bunshin
   await reportBunshin('intel-ops-status', sweepReport, env);
@@ -396,10 +407,14 @@ async function getIntelStatus(env) {
   });
 }
 
-// === Telegram ===
+// === Telegram (with 5-min dedup) ===
 async function sendTelegram(env, text) {
   if (!env.TELEGRAM_BOT_TOKEN) return;
+  const dedupKey = `alert:last:intel:${text.slice(0, 30).replace(/\W/g, '')}`;
   try {
+    const last = await env.ARMY_KV.get(dedupKey);
+    if (last) return; // Already sent within 5 min
+    await env.ARMY_KV.put(dedupKey, Date.now().toString(), { expirationTtl: 300 });
     await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -409,20 +424,59 @@ async function sendTelegram(env, text) {
   } catch {}
 }
 
-// === Bunshin ===
-async function reportBunshin(key, value, env) {
+// === Graph RAG Integration ===
+async function writeIntelToGraphRAG(env, sweepReport) {
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
+    const entities = [{
+      id: `intel-sweep-${Date.now()}`,
+      type: 'event',
+      name: `Intel Sweep ${new Date().toISOString().slice(0, 16)}`,
+      properties: { ...sweepReport.sources, duration_ms: sweepReport.duration_ms },
+      summary: `OBSERVE sweep: ${sweepReport.items_collected} items from 5 sources in ${sweepReport.duration_ms}ms`
+    }];
+    const relationships = [
+      { source: 'yedan-intel-ops', target: entities[0].id, type: 'generates', layer: 'temporal' }
+    ];
+    // Write top intel items as entities for graph enrichment
+    try {
+      const { results } = await env.ARMY_DB.prepare(
+        `SELECT source, title, url, summary FROM intel_feed ORDER BY created_at DESC LIMIT 5`
+      ).all();
+      for (const item of (results || [])) {
+        const itemId = `intel-${item.source}-${item.title.slice(0, 30).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        entities.push({
+          id: itemId,
+          type: 'intel',
+          name: item.title.slice(0, 100),
+          properties: { source: item.source, url: item.url },
+          summary: item.summary?.slice(0, 200)
+        });
+        relationships.push({ source: entities[0].id, target: itemId, type: 'processes', layer: 'semantic' });
+      }
+    } catch {}
+
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key, value, context: 'Intel Ops OODA OBSERVE' }),
-      signal: AbortSignal.timeout(8000)
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ entities, relationships, source: 'intel-ops' }),
+      signal: AbortSignal.timeout(5000)
     });
   } catch {}
 }
 
+// === Bunshin ===
+async function reportBunshin(key, value, env) {
+  const payload = JSON.stringify({ key, value, context: 'Intel Ops OODA OBSERVE' });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
+  try {
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
+  } catch {}
+  try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }

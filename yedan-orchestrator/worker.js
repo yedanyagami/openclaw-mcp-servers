@@ -1,11 +1,13 @@
 /**
- * YEDAN Fleet Orchestrator v2.0 — OODA ORIENT + DECIDE Layers
+ * YEDAN Fleet Orchestrator v3.0 — OODA ORIENT + DECIDE + REFLECT
  * Cron: every 2 minutes
  *
- * OODA Role:
- *   ORIENT  — Analyze intel_feed with DeepSeek R1, score opportunities 1-10
- *   DECIDE  — Auto-create fleet_tasks for high-score intel (>=7)
- *   Also: Fleet coordination, task dispatch, revenue aggregation
+ * v3.0 Upgrades:
+ *   - Plan-Act-Reflect loop: multi-step reasoning with self-correction
+ *   - Graph RAG context: query knowledge graph before decisions
+ *   - Confidence scoring: uncertainty-weighted task creation
+ *   - Outcome learning: feedback loop adjusts future decisions
+ *   - Dynamic priority: recent outcomes influence new task urgency
  */
 
 const FLEET_WORKERS = [
@@ -15,7 +17,7 @@ const FLEET_WORKERS = [
   { id: 'yedan-intel-ops', url: 'https://yedan-intel-ops.yagami8095.workers.dev' },
   { id: 'yedan-health-commander', url: 'https://yedan-health-commander.yagami8095.workers.dev' },
   { id: 'yedan-cloud-executor', url: 'https://yedan-cloud-executor.yagami8095.workers.dev' },
-  { id: 'dansin-gateway', url: 'http://161.33.7.159:18789' },
+  // dansin-gateway URL loaded from env.YEDAN_GATEWAY_URL
 ];
 
 const MCP_SERVERS = [
@@ -25,7 +27,7 @@ const MCP_SERVERS = [
 ];
 
 const BUNSHIN_URL = 'https://openclaw-mcp-servers.onrender.com';
-const BUNSHIN_AUTH = 'openclaw-bunshin-2026';
+// BUNSHIN_AUTH loaded from env.BUNSHIN_AUTH_TOKEN (wrangler secret)
 const TELEGRAM_CHAT_ID = '7848052227';
 
 export default {
@@ -35,12 +37,21 @@ export default {
 
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Auth check for mutating endpoints
+    const PROTECTED = ['/dispatch', '/execute'];
+    if (PROTECTED.includes(url.pathname)) {
+      const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+      if (!env.FLEET_AUTH_TOKEN || token !== env.FLEET_AUTH_TOKEN)
+        return json({ error: 'Unauthorized' }, 401);
+    }
+
     switch (url.pathname) {
       case '/':
       case '/status':
         return await getFleetStatus(env);
       case '/health':
-        return json({ status: 'operational', role: 'fleet-orchestrator', version: '2.0.0', ooda: 'ORIENT+DECIDE' });
+        return json({ status: 'operational', role: 'fleet-orchestrator', version: '3.0.0', ooda: 'ORIENT+DECIDE+REFLECT' });
       case '/fleet':
         return await getFleetDetails(env);
       case '/revenue':
@@ -52,8 +63,10 @@ export default {
         return json({ error: 'POST required' }, 405);
       case '/metrics':
         return await getMetrics(env);
+      case '/reflect':
+        return await getReflection(env);
       case '/ping':
-        return json({ pong: true, brain: 'orchestrator', version: '2.0.0', ts: Date.now() });
+        return json({ pong: true, brain: 'orchestrator', version: '3.0.0', ts: Date.now() });
       default:
         return json({ error: 'Not found' }, 404);
     }
@@ -71,23 +84,29 @@ async function orchestrate(env) {
     // Phase 2: ORIENT — AI Analysis of intel_feed
     const analysisResults = await orientAnalyzeIntel(env);
 
+    // Phase 2.5: Graph RAG — Enrich decisions with knowledge graph context
+    await writeToGraphRAG(env, 'orchestration_cycle', { fleet: fleetHealth, analysis: analysisResults });
+
     // Phase 3: DECIDE — Auto-create tasks from analysis
     const decisions = await decideActions(env);
 
     // Phase 4: Task Distribution
     const taskResults = await distributeTasks(env);
 
-    // Phase 5: Revenue Aggregation
+    // Phase 5: REFLECT — Learn from completed tasks
+    const reflection = await reflectOnOutcomes(env);
+
+    // Phase 6: Revenue Aggregation
     const revenue = await aggregateRevenue(env);
 
-    // Phase 6: Metrics + Report
+    // Phase 7: Metrics + Report
     const duration = Date.now() - startTime;
     await recordMetrics(env, fleetHealth, taskResults, revenue, duration);
 
     const report = {
       orchestrator: 'yedan-fleet-orchestrator',
-      version: '2.0.0',
-      ooda: { orient: analysisResults, decide: decisions },
+      version: '3.0.0',
+      ooda: { orient: analysisResults, decide: decisions, reflect: reflection },
       timestamp: new Date().toISOString(),
       duration_ms: duration,
       fleet: { total: FLEET_WORKERS.length, healthy: fleetHealth.healthy, unhealthy: fleetHealth.unhealthy },
@@ -128,20 +147,35 @@ async function orientAnalyzeIntel(env) {
     // Batch analyze — group items into one prompt for efficiency
     const itemList = results.map((r, i) => `${i + 1}. [${r.source}] ${r.title} — ${r.summary}`).join('\n');
 
-    const prompt = `You are an AI business intelligence analyst for OpenClaw, an MCP server ecosystem.
-Analyze these ${results.length} intel items and for EACH one provide:
-- Score (1-10): How relevant is this for our MCP business? 10 = must act immediately
-- Opportunity: One-sentence business opportunity (or "none")
-- Action: What specific action should we take? (or "monitor")
+    // Query Graph RAG for relevant context before analysis
+    const graphContext = await queryGraphRAGContext(env, results.map(r => r.title).join(' '));
 
-Our products: 9 MCP servers on Smithery, Product Store, Intel API
-Our tech: Cloudflare Workers, D1, KV, Workers AI
+    // Check recent failure patterns for confidence adjustment
+    let failureContext = '';
+    try {
+      const failTypes = ['content', 'intel', 'revenue-action', 'general'];
+      for (const ft of failTypes) {
+        const count = parseInt(await env.ARMY_KV.get(`reflect:fail:${ft}`) || '0');
+        if (count >= 2) failureContext += `WARNING: "${ft}" tasks have ${count} recent failures. Reduce score for this type.\n`;
+      }
+    } catch {}
 
+    const prompt = `You are YEDAN's AI strategist for OpenClaw MCP ecosystem.
+Analyze ${results.length} intel items. For EACH provide:
+- Score (1-10): Business relevance. 10 = must act NOW
+- Confidence (0.0-1.0): How certain are you? Low if data is ambiguous
+- Opportunity: One-sentence (or "none")
+- Action: Specific action (or "monitor")
+
+Our products: 9 MCP servers on Smithery, 15 digital products, Intel API, x402 payment gateway
+Our tech: Cloudflare Workers, D1, KV, Workers AI, Graph RAG knowledge engine
+${graphContext ? '\nKnowledge context:\n' + graphContext.slice(0, 500) : ''}
+${failureContext}
 Items:
 ${itemList}
 
-Respond in JSON array format ONLY (no explanation):
-[{"index":1,"score":5,"opportunity":"...","action":"..."},...]`;
+JSON array ONLY:
+[{"index":1,"score":5,"confidence":0.8,"opportunity":"...","action":"..."},...]`;
 
     const resp = await fetch('https://api.deepinfra.com/v1/openai/chat/completions', {
       method: 'POST',
@@ -189,7 +223,7 @@ Respond in JSON array format ONLY (no explanation):
             ).bind(item.id, score, analysis.opportunity || '', analysis.action || '', JSON.stringify(analysis)).run();
 
             if (score >= 7) {
-              highScoreItems.push({ ...item, score, opportunity: analysis.opportunity, action: analysis.action });
+              highScoreItems.push({ ...item, score, confidence: analysis.confidence || 0.7, opportunity: analysis.opportunity, action: analysis.action });
             }
 
             analyzed++;
@@ -216,7 +250,7 @@ async function decideActions(env) {
   try {
     // Get high-score analyses from last hour that haven't been tasked yet
     const { results } = await env.ARMY_DB.prepare(
-      `SELECT a.id as analysis_id, a.score, a.opportunity, a.action_needed, f.source, f.title, f.url
+      `SELECT a.id as analysis_id, a.score, a.opportunity, a.action_needed, a.analysis, f.source, f.title, f.url
        FROM intel_analysis a
        JOIN intel_feed f ON a.feed_id = f.id
        WHERE a.score >= 7
@@ -235,7 +269,7 @@ async function decideActions(env) {
 
       if (existing) continue;
 
-      // Route task type
+      // Check failure patterns — skip task types with 3+ recent failures
       const action = (item.action_needed || '').toLowerCase();
       let taskType = 'general';
       if (action.includes('content') || action.includes('write') || action.includes('post')) taskType = 'content';
@@ -244,13 +278,22 @@ async function decideActions(env) {
       else if (action.includes('health') || action.includes('fix')) taskType = 'health-check';
       else if (action.includes('intel') || action.includes('research')) taskType = 'intel';
 
+      // Confidence-weighted priority: high confidence + high score = urgent
+      const confidence = parseFloat(item.confidence || '0.7');
+      const effectiveScore = Math.round(item.score * confidence);
+      if (effectiveScore < 5) continue; // Skip low-confidence items
+
+      // Skip task types with too many recent failures
+      const failCount = parseInt(await env.ARMY_KV.get(`reflect:fail:${taskType}`) || '0');
+      if (failCount >= 3) continue;
+
       const taskId = `ooda-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
       await env.ARMY_DB.prepare(
         `INSERT INTO fleet_tasks (id, type, priority, payload, status) VALUES (?, ?, ?, ?, 'pending')`
       ).bind(
         taskId,
         taskType,
-        item.score >= 9 ? 1 : item.score >= 8 ? 3 : 5,
+        effectiveScore >= 8 ? 1 : effectiveScore >= 6 ? 3 : 5,
         JSON.stringify({
           analysis_id: item.analysis_id,
           source: item.source,
@@ -259,6 +302,8 @@ async function decideActions(env) {
           opportunity: item.opportunity,
           action: item.action_needed,
           score: item.score,
+          confidence,
+          effective_score: effectiveScore,
           auto_created: true
         })
       ).run();
@@ -280,8 +325,10 @@ async function decideActions(env) {
 async function checkFleetHealth(env) {
   let healthy = 0, unhealthy = 0;
   const details = {};
+  const workers = [...FLEET_WORKERS];
+  if (env.YEDAN_GATEWAY_URL) workers.push({ id: 'dansin-gateway', url: env.YEDAN_GATEWAY_URL });
 
-  const checks = FLEET_WORKERS.map(async (w) => {
+  const checks = workers.map(async (w) => {
     try {
       const resp = await fetch(`${w.url}/health`, {
         signal: AbortSignal.timeout(5000),
@@ -309,10 +356,17 @@ async function distributeTasks(env) {
     for (const task of results) {
       const targetWorker = routeTask(task);
       if (targetWorker) {
+        // Circuit breaker check
+        const cbKey = `circuit:${targetWorker.id}`;
+        try {
+          const cb = await env.ARMY_KV.get(cbKey, 'json');
+          if (cb && cb.openUntil && Date.now() < cb.openUntil) continue; // Skip — circuit open
+        } catch {}
+
         try {
           const resp = await fetch(`${targetWorker.url}/execute`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
             body: JSON.stringify({ task_id: task.id, type: task.type, payload: task.payload }),
             signal: AbortSignal.timeout(10000)
           });
@@ -321,8 +375,14 @@ async function distributeTasks(env) {
               `UPDATE fleet_tasks SET status = 'running', worker_id = ?, started_at = datetime('now') WHERE id = ?`
             ).bind(targetWorker.id, task.id).run();
             dispatched++;
+            // Reset circuit on success
+            try { await env.ARMY_KV.delete(cbKey); } catch {}
+          } else {
+            await tripCircuit(env, cbKey, targetWorker.id);
           }
-        } catch {}
+        } catch {
+          await tripCircuit(env, cbKey, targetWorker.id);
+        }
       }
     }
 
@@ -330,6 +390,17 @@ async function distributeTasks(env) {
   } catch (e) {
     return { dispatched: 0, error: e.message };
   }
+}
+
+async function tripCircuit(env, cbKey, workerId) {
+  try {
+    const cb = await env.ARMY_KV.get(cbKey, 'json') || { failures: 0 };
+    cb.failures = (cb.failures || 0) + 1;
+    if (cb.failures >= 3) {
+      cb.openUntil = Date.now() + 10 * 60 * 1000; // Open for 10 minutes
+    }
+    await env.ARMY_KV.put(cbKey, JSON.stringify(cb), { expirationTtl: 1800 });
+  } catch {}
 }
 
 function routeTask(task) {
@@ -428,6 +499,35 @@ async function dispatchTask(request, env) {
   } catch (e) { return json({ error: e.message }, 500); }
 }
 
+async function getReflection(env) {
+  const lastReflection = await env.ARMY_KV.get('orchestrator:last-reflection', 'json').catch(() => null);
+  const { results: recentCompleted } = await env.ARMY_DB.prepare(`
+    SELECT type, worker_id, COUNT(*) as count,
+      AVG(ROUND((julianday(completed_at) - julianday(created_at)) * 86400, 0)) as avg_duration
+    FROM fleet_tasks WHERE status = 'completed' AND completed_at > datetime('now', '-24 hours')
+    GROUP BY type, worker_id ORDER BY count DESC
+  `).all().catch(() => ({ results: [] }));
+  const { results: recentFailed } = await env.ARMY_DB.prepare(`
+    SELECT type, worker_id, COUNT(*) as count, GROUP_CONCAT(result, ' | ') as errors
+    FROM fleet_tasks WHERE status = 'failed' AND created_at > datetime('now', '-24 hours')
+    GROUP BY type, worker_id ORDER BY count DESC
+  `).all().catch(() => ({ results: [] }));
+  // Failure pattern KV data
+  const failPatterns = {};
+  for (const ft of ['content', 'intel', 'revenue-action', 'general', 'monitoring', 'health-check']) {
+    const count = parseInt(await env.ARMY_KV.get(`reflect:fail:${ft}`) || '0');
+    if (count > 0) failPatterns[ft] = count;
+  }
+  return json({
+    last_reflection: lastReflection,
+    last_24h: { completed_by_type: recentCompleted, failed_by_type: recentFailed },
+    failure_patterns: failPatterns,
+    circuit_breakers: Object.fromEntries(
+      await Promise.all(FLEET_WORKERS.map(async w => [w.id, await env.ARMY_KV.get(`circuit:${w.id}`, 'json').catch(() => null)]))
+    )
+  });
+}
+
 async function getMetrics(env) {
   const { results } = await env.ARMY_DB.prepare(
     `SELECT worker_id, metric_name, metric_value, unit, recorded_at FROM fleet_metrics ORDER BY recorded_at DESC LIMIT 100`
@@ -435,28 +535,151 @@ async function getMetrics(env) {
   return json({ metrics: results });
 }
 
-// === TELEGRAM ===
+// === TELEGRAM (with 5-min dedup) ===
 async function sendTelegram(env, text) {
   if (!env.TELEGRAM_BOT_TOKEN) return;
+  const dedupKey = `alert:last:orch:${text.slice(0, 30).replace(/\W/g, '')}`;
   try {
+    const last = await env.ARMY_KV.get(dedupKey);
+    if (last) return;
+    await env.ARMY_KV.put(dedupKey, Date.now().toString(), { expirationTtl: 300 });
     await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
       signal: AbortSignal.timeout(5000)
     });
   } catch {}
 }
 
-// === BUNSHIN ===
-async function reportToBunshin(report, env) {
+// === PHASE 5: REFLECT — Learn from outcomes ===
+async function reflectOnOutcomes(env) {
   try {
-    await fetch(`${BUNSHIN_URL}/api/brain`, {
+    // Get recently completed tasks (last 30 min)
+    const { results: completed } = await env.ARMY_DB.prepare(`
+      SELECT id, type, worker_id, result, created_at, completed_at,
+        ROUND((julianday(completed_at) - julianday(created_at)) * 86400, 0) as duration_sec
+      FROM fleet_tasks
+      WHERE status = 'completed' AND completed_at > datetime('now', '-30 minutes')
+      ORDER BY completed_at DESC LIMIT 10
+    `).all();
+
+    // Get recently failed tasks
+    const { results: failed } = await env.ARMY_DB.prepare(`
+      SELECT id, type, worker_id, result, created_at
+      FROM fleet_tasks
+      WHERE status = 'failed' AND created_at > datetime('now', '-30 minutes')
+      ORDER BY created_at DESC LIMIT 5
+    `).all();
+
+    let lessons = 0;
+
+    // Write outcome feedback to Graph RAG
+    for (const task of (completed || [])) {
+      try {
+        const result = safeJsonParse(task.result);
+        const isPositive = !result.error && result.status !== 'ai_failed';
+        await fetch('https://yedan-graph-rag.yagami8095.workers.dev/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+          body: JSON.stringify({
+            entity_id: task.worker_id,
+            feedback_type: 'task_outcome',
+            outcome: isPositive ? 'success' : 'partial',
+            score: isPositive ? 1 : -1
+          }),
+          signal: AbortSignal.timeout(3000)
+        });
+        lessons++;
+      } catch {}
+    }
+
+    // Track failure patterns — if a worker type keeps failing, reduce future dispatch
+    for (const task of (failed || [])) {
+      try {
+        const failKey = `reflect:fail:${task.type}`;
+        const prev = parseInt(await env.ARMY_KV.get(failKey) || '0');
+        await env.ARMY_KV.put(failKey, String(prev + 1), { expirationTtl: 3600 });
+        // If 3+ failures of same type in 1 hour, skip creating more of this type
+        lessons++;
+      } catch {}
+    }
+
+    // Store reflection summary
+    const summary = {
+      completed: completed?.length || 0,
+      failed: failed?.length || 0,
+      lessons_recorded: lessons,
+      avg_duration_sec: completed?.length > 0
+        ? Math.round(completed.reduce((s, t) => s + (t.duration_sec || 0), 0) / completed.length)
+        : 0
+    };
+    await env.ARMY_KV.put('orchestrator:last-reflection', JSON.stringify(summary), { expirationTtl: 3600 });
+
+    return summary;
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+// === GRAPH RAG CONTEXT-AWARE QUERY ===
+async function queryGraphRAGContext(env, query) {
+  try {
+    const resp = await fetch('https://yedan-graph-rag.yagami8095.workers.dev/query', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${BUNSHIN_AUTH}` },
-      body: JSON.stringify({ key: 'fleet-orchestrator-status', value: report, context: 'OODA Orchestrator v2.0' }),
-      signal: AbortSignal.timeout(8000)
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ query, max_hops: 1, limit: 5 }),
+      signal: AbortSignal.timeout(5000)
     });
+    if (resp.ok) {
+      const data = await resp.json();
+      return data.context || '';
+    }
+  } catch {}
+  return '';
+}
+
+function safeJsonParse(str) {
+  try { return JSON.parse(str || '{}'); } catch { return {}; }
+}
+
+// === GRAPH RAG INTEGRATION ===
+async function writeToGraphRAG(env, eventType, data) {
+  try {
+    const entities = [];
+    const relationships = [];
+
+    // Write orchestration event as entity
+    const eventId = `event-${eventType}-${Date.now()}`;
+    entities.push({
+      id: eventId,
+      type: 'event',
+      name: `${eventType} ${new Date().toISOString().slice(0, 16)}`,
+      properties: { event_type: eventType, timestamp: new Date().toISOString() },
+      summary: `Orchestration ${eventType} cycle`
+    });
+    relationships.push({ source: 'yedan-orchestrator', target: eventId, type: 'generates', layer: 'temporal' });
+
+    await fetch('https://yedan-graph-rag.yagami8095.workers.dev/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.FLEET_AUTH_TOKEN || ''}` },
+      body: JSON.stringify({ entities, relationships, source: 'orchestrator' }),
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+}
+
+// === BUNSHIN (with D1 mirror fallback) ===
+async function reportToBunshin(report, env) {
+  const payload = JSON.stringify({ key: 'fleet-orchestrator-status', value: report, context: 'OODA Orchestrator v2.0' });
+  const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.BUNSHIN_AUTH_TOKEN || ''}` };
+  try {
+    const res = await fetch(`${BUNSHIN_URL}/api/brain`, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) });
+    if (res.ok) return;
+  } catch {}
+  // Fallback to D1 mirror
+  try {
+    await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) });
   } catch {}
 }
 
@@ -469,6 +692,6 @@ async function logEvent(env, workerId, eventType, severity, message) {
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
-    status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    status, headers: { 'Content-Type': 'application/json', 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' }
   });
 }

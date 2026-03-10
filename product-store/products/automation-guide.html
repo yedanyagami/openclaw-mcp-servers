@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How to Build a 24/7 AI System | 打造 24 小時運作的 AI 系統</title>
+<style>
+  @page { margin: 15mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; background: #fff; }
+  h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
+  h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
+  h3 { color: #444; margin-top: 30px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.9rem; line-height: 1.5; }
+  code { font-family: 'SF Mono', 'Fira Code', monospace; }
+  .inline-code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+  .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .warn { background: #fff3e0; border-left: 4px solid #ff9800; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .cost { background: #e3f2fd; padding: 12px 16px; border-radius: 6px; margin: 12px 0; font-weight: bold; }
+  .notice { text-align: center; color: #999; font-size: 0.85rem; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+  th { background: #f5f5f5; }
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
+  .toc { background: #f0f4ff; padding: 20px 30px; border-radius: 8px; margin: 20px 0; }
+  .toc a { color: #1a73e8; text-decoration: none; }
+  .toc li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<h1>How to Build a 24/7 AI System</h1>
+<h1 style="font-size:1.5rem;">打造 24 小時運作的 AI 系統</h1>
+<p class="subtitle">Claude Code x OpenClaw — From Zero to Always-On AI<br>從零開始的實作指南 | Under $8/month</p>
+<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<hr>
+
+<div class="toc">
+<strong>Table of Contents | 目錄</strong>
+<ol>
+<li><a href="#ch1">Chapter 1: Environment Setup (WSL2 + OpenClaw)</a></li>
+<li><a href="#ch2">Chapter 2: Your First AI Agent</a></li>
+<li><a href="#ch3">Chapter 3: Cron Automation — 24/7 Operations</a></li>
+<li><a href="#ch4">Chapter 4: Telegram Integration — Control from Anywhere</a></li>
+<li><a href="#ch5">Chapter 5: Cloudflare Workers — Serverless Edge AI</a></li>
+<li><a href="#ch6">Chapter 6: Monitoring &amp; Self-Healing</a></li>
+<li><a href="#ch7">Chapter 7: Real-World Troubleshooting</a></li>
+<li><a href="#ch8">Chapter 8: Scaling to Production</a></li>
+</ol>
+</div>
+
+<div class="cost">Total Monthly Cost: $0-8 (free tier for everything except optional Claude API)</div>
+
+<h2 id="ch1">Chapter 1: Environment Setup | 環境建置</h2>
+<p>We'll set up a complete AI development environment using WSL2 on Windows or native Linux. This takes about 30 minutes.</p>
+
+<h3>1.1 Prerequisites | 前置需求</h3>
+<table>
+<tr><th>Component</th><th>Version</th><th>Cost</th></tr>
+<tr><td>Node.js</td><td>20+ LTS</td><td>Free</td></tr>
+<tr><td>WSL2 (Windows) or Linux</td><td>Ubuntu 22.04+</td><td>Free</td></tr>
+<tr><td>Cloudflare Account</td><td>Free plan</td><td>Free</td></tr>
+<tr><td>Telegram Account</td><td>Any</td><td>Free</td></tr>
+<tr><td>Claude Code or Cursor</td><td>Latest</td><td>$0-20/mo</td></tr>
+</table>
+
+<h3>1.2 Install Node.js &amp; npm</h3>
+<pre><code># Install nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+
+# Install Node.js 20 LTS
+nvm install 20
+nvm use 20
+node --version  # Should show v20.x.x</code></pre>
+
+<h3>1.3 Install Wrangler (Cloudflare CLI)</h3>
+<pre><code>npm install -g wrangler
+wrangler login  # Opens browser for OAuth
+wrangler whoami  # Verify: should show your account</code></pre>
+
+<h3>1.4 Project Structure</h3>
+<pre><code>~/my-ai-system/
+├── agents/           # AI agent configurations
+│   ├── main.json     # Primary agent config
+│   └── cron.json     # Scheduled task definitions
+├── workers/          # Cloudflare Workers
+│   ├── api/          # Your MCP server
+│   └── monitor/      # Health monitoring worker
+├── scripts/          # Automation scripts
+│   ├── setup.sh
+│   └── deploy.sh
+└── .env              # API keys (NEVER commit this)</code></pre>
+
+<div class="tip">Tip: Keep all API keys in <span class="inline-code">.env</span> and add it to <span class="inline-code">.gitignore</span>. Never hardcode secrets.</div>
+
+<h2 id="ch2">Chapter 2: Your First AI Agent | 你的第一個 AI 代理</h2>
+
+<h3>2.1 Understanding the Agent Loop</h3>
+<p>Every AI agent follows a simple loop:</p>
+<pre><code>while (running) {
+  // 1. OBSERVE — Gather information
+  const data = await collectData(sources);
+
+  // 2. THINK — Analyze with AI
+  const analysis = await llm.analyze(data, context);
+
+  // 3. ACT — Execute decisions
+  const result = await executeAction(analysis.action);
+
+  // 4. LEARN — Record outcomes
+  await recordOutcome(result);
+
+  // 5. WAIT — Sleep until next cycle
+  await sleep(INTERVAL);
+}</code></pre>
+
+<h3>2.2 Building a Market Intel Agent</h3>
+<p>Let's build a real agent that monitors HackerNews for AI trends:</p>
+<pre><code>// agents/intel-agent.js
+const SOURCES = {
+  hn: 'https://hacker-news.firebaseio.com/v0',
+};
+
+async function collectHNTrends() {
+  // Fetch top stories
+  const topIds = await fetch(`${SOURCES.hn}/topstories.json`)
+    .then(r => r.json());
+
+  // Get details for top 30
+  const stories = await Promise.all(
+    topIds.slice(0, 30).map(id =>
+      fetch(`${SOURCES.hn}/item/${id}.json`).then(r => r.json())
+    )
+  );
+
+  // Filter AI-related
+  const aiStories = stories.filter(s =>
+    /\b(ai|llm|gpt|claude|agent|mcp)\b/i.test(s.title)
+  );
+
+  return aiStories.map(s => ({
+    title: s.title,
+    url: s.url,
+    score: s.score,
+    comments: s.descendants || 0,
+  }));
+}
+
+// Analyze with any free LLM API
+async function analyzeWithAI(stories) {
+  const prompt = `Analyze these AI news items and identify:
+1. Top 3 trends
+2. Business opportunities
+3. Threats to watch
+
+Stories: ${JSON.stringify(stories, null, 2)}`;
+
+  // Using free Groq API (llama-3.3-70b)
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 1000,
+    }),
+  });
+
+  return response.json();
+}</code></pre>
+
+<div class="tip">Tip: Groq offers free API access with 120 RPM for llama-3.3-70b. Perfect for automation.</div>
+
+<h3>2.3 Free LLM Providers (2026)</h3>
+<table>
+<tr><th>Provider</th><th>Model</th><th>Free Tier</th><th>Best For</th></tr>
+<tr><td>Groq</td><td>llama-3.3-70b</td><td>30 RPM / 120 with rotation</td><td>Fast analysis</td></tr>
+<tr><td>Google</td><td>Gemini 3.1 Flash</td><td>1500 RPD</td><td>Long context</td></tr>
+<tr><td>DeepInfra</td><td>DeepSeek R1</td><td>Limited free</td><td>Deep reasoning</td></tr>
+<tr><td>Cloudflare AI</td><td>Various</td><td>10K tokens/day</td><td>Edge inference</td></tr>
+</table>
+
+<h2 id="ch3">Chapter 3: Cron Automation | Cron 自動化</h2>
+
+<h3>3.1 Understanding Cron Expressions</h3>
+<pre><code># Format: minute hour day-of-month month day-of-week
+# ┌───────── minute (0-59)
+# │ ┌─────── hour (0-23)
+# │ │ ┌───── day of month (1-31)
+# │ │ │ ┌─── month (1-12)
+# │ │ │ │ ┌─ day of week (0-7, Sun=0 or 7)
+# │ │ │ │ │
+# * * * * *
+
+# Common patterns:
+*/5 * * * *     # Every 5 minutes
+0 */2 * * *     # Every 2 hours
+0 9 * * 1-5     # Weekdays at 9 AM
+0 0 * * 0       # Every Sunday at midnight</code></pre>
+
+<h3>3.2 Cloudflare Worker Cron Triggers</h3>
+<pre><code>// wrangler.toml
+[triggers]
+crons = ["*/30 * * * *"]  # Every 30 minutes
+
+// worker.js
+export default {
+  async scheduled(event, env, ctx) {
+    // This runs on schedule — no HTTP request needed
+    const intel = await collectHNTrends();
+    const analysis = await analyzeWithAI(intel);
+
+    // Store results in D1
+    await env.DB.prepare(
+      'INSERT INTO intel_reports (data, created_at) VALUES (?, ?)'
+    ).bind(JSON.stringify(analysis), new Date().toISOString()).run();
+
+    // Alert via Telegram if high-value intel found
+    if (analysis.highPriority) {
+      await sendTelegram(env, `🚨 High-value intel detected:\n${analysis.summary}`);
+    }
+  },
+};</code></pre>
+
+<div class="cost">Cost: $0 — Cloudflare Workers free plan includes 100,000 requests/day + cron triggers</div>
+
+<h3>3.3 Systemd Cron (Linux/WSL2)</h3>
+<p>For tasks that need full Node.js runtime:</p>
+<pre><code># Create a systemd timer
+# ~/.config/systemd/user/ai-intel.timer
+[Unit]
+Description=AI Intel Collection
+
+[Timer]
+OnCalendar=*:0/30
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
+# Enable and start
+systemctl --user enable ai-intel.timer
+systemctl --user start ai-intel.timer
+systemctl --user list-timers  # Verify</code></pre>
+
+<h2 id="ch4">Chapter 4: Telegram Integration | Telegram 整合</h2>
+
+<h3>4.1 Create Your Bot</h3>
+<ol>
+<li>Message <span class="inline-code">@BotFather</span> on Telegram</li>
+<li>Send <span class="inline-code">/newbot</span>, give it a name</li>
+<li>Save the API token (looks like <span class="inline-code">123456:ABC-DEF...</span>)</li>
+<li>Get your chat ID: message <span class="inline-code">@userinfobot</span></li>
+</ol>
+
+<h3>4.2 Send Alerts from Your Agent</h3>
+<pre><code>async function sendTelegram(env, text) {
+  const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: env.TELEGRAM_CHAT_ID,
+      text: text,
+      parse_mode: 'Markdown',
+    }),
+  });
+}</code></pre>
+
+<div class="warn">Warning: Store your bot token as a Wrangler secret, NEVER in source code:<br>
+<span class="inline-code">npx wrangler secret put TELEGRAM_BOT_TOKEN</span></div>
+
+<h3>4.3 Receive Commands</h3>
+<pre><code>// Handle incoming Telegram webhook
+async function handleTelegramWebhook(request, env) {
+  const update = await request.json();
+  const message = update.message;
+  if (!message?.text) return new Response('OK');
+
+  const chatId = message.chat.id;
+  const text = message.text.trim();
+
+  // Simple command router
+  const commands = {
+    '/status': () => getSystemStatus(env),
+    '/intel': () => getLatestIntel(env),
+    '/report': () => generateReport(env),
+    '/help': () => 'Commands: /status, /intel, /report',
+  };
+
+  const handler = commands[text.split(' ')[0]];
+  const reply = handler ? await handler() : 'Unknown command. Try /help';
+
+  await sendTelegram(env, reply);
+  return new Response('OK');
+}</code></pre>
+
+<h2 id="ch5">Chapter 5: Cloudflare Workers | Serverless Edge AI</h2>
+
+<h3>5.1 Your First Worker</h3>
+<pre><code># Create a new worker
+mkdir my-ai-worker && cd my-ai-worker
+npx wrangler init
+
+# wrangler.toml
+name = "my-ai-worker"
+main = "worker.js"
+compatibility_date = "2026-03-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "my-ai-db"
+database_id = "your-db-id"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "your-kv-id"</code></pre>
+
+<h3>5.2 D1 Database (SQLite at the Edge)</h3>
+<pre><code># Create database
+npx wrangler d1 create my-ai-db
+
+# Create tables
+npx wrangler d1 execute my-ai-db --command "
+  CREATE TABLE IF NOT EXISTS intel_reports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    data TEXT NOT NULL,
+    source TEXT DEFAULT 'unknown',
+    score INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX idx_reports_date ON intel_reports(created_at);
+"</code></pre>
+
+<h3>5.3 KV Storage (Key-Value at the Edge)</h3>
+<pre><code># Create namespace
+npx wrangler kv namespace create "CACHE"
+
+// In your worker:
+// Write (with TTL)
+await env.KV.put('latest-report', JSON.stringify(report), { expirationTtl: 3600 });
+
+// Read
+const cached = await env.KV.get('latest-report', { type: 'json' });
+if (cached) return cached;  // Cache hit!</code></pre>
+
+<div class="cost">Free Tier Limits: D1 = 5M rows read, 100K writes/day | KV = 100K reads, 1K writes/day</div>
+
+<h3>5.4 Deploy</h3>
+<pre><code># Deploy to production
+npx wrangler deploy
+
+# Your worker is now live at:
+# https://my-ai-worker.YOUR-SUBDOMAIN.workers.dev
+
+# Set secrets (never in code!)
+npx wrangler secret put GROQ_API_KEY
+npx wrangler secret put TELEGRAM_BOT_TOKEN</code></pre>
+
+<h2 id="ch6">Chapter 6: Monitoring &amp; Self-Healing | 監控與自我修復</h2>
+
+<h3>6.1 Health Check Pattern</h3>
+<pre><code>// Every worker should have a /health endpoint
+if (url.pathname === '/health') {
+  const checks = {
+    worker: 'ok',
+    d1: 'unknown',
+    kv: 'unknown',
+    uptime: Date.now() - startTime,
+  };
+
+  try {
+    await env.DB.prepare('SELECT 1').run();
+    checks.d1 = 'ok';
+  } catch (e) {
+    checks.d1 = `error: ${e.message}`;
+  }
+
+  try {
+    await env.KV.put('health-check', Date.now().toString());
+    checks.kv = 'ok';
+  } catch (e) {
+    checks.kv = `error: ${e.message}`;
+  }
+
+  const allOk = checks.d1 === 'ok' && checks.kv === 'ok';
+  return Response.json(checks, { status: allOk ? 200 : 503 });
+}</code></pre>
+
+<h3>6.2 Self-Healing Patterns</h3>
+<pre><code>// Retry with exponential backoff
+async function retryWithBackoff(fn, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      const delay = Math.min(1000 * Math.pow(2, i), 10000);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+}
+
+// Circuit breaker
+class CircuitBreaker {
+  constructor(threshold = 3, resetMs = 60000) {
+    this.failures = 0;
+    this.threshold = threshold;
+    this.resetMs = resetMs;
+    this.openUntil = 0;
+  }
+
+  async execute(fn) {
+    if (Date.now() < this.openUntil) {
+      throw new Error('Circuit breaker OPEN');
+    }
+    try {
+      const result = await fn();
+      this.failures = 0;
+      return result;
+    } catch (error) {
+      this.failures++;
+      if (this.failures >= this.threshold) {
+        this.openUntil = Date.now() + this.resetMs;
+      }
+      throw error;
+    }
+  }
+}</code></pre>
+
+<h2 id="ch7">Chapter 7: Troubleshooting | 疑難排解</h2>
+
+<h3>Common Issues &amp; Solutions</h3>
+<table>
+<tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+<tr><td><span class="inline-code">Error 10021: worker exceeded CPU limit</span></td><td>Worker running >10ms CPU</td><td>Move heavy computation to scheduled handler or use streaming</td></tr>
+<tr><td><span class="inline-code">D1_ERROR: too many SQL statements</span></td><td>Batch too large</td><td>Use D1 batch API with chunks of 100</td></tr>
+<tr><td><span class="inline-code">KV: rate limit exceeded</span></td><td>Over 1000 writes/day (free)</td><td>Cache writes in memory, batch to KV</td></tr>
+<tr><td>Cron not firing</td><td>Worker not deployed or syntax error</td><td>Check <span class="inline-code">wrangler tail</span> for errors</td></tr>
+<tr><td>Telegram bot not responding</td><td>Webhook URL incorrect</td><td>Re-register: <span class="inline-code">POST /setWebhook?url=YOUR_WORKER_URL</span></td></tr>
+<tr><td><span class="inline-code">fetch failed</span></td><td>DNS or timeout</td><td>Add <span class="inline-code">signal: AbortSignal.timeout(5000)</span></td></tr>
+</table>
+
+<h3>Debugging with Wrangler Tail</h3>
+<pre><code># Watch real-time logs
+npx wrangler tail my-ai-worker
+
+# Filter by status
+npx wrangler tail my-ai-worker --status error
+
+# View cron executions
+npx wrangler tail my-ai-worker --format json | jq '.logs[]'</code></pre>
+
+<h2 id="ch8">Chapter 8: Scaling to Production | 擴展到正式環境</h2>
+
+<h3>8.1 Architecture Overview</h3>
+<pre><code>
+┌─────────────────────────────────────────────┐
+│              Your 24/7 AI System             │
+├──────────┬──────────┬──────────┬────────────┤
+│ Intel    │ Content  │ Health   │ Revenue    │
+│ Agent    │ Engine   │ Monitor  │ Tracker    │
+├──────────┴──────────┴──────────┴────────────┤
+│         Cloudflare Workers (Edge)            │
+├──────────┬──────────┬───────────────────────┤
+│ D1 (SQL) │ KV Cache │ R2 Storage (optional) │
+├──────────┴──────────┴───────────────────────┤
+│     Free LLM APIs (Groq / Gemini / CF AI)    │
+├─────────────────────────────────────────────┤
+│     Telegram Bot (Alerts + Control)          │
+└─────────────────────────────────────────────┘
+</code></pre>
+
+<h3>8.2 Cost Breakdown</h3>
+<table>
+<tr><th>Service</th><th>Free Tier</th><th>Your Usage</th><th>Cost</th></tr>
+<tr><td>Cloudflare Workers</td><td>100K req/day</td><td>~5K req/day</td><td>$0</td></tr>
+<tr><td>D1 Database</td><td>5M reads/day</td><td>~10K reads/day</td><td>$0</td></tr>
+<tr><td>KV Storage</td><td>100K reads/day</td><td>~1K reads/day</td><td>$0</td></tr>
+<tr><td>Groq API</td><td>30 RPM</td><td>~720 calls/day</td><td>$0</td></tr>
+<tr><td>Telegram Bot API</td><td>Unlimited</td><td>~50 msgs/day</td><td>$0</td></tr>
+<tr><td>Claude Code (optional)</td><td>—</td><td>Development</td><td>$0-20</td></tr>
+<tr><td><strong>Total</strong></td><td></td><td></td><td><strong>$0-8/mo</strong></td></tr>
+</table>
+
+<h3>8.3 Next Steps</h3>
+<ol>
+<li><strong>Add more agents</strong> — Revenue tracking, content generation, competitive intel</li>
+<li><strong>Build an MCP server</strong> — Expose your agent's capabilities to Claude Code</li>
+<li><strong>Set up multi-cloud</strong> — Add Render/Koyeb/Fly.io for resilience</li>
+<li><strong>Implement OODA loop</strong> — Observe → Orient → Decide → Act autonomously</li>
+<li><strong>Monetize</strong> — Sell your MCP server access or agent outputs</li>
+</ol>
+
+<hr>
+<div style="text-align:center; margin-top:60px; padding: 30px; background: #f0f4ff; border-radius: 12px;">
+<h2>Thank you for your purchase!</h2>
+<p>感謝您的購買！</p>
+<p style="color:#666;">Questions? Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
+<p style="color:#666;">Advanced kit: <a href="https://openclaw-product-store.yagami8095.workers.dev/">OODA System Blueprint ($59)</a></p>
+<p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
+</div>
+</body>
+</html>

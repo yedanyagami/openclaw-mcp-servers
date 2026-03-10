@@ -21,8 +21,8 @@
 // ── Configuration ──────────────────────────────────────────────────────────────
 
 const TELEGRAM_API = 'https://api.telegram.org/bot';
-const TELEGRAM_BOT_TOKEN = '8584008728:AAEsxD3SXEkp62CZQc-5tpPp9XwWdntJtbc';
-const TELEGRAM_CHAT_ID = '7848052227';
+// TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are now read from env (wrangler secrets)
+let _tgEnv = null;
 
 const SOURCES = {
   // Google Cloud release notes RSS feeds
@@ -110,7 +110,8 @@ CREATE INDEX IF NOT EXISTS idx_gpc_detected ON google_policy_changes(detected_at
  * Send a Telegram message with retry
  */
 async function sendTelegram(text, parseMode = 'HTML') {
-  const url = `${TELEGRAM_API}${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  if (!_tgEnv?.TELEGRAM_BOT_TOKEN) { console.error('TELEGRAM_BOT_TOKEN not set'); return false; }
+  const url = `${TELEGRAM_API}${_tgEnv.TELEGRAM_BOT_TOKEN}/sendMessage`;
   const maxLen = 4000;
   const truncated = text.length > maxLen ? text.substring(0, maxLen) + '\n...(truncated)' : text;
 
@@ -120,7 +121,7 @@ async function sendTelegram(text, parseMode = 'HTML') {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: _tgEnv.TELEGRAM_CHAT_ID || '7848052227',
           text: truncated,
           parse_mode: parseMode,
           disable_web_page_preview: true,
@@ -920,6 +921,7 @@ export default {
  * Core monitoring function — called by both cron and manual trigger
  */
 async function runMonitor(env) {
+  _tgEnv = env; // Make env available to sendTelegram
   const startTime = Date.now();
   const kv = env.KV;
   const db = env.DB;

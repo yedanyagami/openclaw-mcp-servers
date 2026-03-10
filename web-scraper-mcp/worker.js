@@ -26,7 +26,8 @@ const MEM_RL_LIMIT = 5;
 const MEM_RL_WINDOW = 60000;
 
 const CF_BROWSER_URL = 'https://openclaw-browser.yagami8095.workers.dev';
-const CF_BROWSER_TOKEN = 'openclaw-browser-2026';
+// CF_BROWSER_TOKEN loaded from env (wrangler secret)
+let _cfBrowserToken = null;
 
 const USER_AGENTS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -134,7 +135,7 @@ async function scrapeUrl({ url, ignore_robots = false, render_js = false, timeou
     try {
       const browserRes = await fetch(`${CF_BROWSER_URL}/scrape`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CF_BROWSER_TOKEN}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_cfBrowserToken}` },
         body: JSON.stringify({ url, wait_for: 'domcontentloaded' }),
       });
       if (browserRes.ok) {
@@ -271,7 +272,7 @@ async function screenshotPage({ url, full_page = true, width = 1280, wait_for_se
     const payload = { url, full_page, width, wait_for_selector };
     const res = await fetch(`${CF_BROWSER_URL}/screenshot`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CF_BROWSER_TOKEN}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_cfBrowserToken}` },
       body: JSON.stringify(payload),
     });
 
@@ -320,7 +321,7 @@ async function interactWithPage({ url, actions = [], session_id = null }, proKey
   try {
     const res = await fetch(`${CF_BROWSER_URL}/interact`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CF_BROWSER_TOKEN}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_cfBrowserToken}` },
       body: JSON.stringify({ url, actions, session_id }),
     });
 
@@ -525,6 +526,7 @@ async function handleMcp(request, env) {
 
 export default {
   async fetch(request, env) {
+    _cfBrowserToken = env.CF_BROWSER_TOKEN || '';
     const url = new URL(request.url);
     const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type,Authorization' };
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
