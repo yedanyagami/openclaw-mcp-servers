@@ -31,7 +31,7 @@ services:
       - key: CF_BROWSER_URL
         value: https://openclaw-browser.yagami8095.workers.dev
       - key: CF_BROWSER_TOKEN
-        value: openclaw-browser-2026
+        sync: false  # Set in Render Dashboard
       - key: DEEPINFRA_API_KEY
         sync: false
       - key: GROQ_API_KEY
@@ -39,7 +39,7 @@ services:
       - key: BUNSHIN_URL
         value: https://openclaw-mcp-servers.onrender.com
       - key: BUNSHIN_TOKEN
-        value: openclaw-bunshin-2026
+        sync: false  # Set in Render Dashboard
 
     # Render free tier — keep alive with external ping (use UptimeRobot or CF Worker cron)
     # The CF yedan-keepalive worker already pings Bunshin; add this URL there.

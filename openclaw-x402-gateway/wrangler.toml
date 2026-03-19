@@ -1,0 +1,9 @@
+name = "openclaw-x402-gateway"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true

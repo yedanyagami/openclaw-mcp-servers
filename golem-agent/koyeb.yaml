@@ -16,11 +16,11 @@
 #     --env TELEGRAM_BOT_TOKEN=... \
 #     --env TELEGRAM_CHAT_ID=7848052227 \
 #     --env CF_BROWSER_URL=https://openclaw-browser.yagami8095.workers.dev \
-#     --env CF_BROWSER_TOKEN=openclaw-browser-2026 \
+#     --env CF_BROWSER_TOKEN=<secret> \
 #     --env DEEPINFRA_API_KEY=... \
 #     --env GROQ_API_KEY=... \
 #     --env BUNSHIN_URL=https://openclaw-mcp-servers.onrender.com \
-#     --env BUNSHIN_TOKEN=openclaw-bunshin-2026 \
+#     --env BUNSHIN_TOKEN=<secret> \
 #     --health-check-path /health \
 #     --instance-type free
 #
@@ -70,10 +70,10 @@ services:
       - name: CF_BROWSER_URL
         value: https://openclaw-browser.yagami8095.workers.dev
       - name: CF_BROWSER_TOKEN
-        value: openclaw-browser-2026
+        secret: CF_BROWSER_TOKEN  # Set in Koyeb secrets
       - name: BUNSHIN_URL
         value: https://openclaw-mcp-servers.onrender.com
       - name: BUNSHIN_TOKEN
-        value: openclaw-bunshin-2026
+        secret: BUNSHIN_TOKEN  # Set in Koyeb secrets
       # Set these as secrets in Koyeb dashboard:
       # TELEGRAM_BOT_TOKEN, DEEPINFRA_API_KEY, GROQ_API_KEY

@@ -1,0 +1,30 @@
+name = "fleet-gateway"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+FLEET_VERSION = "1.1.0"
+
+# Cron: auto-save fleet state to memory every 15 minutes
+[triggers]
+crons = ["*/15 * * * *"]
+
+# Workers AI binding (free: 10K neurons/day)
+[ai]
+binding = "AI"
+
+# D1 database (shared with fleet)
+[[d1_databases]]
+binding = "DB"
+database_name = "yedan-army-command"
+database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# Vectorize index (shared with KG Worker)
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "openclaw-kg-vectors"
+
+# KV for rate limiting and state
+[[kv_namespaces]]
+binding = "KV"
+id = "51826cd6550a40e79a61d462b084a1c8"

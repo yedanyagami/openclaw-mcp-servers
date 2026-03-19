@@ -11,9 +11,9 @@ jobs:
       - name: Scan for hardcoded secrets
         run: |
           echo "Scanning for hardcoded Zilliz/KG/API tokens..."
-          PATTERNS='95eae8a0c4e15f09|8140649fa997406|4efc1ac07d474c13|FwfGWwUWigeVmYGe|gsk_[a-zA-Z0-9]{20,}|sk-ant-[a-zA-Z0-9]+'
-          if grep -rE "$PATTERNS" --include='*.js' --include='*.ts' --include='*.json' \
-            --exclude-dir=node_modules --exclude-dir=.git .; then
+          PATTERNS='95eae8a0c4e15f09|8140649fa997406|4efc1ac07d474c13|FwfGWwUWigeVmYGe|gsk_[a-zA-Z0-9]{20,}|sk-ant-[a-zA-Z0-9]+|openclaw-bunshin-2026|openclaw-browser-2026|7f10d841a3f7bd49'
+          if grep -rE "$PATTERNS" --include='*.js' --include='*.ts' --include='*.json' --include='*.yaml' --include='*.yml' \
+            --exclude-dir=node_modules --exclude-dir=.git --exclude='*.md' .; then
             echo "::error::FAIL: Hardcoded secrets found in source files!"
             exit 1
           fi
