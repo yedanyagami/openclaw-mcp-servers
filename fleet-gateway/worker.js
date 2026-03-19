@@ -29,6 +29,7 @@ const FLEET_WORKERS = {
   'groq-lb':            { url: 'https://groq-lb.yagami8095.workers.dev' },
   'zilliz-bridge':      { url: 'https://zilliz-bridge.yagami8095.workers.dev' },
   'github-models':      { url: 'https://github-models-proxy.yagami8095.workers.dev' },
+  'xai-proxy':          { url: 'https://xai-proxy.yagami8095.workers.dev' },
 };
 
 // ── Auth ──
@@ -157,7 +158,7 @@ const KG_URL = 'https://yedan-graph-rag.yagami8095.workers.dev';
 
 async function memoryQuery(env, query, sources, limit = 10) {
   const startTime = Date.now();
-  const allSources = sources || ['d1', 'vectorize', 'zilliz-agents', 'zilliz-intel', 'zilliz-products', 'kg'];
+  const allSources = sources || ['d1', 'vectorize', 'zilliz-agents', 'zilliz-intel', 'zilliz-products', 'kg', 'tavily'];
   const results = {};
   const errors = [];
 
@@ -264,6 +265,37 @@ async function memoryQuery(env, query, sources, limit = 10) {
     })());
   }
 
+  // Tavily web search
+  if (allSources.includes('tavily') && env.TAVILY_API_KEY) {
+    tasks.push((async () => {
+      try {
+        const resp = await fetch('https://api.tavily.com/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: env.TAVILY_API_KEY,
+            query: query.slice(0, 400),
+            search_depth: 'basic',
+            max_results: Math.min(limit, 5),
+            include_answer: true
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        const data = await resp.json();
+        results.tavily = (data.results || []).map((r, i) => ({
+          id: `tavily-${i}`, name: r.title, type: 'web_result',
+          summary: r.content?.slice(0, 300), source: 'tavily',
+          score: r.score || 0, url: r.url, rank: i
+        }));
+        if (data.answer) {
+          results.tavily.unshift({ id: 'tavily-answer', name: 'Tavily Answer', type: 'answer', summary: data.answer, source: 'tavily', score: 1.0, rank: -1 });
+        }
+      } catch (e) {
+        errors.push(`Tavily: ${e.message}`);
+      }
+    })());
+  }
+
   await Promise.all(tasks);
 
   // 3. RRF fusion (k=60)
@@ -293,12 +325,39 @@ async function memoryQuery(env, query, sources, limit = 10) {
     .sort((a, b) => b._rrf_score - a._rrf_score)
     .slice(0, limit);
 
+  // 4. Cohere rerank (optional, post-RRF quality boost)
+  let finalResults = merged;
+  if (env.COHERE_API_KEY && merged.length > 3) {
+    try {
+      const docs = merged.slice(0, 25).map(r => r.summary || r.name || '').filter(Boolean);
+      if (docs.length > 1) {
+        const resp = await fetch('https://api.cohere.com/v2/rerank', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${env.COHERE_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'rerank-v3.5', query, documents: docs, top_n: limit }),
+          signal: AbortSignal.timeout(5000)
+        });
+        const reranked = await resp.json();
+        if (reranked.results && reranked.results.length > 0) {
+          finalResults = reranked.results.map(r => ({
+            ...merged[r.index],
+            _rerank_score: r.relevance_score,
+            source: (merged[r.index].source || '') + '+cohere'
+          }));
+        }
+      }
+    } catch (e) {
+      errors.push(`Cohere rerank: ${e.message}`);
+      // Fall back to RRF results
+    }
+  }
+
   return {
     ok: true,
     query,
-    count: merged.length,
-    results: merged,
-    meta: { sources_queried: Object.keys(sourceCounts), source_counts: sourceCounts, latency_ms: Date.now() - startTime, errors: errors.length > 0 ? errors : undefined }
+    count: finalResults.length,
+    results: finalResults,
+    meta: { sources_queried: Object.keys(sourceCounts), source_counts: sourceCounts, latency_ms: Date.now() - startTime, reranked: finalResults !== merged, errors: errors.length > 0 ? errors : undefined }
   };
 }
 

@@ -20,6 +20,7 @@ on:
       - 'zilliz-bridge/**'
       - 'yedan-graph-rag/**'
       - 'github-models-proxy/**'
+      - 'xai-proxy/**'
   workflow_dispatch:
 
 jobs:
@@ -52,7 +53,8 @@ jobs:
             {"dir":"fleet-gateway","name":"fleet-gateway"},
             {"dir":"zilliz-bridge","name":"zilliz-bridge"},
             {"dir":"yedan-graph-rag","name":"yedan-graph-rag"},
-            {"dir":"github-models-proxy","name":"github-models-proxy"}
+            {"dir":"github-models-proxy","name":"github-models-proxy"},
+            {"dir":"xai-proxy","name":"xai-proxy"}
           ]'
 
           # For workflow_dispatch, deploy all

@@ -1,0 +1,21 @@
+name = "xai-proxy"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+VERSION = "1.0.0"
+DEFAULT_MODEL = "grok-4-1-fast"
+
+# Secrets (via wrangler secret put):
+#   XAI_API_KEY — xAI API key
+#   AUTH_TOKEN — fleet auth for this worker
+
+[[kv_namespaces]]
+binding = "KV"
+id = "59f9508dcc454f338c9d662b3d7b6326"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
