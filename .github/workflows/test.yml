@@ -1,0 +1,47 @@
+name: Security + Lint
+
+on: [push, pull_request]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for hardcoded secrets
+        run: |
+          echo "Scanning for hardcoded Zilliz/KG/API tokens..."
+          PATTERNS='95eae8a0c4e15f09|8140649fa997406|4efc1ac07d474c13|FwfGWwUWigeVmYGe|gsk_[a-zA-Z0-9]{20,}|sk-ant-[a-zA-Z0-9]+'
+          if grep -rE "$PATTERNS" --include='*.js' --include='*.ts' --include='*.json' \
+            --exclude-dir=node_modules --exclude-dir=.git .; then
+            echo "::error::FAIL: Hardcoded secrets found in source files!"
+            exit 1
+          fi
+          echo "PASS: No hardcoded secrets detected"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Syntax check all workers
+        run: |
+          ERRORS=0
+          for f in */worker.js; do
+            if [ -f "$f" ]; then
+              echo "Checking $f..."
+              if ! node -c "$f" 2>&1; then
+                echo "::error file=$f::Syntax error in $f"
+                ERRORS=$((ERRORS + 1))
+              fi
+            fi
+          done
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::$ERRORS file(s) had syntax errors"
+            exit 1
+          fi
+          echo "PASS: All worker files have valid syntax"

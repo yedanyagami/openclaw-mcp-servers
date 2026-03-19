@@ -16,6 +16,10 @@ on:
       - 'openclaw-intel-mcp/**'
       - 'openclaw-intel-api/**'
       - 'product-store/**'
+      - 'fleet-gateway/**'
+      - 'zilliz-bridge/**'
+      - 'yedan-graph-rag/**'
+      - 'github-models-proxy/**'
   workflow_dispatch:
 
 jobs:
@@ -44,7 +48,11 @@ jobs:
             {"dir":"fortune-api","name":"fortune-api"},
             {"dir":"openclaw-intel-mcp","name":"openclaw-intel-mcp"},
             {"dir":"openclaw-intel-api","name":"openclaw-intel-api"},
-            {"dir":"product-store","name":"product-store"}
+            {"dir":"product-store","name":"product-store"},
+            {"dir":"fleet-gateway","name":"fleet-gateway"},
+            {"dir":"zilliz-bridge","name":"zilliz-bridge"},
+            {"dir":"yedan-graph-rag","name":"yedan-graph-rag"},
+            {"dir":"github-models-proxy","name":"github-models-proxy"}
           ]'
 
           # For workflow_dispatch, deploy all

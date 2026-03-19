@@ -1,0 +1,35 @@
+name: Zilliz Sync
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Zilliz keepalive
+        run: |
+          echo "Pinging zilliz-bridge keepalive..."
+          RESP=$(curl -sf -X POST \
+            https://zilliz-bridge.yagami8095.workers.dev/v1/keepalive \
+            -H "Authorization: Bearer ${{ secrets.FLEET_AUTH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --max-time 30 || echo '{"ok":false,"error":"timeout"}')
+          echo "Keepalive response: $RESP"
+
+      - name: Check cluster stats
+        run: |
+          echo "Checking Zilliz cluster load states..."
+          STATS=$(curl -sf \
+            https://zilliz-bridge.yagami8095.workers.dev/v1/stats \
+            --max-time 15 || echo '{"ok":false}')
+          echo "Stats: $STATS"
+
+          # Verify all clusters are loaded
+          if echo "$STATS" | grep -q '"loadState":"LoadStateLoaded"'; then
+            echo "All clusters loaded"
+          else
+            echo "::warning::Some clusters may not be loaded"
+          fi

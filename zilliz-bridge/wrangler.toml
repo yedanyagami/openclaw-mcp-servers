@@ -1,0 +1,34 @@
+name = "zilliz-bridge"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+[triggers]
+crons = ["0 */5 * * *"]
+
+[vars]
+VERSION = "1.0.0"
+ZILLIZ_AGENTS_ENDPOINT = "https://in05-424cac2849dd9cd.serverless.aws-eu-central-1.cloud.zilliz.com"
+ZILLIZ_AGENTS_COLLECTION = "openclaw_agents"
+ZILLIZ_INTEL_ENDPOINT = "https://in05-f0ffc3fdff724c8.serverless.aws-eu-central-1.cloud.zilliz.com"
+ZILLIZ_INTEL_COLLECTION = "openclaw_intel"
+ZILLIZ_PRODUCTS_ENDPOINT = "https://in05-7195e1ee3de3fc7.serverless.aws-eu-central-1.cloud.zilliz.com"
+ZILLIZ_PRODUCTS_COLLECTION = "openclaw_products"
+
+# Secrets (via wrangler secret put):
+#   ZILLIZ_AGENTS_TOKEN
+#   ZILLIZ_INTEL_TOKEN
+#   ZILLIZ_PRODUCTS_TOKEN
+#   AUTH_TOKEN (fleet-gateway-2026)
+
+[ai]
+binding = "AI"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "59f9508dcc454f338c9d662b3d7b6326"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = true
