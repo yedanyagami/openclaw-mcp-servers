@@ -60,11 +60,9 @@ binding = "GROQ_LB"
 service = "groq-lb"
 
 # ── Hyperdrive (accelerated Neon Postgres connection pooling + caching) ──
-# TODO: Create via: npx wrangler hyperdrive create openclaw-neon --connection-string="$NEON_CONNECTION_STRING"
-# Then uncomment below and replace ID. Code auto-falls back to NEON_CONNECTION_STRING secret.
-# [[hyperdrive]]
-# binding = "NEON"
-# id = "REPLACE_WITH_HYPERDRIVE_ID"
+[[hyperdrive]]
+binding = "NEON"
+id = "feba7c9b43df49958732dde24f15bbb9"
 
 # ── Queue (reliable async task dispatch) ──
 # Create via: npx wrangler queues create openclaw-task-queue
