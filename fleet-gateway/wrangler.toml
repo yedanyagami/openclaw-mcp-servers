@@ -3,15 +3,16 @@ main = "worker.js"
 compatibility_date = "2024-12-01"
 
 [vars]
-FLEET_VERSION = "1.1.0"
+FLEET_VERSION = "2.0.0"
 
 # Cron: auto-save fleet state to memory every 15 minutes
 [triggers]
 crons = ["*/15 * * * *"]
 
-# Workers AI binding (free: 10K neurons/day)
+# Workers AI binding via AI Gateway (caching, fallback, cost tracking)
 [ai]
 binding = "AI"
+gateway = { id = "openclaw-ai-gateway" }
 
 # D1 database (shared with fleet)
 [[d1_databases]]
@@ -28,3 +29,45 @@ index_name = "openclaw-kg-vectors"
 [[kv_namespaces]]
 binding = "KV"
 id = "51826cd6550a40e79a61d462b084a1c8"
+
+# ── Service Bindings (Worker-to-Worker, zero HTTP overhead) ──
+[[services]]
+binding = "GRAPH_RAG"
+service = "yedan-graph-rag"
+
+[[services]]
+binding = "ORCHESTRATOR"
+service = "yedan-orchestrator"
+
+[[services]]
+binding = "CLOUD_EXECUTOR"
+service = "yedan-cloud-executor"
+
+[[services]]
+binding = "INTEL_OPS"
+service = "yedan-intel-ops"
+
+[[services]]
+binding = "HEALTH_COMMANDER"
+service = "yedan-health-commander"
+
+[[services]]
+binding = "ZILLIZ_BRIDGE"
+service = "zilliz-bridge"
+
+[[services]]
+binding = "GROQ_LB"
+service = "groq-lb"
+
+# ── Hyperdrive (accelerated Neon Postgres connection pooling + caching) ──
+# Create via: npx wrangler hyperdrive create openclaw-neon --connection-string="$NEON_CONNECTION_STRING"
+# Then replace the placeholder ID below with the actual Hyperdrive config ID
+[[hyperdrive]]
+binding = "NEON"
+id = "PLACEHOLDER_HYPERDRIVE_ID"
+
+# ── Queue (reliable async task dispatch) ──
+# Create via: npx wrangler queues create openclaw-task-queue
+[[queues.producers]]
+binding = "TASK_QUEUE"
+queue = "openclaw-task-queue"

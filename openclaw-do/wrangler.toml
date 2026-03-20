@@ -1,0 +1,51 @@
+name = "openclaw-do"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "OODA_AGENT"
+class_name = "OODAAgent"
+
+[[durable_objects.bindings]]
+name = "AGI_BRAIN"
+class_name = "AGIBrain"
+
+# DO migrations
+[[migrations]]
+tag = "v1"
+new_classes = ["OODAAgent", "AGIBrain"]
+
+# Workers AI via AI Gateway
+[ai]
+binding = "AI"
+gateway = { id = "openclaw-ai-gateway" }
+
+# D1 database
+[[d1_databases]]
+binding = "DB"
+database_name = "yedan-army-command"
+database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# KV for state
+[[kv_namespaces]]
+binding = "KV"
+id = "51826cd6550a40e79a61d462b084a1c8"
+
+# Service Bindings
+[[services]]
+binding = "FLEET_GATEWAY"
+service = "fleet-gateway"
+
+[[services]]
+binding = "GRAPH_RAG"
+service = "yedan-graph-rag"
+
+[[services]]
+binding = "INTEL_OPS"
+service = "yedan-intel-ops"
+
+# Queue producer for async dispatch
+[[queues.producers]]
+binding = "TASK_QUEUE"
+queue = "openclaw-task-queue"

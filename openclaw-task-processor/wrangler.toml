@@ -1,0 +1,42 @@
+name = "openclaw-task-processor"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+# Queue consumer
+[[queues.consumers]]
+queue = "openclaw-task-queue"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+dead_letter_queue = "openclaw-dead-letter"
+
+# D1 for task logging
+[[d1_databases]]
+binding = "DB"
+database_name = "yedan-army-command"
+database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# Service Bindings for dispatching to Workers
+[[services]]
+binding = "FLEET_GATEWAY"
+service = "fleet-gateway"
+
+[[services]]
+binding = "ORCHESTRATOR"
+service = "yedan-orchestrator"
+
+[[services]]
+binding = "CLOUD_EXECUTOR"
+service = "yedan-cloud-executor"
+
+[[services]]
+binding = "INTEL_OPS"
+service = "yedan-intel-ops"
+
+[[services]]
+binding = "GRAPH_RAG"
+service = "yedan-graph-rag"
+
+[[services]]
+binding = "ZILLIZ_BRIDGE"
+service = "zilliz-bridge"

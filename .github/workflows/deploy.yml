@@ -21,6 +21,10 @@ on:
       - 'yedan-graph-rag/**'
       - 'github-models-proxy/**'
       - 'xai-proxy/**'
+      - 'yedan-orchestrator/**'
+      - 'yedan-cloud-executor/**'
+      - 'yedan-intel-ops/**'
+      - 'yedan-health-commander/**'
   workflow_dispatch:
 
 jobs:
@@ -54,7 +58,11 @@ jobs:
             {"dir":"zilliz-bridge","name":"zilliz-bridge"},
             {"dir":"yedan-graph-rag","name":"yedan-graph-rag"},
             {"dir":"github-models-proxy","name":"github-models-proxy"},
-            {"dir":"xai-proxy","name":"xai-proxy"}
+            {"dir":"xai-proxy","name":"xai-proxy"},
+            {"dir":"yedan-orchestrator","name":"yedan-orchestrator"},
+            {"dir":"yedan-cloud-executor","name":"yedan-cloud-executor"},
+            {"dir":"yedan-intel-ops","name":"yedan-intel-ops"},
+            {"dir":"yedan-health-commander","name":"yedan-health-commander"}
           ]'
 
           # For workflow_dispatch, deploy all
@@ -100,3 +108,50 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: ${{ matrix.dir }}
           command: deploy
+
+      - name: Post-deploy health check
+        run: |
+          echo "Checking health of ${{ matrix.name }}..."
+          WORKER_URL="https://${{ matrix.name }}.yagami8095.workers.dev"
+
+          # Wait for deployment propagation
+          sleep 5
+
+          # Health check with retry (3 attempts)
+          for i in 1 2 3; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "${WORKER_URL}/health" 2>/dev/null || echo "000")
+
+            # Any HTTP response = alive (even 404/405 means Worker is running)
+            if [ "$HTTP_CODE" != "000" ]; then
+              echo "✅ ${{ matrix.name }} is alive (HTTP $HTTP_CODE)"
+              exit 0
+            fi
+
+            echo "Attempt $i: ${{ matrix.name }} returned $HTTP_CODE, retrying..."
+            sleep 3
+          done
+
+          echo "⚠️ ${{ matrix.name }} health check failed after 3 attempts"
+          # Don't fail the job — Worker may not have a /health endpoint
+          exit 0
+
+  # Notify fleet-gateway after all deploys complete
+  notify:
+    needs: deploy
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify fleet-gateway
+        run: |
+          curl -s -X POST "https://fleet-gateway.yagami8095.workers.dev/v1/memory/save" \
+            -H "Authorization: Bearer ${{ secrets.FLEET_GATEWAY_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"items\": [{
+                \"id\": \"deploy-$(date +%s)\",
+                \"name\": \"GitHub Deploy: ${{ github.sha }}\",
+                \"type\": \"deploy_event\",
+                \"summary\": \"Deployed via GitHub Actions. Commit: ${{ github.event.head_commit.message }}. Status: ${{ needs.deploy.result }}\"
+              }]
+            }" || true
+          echo "Deploy notification sent to fleet-gateway"

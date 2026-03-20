@@ -1,0 +1,43 @@
+name = "openclaw-workflows"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# Workflow bindings
+[[workflows]]
+name = "evolution-workflow"
+binding = "EVOLUTION"
+class_name = "EvolutionWorkflow"
+
+[[workflows]]
+name = "deploy-workflow"
+binding = "DEPLOY"
+class_name = "DeployWorkflow"
+
+# Workers AI via AI Gateway
+[ai]
+binding = "AI"
+gateway = { id = "openclaw-ai-gateway" }
+
+# D1 database
+[[d1_databases]]
+binding = "DB"
+database_name = "yedan-army-command"
+database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# Service Bindings
+[[services]]
+binding = "FLEET_GATEWAY"
+service = "fleet-gateway"
+
+[[services]]
+binding = "GRAPH_RAG"
+service = "yedan-graph-rag"
+
+[[services]]
+binding = "CLOUD_EXECUTOR"
+service = "yedan-cloud-executor"
+
+# Queue for async tasks
+[[queues.producers]]
+binding = "TASK_QUEUE"
+queue = "openclaw-task-queue"

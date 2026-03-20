@@ -1,42 +1,124 @@
 // ============================================================
-// Fleet Gateway v1.0 — Central command for all 38 CF Workers
-// Lets VM1/VM2/Claude Code dispatch tasks, discuss, save memory
-// Uses Workers AI (free), D1, Vectorize — no Ollama needed
+// Fleet Gateway v2.0 — Unified AGI Memory + Search + Dispatch
+// Sources: D1 + Vectorize + Zilliz×3 + KG + Neo4j + Mem0 + Brave + Neon + Tavily
+// 11-source RRF fusion + Cohere rerank
 // ============================================================
 
-const FLEET_AUTH_TOKEN = 'fleet-gateway-2026'; // Will be overridden by CF secret
+// ── AI Gateway External Provider Routing ──
+// Route external LLM calls through CF AI Gateway for unified billing + caching + fallback
+const AI_GATEWAY_BASE = 'https://gateway.ai.cloudflare.com/v1';
 
-// ── Known fleet Workers ──
+async function aiGatewayCall(env, provider, model, messages, opts = {}) {
+  const accountId = env.CF_ACCOUNT_ID || '9c7d2957';
+  const gatewayId = 'openclaw-ai-gateway';
+  const providerMap = {
+    'groq': { path: 'groq', authKey: 'GROQ_API_KEY' },
+    'openrouter': { path: 'openrouter', authKey: 'OPENROUTER_API_KEY' },
+    'workers-ai': { path: 'workers-ai', authKey: null }, // Uses AI binding instead
+  };
+  const p = providerMap[provider];
+  if (!p) return { error: `Unknown provider: ${provider}` };
+
+  const url = `${AI_GATEWAY_BASE}/${accountId}/${gatewayId}/${p.path}/chat/completions`;
+  const headers = { 'Content-Type': 'application/json' };
+  if (p.authKey && env[p.authKey]) headers['Authorization'] = `Bearer ${env[p.authKey]}`;
+
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ model, messages, max_tokens: opts.max_tokens || 512, ...opts }),
+      signal: AbortSignal.timeout(opts.timeout || 30000),
+    });
+    if (!resp.ok) return { error: `${provider} ${resp.status}: ${await resp.text()}` };
+    return await resp.json();
+  } catch (e) {
+    return { error: `${provider}: ${e.message}` };
+  }
+}
+
+// ── LLM Fallback Chain (Workers AI → Groq → OpenRouter) ──
+async function llmWithFallback(env, messages, opts = {}) {
+  // Try Workers AI first (free neurons, cached via AI Gateway)
+  try {
+    const model = opts.model || MODELS.fast;
+    const result = await env.AI.run(model, { messages, max_tokens: opts.max_tokens || 512 });
+    if (result.response) return { response: result.response, provider: 'workers-ai', model };
+  } catch (e) { /* fallback */ }
+
+  // Try Groq (fast, free tier)
+  if (env.GROQ_API_KEY) {
+    const result = await aiGatewayCall(env, 'groq', 'llama-3.3-70b-versatile', messages, opts);
+    if (!result.error && result.choices?.[0]) return { response: result.choices[0].message.content, provider: 'groq', model: 'llama-3.3-70b-versatile' };
+  }
+
+  // Try OpenRouter (wide model selection)
+  if (env.OPENROUTER_API_KEY) {
+    const result = await aiGatewayCall(env, 'openrouter', 'meta-llama/llama-3.3-70b-instruct', messages, opts);
+    if (!result.error && result.choices?.[0]) return { response: result.choices[0].message.content, provider: 'openrouter', model: 'meta-llama/llama-3.3-70b-instruct' };
+  }
+
+  return { error: 'All LLM providers failed' };
+}
+
+// ── Rate Limiting ──
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 60; // max requests per window per IP
+const rateLimitMap = new Map(); // IP -> { count, resetAt }
+let rateLimitCleanupTimer = 0;
+
+function checkRateLimit(request) {
+  const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Real-IP') || 'unknown';
+  const now = Date.now();
+
+  // Periodic cleanup of expired entries
+  if (now > rateLimitCleanupTimer) {
+    rateLimitCleanupTimer = now + RATE_LIMIT_WINDOW_MS;
+    for (const [key, val] of rateLimitMap) {
+      if (now > val.resetAt) rateLimitMap.delete(key);
+    }
+  }
+
+  let entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+    rateLimitMap.set(ip, entry);
+  }
+  entry.count++;
+  return entry.count <= RATE_LIMIT_MAX;
+}
+
+// ── Known fleet Workers (with dispatch paths for POST) ──
 const FLEET_WORKERS = {
-  'orchestrator':       { url: 'https://yedan-orchestrator.yagami8095.workers.dev', cron: '*/2' },
-  'health-commander':   { url: 'https://yedan-health-commander.yagami8095.workers.dev', cron: '*/3' },
-  'cloud-executor':     { url: 'https://yedan-cloud-executor.yagami8095.workers.dev', cron: '*/5' },
-  'revenue-sentinel':   { url: 'https://yedan-revenue-sentinel.yagami8095.workers.dev', cron: '*/10' },
-  'intel-ops':          { url: 'https://yedan-intel-ops.yagami8095.workers.dev', cron: '*/15' },
-  'content-engine':     { url: 'https://yedan-content-engine.yagami8095.workers.dev', cron: '*/30' },
-  'graph-rag':          { url: 'https://yedan-graph-rag.yagami8095.workers.dev', cron: '*/6h' },
-  'keepalive':          { url: 'https://yedan-keepalive.yagami8095.workers.dev', cron: '*/14' },
-  'product-store':      { url: 'https://product-store.yagami8095.workers.dev' },
-  'x402-gateway':       { url: 'https://openclaw-x402-gateway.yagami8095.workers.dev' },
-  'json-toolkit':       { url: 'https://json-toolkit-mcp.yagami8095.workers.dev' },
-  'regex-engine':       { url: 'https://regex-engine-mcp.yagami8095.workers.dev' },
-  'prompt-enhancer':    { url: 'https://prompt-enhancer-mcp.yagami8095.workers.dev' },
-  'intel-api':          { url: 'https://openclaw-intel-api.yagami8095.workers.dev' },
-  'intel-mcp':          { url: 'https://openclaw-intel-mcp.yagami8095.workers.dev' },
-  'fortune-api':        { url: 'https://fortune-api.yagami8095.workers.dev' },
-  'notion-warroom':     { url: 'https://notion-warroom.yagami8095.workers.dev' },
-  'kpi-dashboard':      { url: 'https://kpi-dashboard.yagami8095.workers.dev' },
-  'groq-lb':            { url: 'https://groq-lb.yagami8095.workers.dev' },
-  'zilliz-bridge':      { url: 'https://zilliz-bridge.yagami8095.workers.dev' },
-  'github-models':      { url: 'https://github-models-proxy.yagami8095.workers.dev' },
-  'xai-proxy':          { url: 'https://xai-proxy.yagami8095.workers.dev' },
+  'orchestrator':       { url: 'https://yedan-orchestrator.yagami8095.workers.dev', cron: '*/2', dispatch: '/run' },
+  'health-commander':   { url: 'https://yedan-health-commander.yagami8095.workers.dev', cron: '*/3', dispatch: '/run' },
+  'cloud-executor':     { url: 'https://yedan-cloud-executor.yagami8095.workers.dev', cron: '*/5', dispatch: '/run' },
+  'revenue-sentinel':   { url: 'https://yedan-revenue-sentinel.yagami8095.workers.dev', cron: '*/10', dispatch: '/run' },
+  'intel-ops':          { url: 'https://yedan-intel-ops.yagami8095.workers.dev', cron: '*/15', dispatch: '/run' },
+  'content-engine':     { url: 'https://yedan-content-engine.yagami8095.workers.dev', cron: '*/30', dispatch: '/run' },
+  'graph-rag':          { url: 'https://yedan-graph-rag.yagami8095.workers.dev', cron: '*/6h', dispatch: '/query' },
+  'keepalive':          { url: 'https://yedan-keepalive.yagami8095.workers.dev', cron: '*/14', dispatch: '/run' },
+  'product-store':      { url: 'https://product-store.yagami8095.workers.dev', dispatch: '/' },
+  'x402-gateway':       { url: 'https://openclaw-x402-gateway.yagami8095.workers.dev', dispatch: '/' },
+  'json-toolkit':       { url: 'https://json-toolkit-mcp.yagami8095.workers.dev', dispatch: '/' },
+  'regex-engine':       { url: 'https://regex-engine-mcp.yagami8095.workers.dev', dispatch: '/' },
+  'prompt-enhancer':    { url: 'https://prompt-enhancer-mcp.yagami8095.workers.dev', dispatch: '/' },
+  'intel-api':          { url: 'https://openclaw-intel-api.yagami8095.workers.dev', dispatch: '/' },
+  'intel-mcp':          { url: 'https://openclaw-intel-mcp.yagami8095.workers.dev', dispatch: '/' },
+  'fortune-api':        { url: 'https://fortune-api.yagami8095.workers.dev', dispatch: '/' },
+  'notion-warroom':     { url: 'https://notion-warroom.yagami8095.workers.dev', dispatch: '/' },
+  'kpi-dashboard':      { url: 'https://kpi-dashboard.yagami8095.workers.dev', dispatch: '/' },
+  'groq-lb':            { url: 'https://groq-lb.yagami8095.workers.dev', dispatch: '/v1/chat/completions' },
+  'zilliz-bridge':      { url: 'https://zilliz-bridge.yagami8095.workers.dev', dispatch: '/search' },
+  'github-models':      { url: 'https://github-models-proxy.yagami8095.workers.dev', dispatch: '/v1/chat/completions' },
+  'xai-proxy':          { url: 'https://xai-proxy.yagami8095.workers.dev', dispatch: '/v1/chat/completions' },
 };
 
 // ── Auth ──
 function auth(request, env) {
+  if (!env.FLEET_GATEWAY_TOKEN) return null; // not configured
   const token = request.headers.get('Authorization')?.replace('Bearer ', '');
-  const expected = env.FLEET_GATEWAY_TOKEN || FLEET_AUTH_TOKEN;
-  if (!token || token !== expected) return false;
+  if (!token || token !== env.FLEET_GATEWAY_TOKEN) return false;
   return true;
 }
 
@@ -47,12 +129,29 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+// ── AI Gateway Config ──
+// AI Gateway: https://gateway.ai.cloudflare.com/v1/{account_id}/openclaw-ai-gateway
+// Configured via wrangler.toml [ai] gateway — all env.AI.run() calls auto-route through it
+// Benefits: caching, rate limiting, fallback, cost tracking, unified analytics
+
+// ── Model Tiers ──
+const MODELS = {
+  // Tier 1: Complex reasoning (256k context, ideal for >32k token tasks)
+  complex: '@cf/moonshotai/kimi-k2.5',
+  // Tier 2: Fast general purpose
+  fast: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+  // Tier 3: Code specialist
+  code: '@cf/qwen/qwen2.5-coder-32b-instruct',
+  // Tier 4: Lightweight
+  light: '@cf/google/gemma-3-12b-it',
+};
+
 // ── Workers AI Discussion ──
 async function aiDiscuss(env, topic, models = []) {
   const defaultModels = [
-    '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
-    '@cf/qwen/qwen2.5-coder-32b-instruct',
-    '@cf/google/gemma-3-12b-it',
+    MODELS.fast,
+    MODELS.code,
+    MODELS.complex,
   ];
   const useModels = models.length > 0 ? models : defaultModels;
 
@@ -116,13 +215,45 @@ async function memorySave(env, items) {
   return results;
 }
 
-// ── Dispatch to fleet Worker ──
+// ── Service Binding Map (Worker name → env binding name) ──
+const SERVICE_BINDING_MAP = {
+  'graph-rag': 'GRAPH_RAG',
+  'orchestrator': 'ORCHESTRATOR',
+  'cloud-executor': 'CLOUD_EXECUTOR',
+  'intel-ops': 'INTEL_OPS',
+  'health-commander': 'HEALTH_COMMANDER',
+  'zilliz-bridge': 'ZILLIZ_BRIDGE',
+  'groq-lb': 'GROQ_LB',
+};
+
+// ── Dispatch to fleet Worker (Service Binding preferred, HTTP fallback) ──
 async function dispatch(workerName, payload, env) {
   const worker = FLEET_WORKERS[workerName];
   if (!worker) return { error: `Unknown worker: ${workerName}`, known: Object.keys(FLEET_WORKERS) };
 
+  const dispatchPath = worker.dispatch || '/';
+
+  // Try Service Binding first (zero-overhead Worker-to-Worker call)
+  const bindingName = SERVICE_BINDING_MAP[workerName];
+  if (bindingName && env[bindingName]) {
+    try {
+      const resp = await env[bindingName].fetch(new Request(`http://internal${dispatchPath}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }));
+      const data = await resp.text();
+      try { return { ...JSON.parse(data), _via: 'service-binding' }; }
+      catch { return { raw: data.substring(0, 1000), _via: 'service-binding' }; }
+    } catch (e) {
+      // Fall through to HTTP
+    }
+  }
+
+  // HTTP fallback (for Workers without Service Binding)
   try {
-    const resp = await fetch(worker.url, {
+    const dispatchUrl = `${worker.url}${dispatchPath}`;
+    const resp = await fetch(dispatchUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,34 +262,61 @@ async function dispatch(workerName, payload, env) {
       body: JSON.stringify(payload),
     });
     const data = await resp.text();
-    try { return JSON.parse(data); }
-    catch { return { raw: data.substring(0, 1000) }; }
+    try { return { ...JSON.parse(data), _via: 'http' }; }
+    catch { return { raw: data.substring(0, 1000), _via: 'http' }; }
   } catch (e) {
     return { error: e.message };
   }
 }
 
 // ── Fleet Status ──
+// Note: Many workers return 404/405 on GET / (they only handle POST or specific paths).
+// Any HTTP response = alive. Only timeout/network error = down.
 async function fleetStatus(env) {
   const checks = Object.entries(FLEET_WORKERS).map(async ([name, info]) => {
+    // Try Service Binding first for bound Workers (faster, no TLS overhead)
+    const bindingName = SERVICE_BINDING_MAP[name];
+    if (bindingName && env[bindingName]) {
+      try {
+        const resp = await env[bindingName].fetch(new Request('http://internal/health', { method: 'GET' }));
+        return { name, url: info.url, status: resp.status, alive: true, ok: resp.ok, cron: info.cron || null, via: 'binding' };
+      } catch (e) {
+        // Fall through to HTTP
+      }
+    }
+    // HTTP fallback
+    const healthUrl = info.health || info.url;
     try {
-      const resp = await fetch(info.url, { method: 'GET', signal: AbortSignal.timeout(5000) });
-      return { name, url: info.url, status: resp.status, ok: resp.ok, cron: info.cron || null };
+      const resp = await fetch(healthUrl, { method: 'GET', signal: AbortSignal.timeout(5000) });
+      return { name, url: info.url, status: resp.status, alive: true, ok: resp.ok, cron: info.cron || null, via: 'http' };
     } catch (e) {
-      return { name, url: info.url, status: 0, ok: false, error: e.message, cron: info.cron || null };
+      return { name, url: info.url, status: 0, alive: false, ok: false, error: e.message, cron: info.cron || null, via: 'http' };
     }
   });
 
   return Promise.all(checks);
 }
 
-// ── Unified Memory Query (D1 FTS5 + Vectorize + Zilliz x3 + KG, with RRF fusion) ──
+// ── Unified Memory Query (11-source: D1+Vectorize+Zilliz×3+KG+Neo4j+Mem0+Brave+Neon+Tavily) ──
+// Service Binding URLs (used as fallback when bindings unavailable)
 const ZILLIZ_BRIDGE_URL = 'https://zilliz-bridge.yagami8095.workers.dev';
 const KG_URL = 'https://yedan-graph-rag.yagami8095.workers.dev';
 
+// Helper: fetch via Service Binding if available, else HTTP
+function bindingOrFetch(env, bindingName, httpUrl, path, opts) {
+  if (env[bindingName]) {
+    return env[bindingName].fetch(new Request(`http://internal${path}`, opts));
+  }
+  return fetch(`${httpUrl}${path}`, opts);
+}
+const NEO4J_URL = 'https://b43cdce1.databases.neo4j.io/db/b43cdce1/query/v2';
+const MEM0_URL = 'https://api.mem0.ai/v1';
+
 async function memoryQuery(env, query, sources, limit = 10) {
   const startTime = Date.now();
-  const allSources = sources || ['d1', 'vectorize', 'zilliz-agents', 'zilliz-intel', 'zilliz-products', 'kg', 'tavily'];
+  // Default sources: skip Zilliz and KG (cause 1042 CPU timeout on free plan when combined with 7+ other sources)
+  // Users can explicitly request them via sources parameter
+  const allSources = sources || ['d1', 'vectorize', 'neo4j', 'mem0', 'brave', 'neon', 'tavily'];
   const results = {};
   const errors = [];
 
@@ -180,22 +338,27 @@ async function memoryQuery(env, query, sources, limit = 10) {
       try {
         const sanitized = query.replace(/[^\w\s]/g, ' ').trim();
         if (!sanitized) return;
+        // FTS5 is built on kg_entities (915 rows), not entities table
         const { results: rows } = await env.DB.prepare(
-          `SELECT e.id, e.name, e.entity_type as type, e.summary, e.trust_level as confidence, e.updated_at
+          `SELECT e.id, e.name, e.type, e.summary, e.confidence, e.updated_at
            FROM kg_entities_fts fts
-           JOIN entities e ON e.rowid = fts.rowid
+           JOIN kg_entities e ON e.rowid = fts.rowid
            WHERE kg_entities_fts MATCH ?
            ORDER BY bm25(kg_entities_fts, 10.0, 5.0, 1.0)
            LIMIT ?`
         ).bind(sanitized, limit * 2).all();
         results.d1 = (rows || []).map((r, i) => ({ ...r, source: 'd1', rank: i }));
       } catch (e) {
-        // FTS5 table may not exist — try basic LIKE search
+        // FTS5 fallback — try both tables with LIKE
         try {
           const { results: rows } = await env.DB.prepare(
-            `SELECT id, name, entity_type as type, summary, trust_level as confidence, updated_at
-             FROM entities WHERE name LIKE ? OR summary LIKE ? LIMIT ?`
-          ).bind(`%${query.slice(0, 50)}%`, `%${query.slice(0, 50)}%`, limit * 2).all();
+            `SELECT id, name, type, summary, confidence, updated_at
+             FROM kg_entities WHERE name LIKE ? OR summary LIKE ?
+             UNION ALL
+             SELECT id, name, entity_type as type, summary, trust_level as confidence, updated_at
+             FROM entities WHERE name LIKE ? OR summary LIKE ?
+             LIMIT ?`
+          ).bind(`%${query.slice(0, 50)}%`, `%${query.slice(0, 50)}%`, `%${query.slice(0, 50)}%`, `%${query.slice(0, 50)}%`, limit * 2).all();
           results.d1 = (rows || []).map((r, i) => ({ ...r, source: 'd1', rank: i }));
         } catch (e2) {
           errors.push(`D1: ${e2.message}`);
@@ -219,16 +382,16 @@ async function memoryQuery(env, query, sources, limit = 10) {
     })());
   }
 
-  // Zilliz clusters via zilliz-bridge
+  // Zilliz clusters via zilliz-bridge (Service Binding or HTTP)
   for (const cluster of ['agents', 'intel', 'products']) {
     if (allSources.includes(`zilliz-${cluster}`)) {
       tasks.push((async () => {
         try {
-          const resp = await fetch(`${ZILLIZ_BRIDGE_URL}/v1/search`, {
+          const resp = await bindingOrFetch(env, 'ZILLIZ_BRIDGE', ZILLIZ_BRIDGE_URL, '/v1/search', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${env.FLEET_GATEWAY_TOKEN || FLEET_AUTH_TOKEN}`
+              'Authorization': `Bearer ${env.FLEET_GATEWAY_TOKEN || ''}`
             },
             body: JSON.stringify({ cluster, query, limit }),
             signal: AbortSignal.timeout(8000)
@@ -244,11 +407,11 @@ async function memoryQuery(env, query, sources, limit = 10) {
     }
   }
 
-  // KG graph query
+  // KG graph query (Service Binding or HTTP)
   if (allSources.includes('kg')) {
     tasks.push((async () => {
       try {
-        const resp = await fetch(`${KG_URL}/query`, {
+        const resp = await bindingOrFetch(env, 'GRAPH_RAG', KG_URL, '/query', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -261,6 +424,121 @@ async function memoryQuery(env, query, sources, limit = 10) {
         results.kg = (json.results || json.entities || []).map((r, i) => ({ ...r, source: 'kg', rank: i }));
       } catch (e) {
         errors.push(`KG: ${e.message}`);
+      }
+    })());
+  }
+
+  // Neo4j AuraDB graph search
+  if (allSources.includes('neo4j') && env.NEO4J_AUTH) {
+    tasks.push((async () => {
+      try {
+        const resp = await fetch(NEO4J_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${env.NEO4J_AUTH}`,
+          },
+          body: JSON.stringify({
+            statement: `MATCH (n) WHERE toLower(n.name) CONTAINS toLower($q) OR toLower(n.summary) CONTAINS toLower($q) RETURN n.id as id, n.name as name, labels(n)[0] as type, n.summary as summary LIMIT $limit`,
+            parameters: { q: query.slice(0, 200), limit: limit * 2 }
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        const json = await resp.json();
+        const rows = json.data?.values || [];
+        results.neo4j = rows.map((r, i) => ({
+          id: r[0] || `neo4j-${i}`, name: r[1] || '', type: r[2] || 'entity',
+          summary: r[3] || '', source: 'neo4j', rank: i
+        }));
+      } catch (e) {
+        errors.push(`Neo4j: ${e.message}`);
+      }
+    })());
+  }
+
+  // Mem0.ai cross-session memory
+  if (allSources.includes('mem0') && env.MEM0_API_KEY) {
+    tasks.push((async () => {
+      try {
+        const resp = await fetch(`${MEM0_URL}/memories/search/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${env.MEM0_API_KEY}`,
+          },
+          body: JSON.stringify({ query: query.slice(0, 500), user_id: 'openclaw-agi', limit }),
+          signal: AbortSignal.timeout(8000)
+        });
+        const json = await resp.json();
+        const items = Array.isArray(json) ? json : (json.results || json.memories || []);
+        results.mem0 = items.map((r, i) => ({
+          id: r.id || `mem0-${i}`, name: r.memory || r.text || r.content || '',
+          type: 'memory', summary: r.memory || r.text || r.content || '',
+          score: r.score || 0, source: 'mem0', rank: i
+        }));
+      } catch (e) {
+        errors.push(`Mem0: ${e.message}`);
+      }
+    })());
+  }
+
+  // Brave Search (web knowledge)
+  if (allSources.includes('brave') && env.BRAVE_API_KEY) {
+    tasks.push((async () => {
+      try {
+        const resp = await fetch(`https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query.slice(0, 300))}&count=${Math.min(limit, 10)}`, {
+          headers: { 'X-Subscription-Token': env.BRAVE_API_KEY, 'Accept': 'application/json' },
+          signal: AbortSignal.timeout(8000)
+        });
+        const json = await resp.json();
+        results.brave = (json.web?.results || []).map((r, i) => ({
+          id: `brave-${i}`, name: r.title, type: 'web_result',
+          summary: r.description?.slice(0, 300), source: 'brave',
+          url: r.url, rank: i
+        }));
+      } catch (e) {
+        errors.push(`Brave: ${e.message}`);
+      }
+    })());
+  }
+
+  // Neon Postgres via Hyperdrive (connection pooling + edge caching, up to 17x faster)
+  // Falls back to raw HTTP if Hyperdrive binding not available
+  if (allSources.includes('neon') && (env.NEON || env.NEON_CONNECTION_STRING)) {
+    tasks.push((async () => {
+      try {
+        let connStr;
+        if (env.NEON) {
+          // Hyperdrive binding — connection string auto-rewritten to edge proxy
+          connStr = env.NEON.connectionString;
+        } else {
+          connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
+        }
+        const connParts = connStr.match(/postgresql:\/\/[^@]+@([^/?]+)/);
+        if (connParts) {
+          const host = connParts[1];
+          const resp = await fetch(`https://${host}/sql`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Neon-Connection-String': connStr,
+            },
+            body: JSON.stringify({
+              query: `SELECT id::text, name, type, summary FROM entities WHERE name ILIKE $1 OR summary ILIKE $1
+                      UNION ALL
+                      SELECT id::text, category as name, 'memory' as type, data::text as summary FROM yedan_memory WHERE category ILIKE $1 OR data::text ILIKE $1
+                      LIMIT $2`,
+              params: [`%${query.slice(0, 100)}%`, limit * 2]
+            }),
+            signal: AbortSignal.timeout(8000)
+          });
+          const json = await resp.json();
+          results.neon = (json.rows || []).map((r, i) => ({
+            ...r, source: env.NEON ? 'neon+hyperdrive' : 'neon', rank: i
+          }));
+        }
+      } catch (e) {
+        errors.push(`Neon: ${e.message}`);
       }
     })());
   }
@@ -361,10 +639,10 @@ async function memoryQuery(env, query, sources, limit = 10) {
   };
 }
 
-// ── Unified Memory Write (D1 + Vectorize + Zilliz + KG) ──
+// ── Unified Memory Write (D1 + Vectorize + Zilliz + KG + Neo4j + Mem0 + Neon) ──
 async function memoryWrite(env, items, targets = 'all') {
-  const targetList = targets === 'all' ? ['d1', 'vectorize', 'zilliz', 'kg'] : (Array.isArray(targets) ? targets : [targets]);
-  const counts = { d1: 0, vectorize: 0, zilliz: 0, kg: 0 };
+  const targetList = targets === 'all' ? ['d1', 'vectorize', 'zilliz', 'kg', 'neo4j', 'mem0', 'neon'] : (Array.isArray(targets) ? targets : [targets]);
+  const counts = { d1: 0, vectorize: 0, zilliz: 0, kg: 0, neo4j: 0, mem0: 0, neon: 0 };
   const errors = [];
 
   for (const item of items) {
@@ -405,14 +683,14 @@ async function memoryWrite(env, items, targets = 'all') {
       } catch (e) { errors.push(`Vec ${item.id}: ${e.message}`); }
     }
 
-    // Zilliz via bridge
+    // Zilliz via bridge (Service Binding or HTTP)
     if (targetList.includes('zilliz')) {
       try {
-        const resp = await fetch(`${ZILLIZ_BRIDGE_URL}/v1/insert`, {
+        const resp = await bindingOrFetch(env, 'ZILLIZ_BRIDGE', ZILLIZ_BRIDGE_URL, '/v1/insert', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${env.FLEET_GATEWAY_TOKEN || FLEET_AUTH_TOKEN}`
+            'Authorization': `Bearer ${env.FLEET_GATEWAY_TOKEN || ''}`
           },
           body: JSON.stringify({ data: [{ id: item.id, name: item.name, type: item.type, summary: item.summary }] }),
           signal: AbortSignal.timeout(10000)
@@ -423,10 +701,10 @@ async function memoryWrite(env, items, targets = 'all') {
       } catch (e) { errors.push(`Zilliz ${item.id}: ${e.message}`); }
     }
 
-    // KG
+    // KG (Service Binding or HTTP)
     if (targetList.includes('kg')) {
       try {
-        const resp = await fetch(`${KG_URL}/ingest`, {
+        const resp = await bindingOrFetch(env, 'GRAPH_RAG', KG_URL, '/ingest', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -441,6 +719,74 @@ async function memoryWrite(env, items, targets = 'all') {
         const json = await resp.json();
         if (json.ok) counts.kg++;
       } catch (e) { errors.push(`KG ${item.id}: ${e.message}`); }
+    }
+
+    // Neo4j AuraDB
+    if (targetList.includes('neo4j') && env.NEO4J_AUTH) {
+      try {
+        const resp = await fetch(NEO4J_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${env.NEO4J_AUTH}`,
+          },
+          body: JSON.stringify({
+            statement: `MERGE (n:Entity {id: $id}) SET n.name = $name, n.type = $type, n.summary = $summary, n.source = 'unified-memory', n.updated_at = datetime()`,
+            parameters: { id: item.id, name: item.name, type: item.type, summary: (item.summary || '').slice(0, 5000) }
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        const json = await resp.json();
+        if (!json.errors || json.errors.length === 0) counts.neo4j++;
+      } catch (e) { errors.push(`Neo4j ${item.id}: ${e.message}`); }
+    }
+
+    // Mem0.ai cross-session memory
+    if (targetList.includes('mem0') && env.MEM0_API_KEY) {
+      try {
+        const resp = await fetch(`${MEM0_URL}/memories/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${env.MEM0_API_KEY}`,
+          },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: `${item.name}: ${(item.summary || '').slice(0, 2000)}` }],
+            user_id: 'openclaw-agi',
+            metadata: { id: item.id, type: item.type, source: 'unified-memory' }
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        const json = await resp.json();
+        if (json.id || json.results || (Array.isArray(json) && json.length > 0)) counts.mem0++;
+      } catch (e) { errors.push(`Mem0 ${item.id}: ${e.message}`); }
+    }
+
+    // Neon Postgres via Hyperdrive (or raw HTTP fallback)
+    if (targetList.includes('neon') && (env.NEON || env.NEON_CONNECTION_STRING)) {
+      try {
+        let connStr;
+        if (env.NEON) {
+          connStr = env.NEON.connectionString;
+        } else {
+          connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
+        }
+        const connParts = connStr.match(/postgresql:\/\/[^@]+@([^/?]+)/);
+        if (connParts) {
+          const host = connParts[1];
+          const resp = await fetch(`https://${host}/sql`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Neon-Connection-String': connStr },
+            body: JSON.stringify({
+              query: `INSERT INTO entities (id, name, type, summary, source, confidence, updated_at) VALUES ($1, $2, $3, $4, 'unified-memory', 1.0, NOW()) ON CONFLICT (id) DO UPDATE SET name=$2, type=$3, summary=$4, source='unified-memory', updated_at=NOW()`,
+              params: [item.id, item.name, item.type, (item.summary || '').slice(0, 5000)]
+            }),
+            signal: AbortSignal.timeout(8000)
+          });
+          const json = await resp.json();
+          if (!json.error) counts.neon++;
+        }
+      } catch (e) { errors.push(`Neon ${item.id}: ${e.message}`); }
     }
   }
 
@@ -470,7 +816,9 @@ export default {
         service: 'fleet-gateway',
         version: env.FLEET_VERSION || '1.0.0',
         workers: Object.keys(FLEET_WORKERS).length,
-        capabilities: ['dispatch', 'discuss', 'memory-save', 'memory-query', 'memory-write', 'fleet-status'],
+        capabilities: ['dispatch', 'discuss', 'llm', 'memory-save', 'memory-query', 'memory-write', 'fleet-status'],
+        ai_gateway: 'openclaw-ai-gateway',
+        models: MODELS,
         timestamp: new Date().toISOString(),
       });
     }
@@ -481,10 +829,11 @@ export default {
         name: 'fleet-gateway',
         description: 'Central command gateway for OpenClaw CF Worker fleet. Dispatch tasks, run multi-AI discussions, save to unified memory.',
         version: '1.0.0',
-        capabilities: ['dispatch', 'discuss', 'memory-save', 'memory-query', 'memory-write', 'fleet-status'],
+        capabilities: ['dispatch', 'discuss', 'llm', 'memory-save', 'memory-query', 'memory-write', 'fleet-status'],
         endpoints: {
           dispatch: '/v1/dispatch',
           discuss: '/v1/discuss',
+          llm: '/v1/llm',
           memory_save: '/v1/memory/save',
           memory_query: '/v1/memory/query',
           memory_write: '/v1/memory/write',
@@ -495,8 +844,49 @@ export default {
     }
 
     // Auth required below
-    if (!auth(request, env)) {
+    const authResult = auth(request, env);
+    if (authResult === null) {
+      return jsonResponse({ error: 'Auth not configured' }, 500);
+    }
+    if (!authResult) {
       return jsonResponse({ error: 'Unauthorized' }, 401);
+    }
+
+    // Rate limiting on sensitive endpoints
+    const RATE_LIMITED_PATHS = ['/v1/memory/query', '/v1/dispatch', '/v1/discuss'];
+    if (RATE_LIMITED_PATHS.includes(path) && !checkRateLimit(request)) {
+      return jsonResponse({ error: 'Rate limit exceeded. Max 60 requests per minute.' }, 429);
+    }
+
+    // POST /v1/llm — LLM call with AI Gateway fallback chain
+    if (path === '/v1/llm' && request.method === 'POST') {
+      const body = await request.json();
+      const { messages, model, max_tokens } = body;
+      if (!messages || !Array.isArray(messages)) return jsonResponse({ error: 'Missing messages array' }, 400);
+      const startTime = Date.now();
+      const result = await llmWithFallback(env, messages, { model, max_tokens: max_tokens || 512 });
+      return jsonResponse({ ...result, latency_ms: Date.now() - startTime });
+    }
+
+    // POST /v1/queue — enqueue task for reliable async processing
+    if (path === '/v1/queue' && request.method === 'POST') {
+      if (!env.TASK_QUEUE) return jsonResponse({ error: 'Queue not configured' }, 503);
+      const body = await request.json();
+      const { worker, payload, priority } = body;
+      if (!worker) return jsonResponse({ error: 'Missing worker name' }, 400);
+      try {
+        await env.TASK_QUEUE.send({
+          type: 'dispatch',
+          target: worker,
+          payload: payload || body,
+          priority: priority || 'normal',
+          created: Date.now(),
+          source: 'fleet-gateway',
+        });
+        return jsonResponse({ ok: true, queued: worker, priority: priority || 'normal' });
+      } catch (e) {
+        return jsonResponse({ error: `Queue send failed: ${e.message}` }, 500);
+      }
     }
 
     // POST /v1/dispatch — send task to a specific Worker
@@ -558,11 +948,12 @@ export default {
     // GET /v1/fleet/status — check all Workers
     if (path === '/v1/fleet/status') {
       const status = await fleetStatus(env);
-      const alive = status.filter(s => s.ok).length;
-      return jsonResponse({ total: status.length, alive, workers: status });
+      const alive = status.filter(s => s.alive).length;
+      const healthy = status.filter(s => s.ok).length;
+      return jsonResponse({ total: status.length, alive, healthy, workers: status });
     }
 
-    return jsonResponse({ error: 'Not found', routes: ['/v1/dispatch', '/v1/discuss', '/v1/memory/save', '/v1/memory/query', '/v1/memory/write', '/v1/fleet/status'] }, 404);
+    return jsonResponse({ error: 'Not found', routes: ['/v1/dispatch', '/v1/queue', '/v1/discuss', '/v1/llm', '/v1/memory/save', '/v1/memory/query', '/v1/memory/write', '/v1/fleet/status'] }, 404);
   },
 
   // ── Cron: Auto-save fleet state every 15 minutes ──
@@ -574,15 +965,16 @@ export default {
       // 1. Collect fleet health snapshot
       const healthChecks = Object.entries(FLEET_WORKERS).map(async ([name, info]) => {
         try {
-          const resp = await fetch(info.url, { method: 'GET', signal: AbortSignal.timeout(5000) });
-          return { name, status: resp.status, ok: resp.ok };
+          const resp = await fetch(info.health || info.url, { method: 'GET', signal: AbortSignal.timeout(5000) });
+          return { name, status: resp.status };
         } catch {
-          return { name, status: 0, ok: false };
+          return { name, status: 0 };
         }
       });
       const health = await Promise.all(healthChecks);
-      const alive = health.filter(h => h.ok).length;
-      const down = health.filter(h => !h.ok).map(h => h.name);
+      // Any HTTP response = alive (even 404/405), only network error = down
+      const alive = health.filter(h => h.status > 0).length;
+      const down = health.filter(h => h.status === 0).map(h => h.name);
 
       // 2. Save fleet snapshot to D1
       try {

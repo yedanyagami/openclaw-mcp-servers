@@ -1,0 +1,44 @@
+name: Claude Security Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - '**/*.js'
+      - '**/wrangler.toml'
+
+jobs:
+  security-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Security Audit
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            Security review this PR for OWASP Agentic AI Top 10 vulnerabilities:
+            1. Prompt injection (user input reaching LLM prompts)
+            2. Insecure tool use (command injection via tool parameters)
+            3. Excessive agency (over-permissioned Workers/bindings)
+            4. Insufficient monitoring (missing auth/rate-limit checks)
+            5. Insecure output handling (unvalidated LLM responses used in code)
+            6. Data leakage (secrets in vars, tokens in logs)
+            7. Supply chain (untrusted npm packages, unverified dependencies)
+
+            Also check for:
+            - SQL injection in D1 queries (non-parameterized)
+            - Missing Authorization header validation
+            - Exposed API tokens in wrangler.toml [vars] (should be secrets)
+            - CORS misconfiguration (overly permissive Allow-Origin)
+
+            Report findings as: CRITICAL / HIGH / MEDIUM / LOW with file:line references.
+          allowed_tools: "Read,Grep,Glob"
+          model: claude-sonnet-4-6
+          timeout_minutes: 5

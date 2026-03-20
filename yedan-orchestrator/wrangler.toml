@@ -25,3 +25,24 @@ id = "51826cd6550a40e79a61d462b084a1c8"
 binding = "ARMY_DB"
 database_name = "yedan-army-command"
 database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# Service Bindings (Worker-to-Worker, zero HTTP overhead)
+[[services]]
+binding = "CLOUD_EXECUTOR"
+service = "yedan-cloud-executor"
+
+[[services]]
+binding = "INTEL_OPS"
+service = "yedan-intel-ops"
+
+[[services]]
+binding = "HEALTH_COMMANDER"
+service = "yedan-health-commander"
+
+[[services]]
+binding = "GRAPH_RAG"
+service = "yedan-graph-rag"
+
+[[services]]
+binding = "FLEET_GATEWAY"
+service = "fleet-gateway"

@@ -51,8 +51,14 @@ export default {
           return json({ ok: true, message: 'Intel sweep executed' });
         }
         return json({ error: 'POST required' }, 405);
+      case '/crawl':
+        if (request.method === 'POST') {
+          const body = await request.json();
+          return await crawlUrl(env, body.url, body.format || 'markdown');
+        }
+        return json({ error: 'POST required with {url, format?}' }, 405);
       case '/ping':
-        return json({ pong: true, brain: 'intel-ops', version: '2.0.0', ts: Date.now() });
+        return json({ pong: true, brain: 'intel-ops', version: '2.1.0', ts: Date.now() });
       default:
         return json({ error: 'Not found' }, 404);
     }
@@ -473,6 +479,49 @@ async function reportBunshin(key, value, env) {
     if (res.ok) return;
   } catch {}
   try { await fetch('https://bunshin-mirror.yagami8095.workers.dev/api/brain', { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(5000) }); } catch {}
+}
+
+// ── Browser Rendering: Crawl URL for web intelligence ──
+async function crawlUrl(env, targetUrl, format = 'markdown') {
+  if (!targetUrl) return json({ error: 'Missing url parameter' }, 400);
+  if (!env.BROWSER) return json({ error: 'Browser Rendering not configured' }, 503);
+
+  const startTime = Date.now();
+  try {
+    // Use CF Browser Rendering /crawl endpoint
+    const resp = await env.BROWSER.fetch(`https://browser-rendering.cloudflare.com/crawl`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url: targetUrl,
+        scrapeOptions: {
+          formats: [format],
+          waitFor: 3000,
+        },
+      }),
+    });
+
+    if (!resp.ok) {
+      return json({ error: `Crawl failed: ${resp.status}`, url: targetUrl }, resp.status);
+    }
+
+    const data = await resp.json();
+    const latency = Date.now() - startTime;
+
+    // Auto-save crawl result to D1 intel_feed
+    try {
+      await env.ARMY_DB.prepare(
+        `INSERT INTO intel_feed (id, source, category, data, created_at)
+         VALUES (?, 'browser-crawl', 'web-intel', ?, datetime('now'))`
+      ).bind(`crawl-${Date.now()}`, JSON.stringify({ url: targetUrl, format, content_length: JSON.stringify(data).length }).substring(0, 5000)).run();
+    } catch (e) {
+      // Best-effort save
+    }
+
+    return json({ ok: true, url: targetUrl, format, latency_ms: latency, data });
+  } catch (e) {
+    return json({ error: `Crawl error: ${e.message}`, url: targetUrl }, 500);
+  }
 }
 
 function json(data, status = 200) {
