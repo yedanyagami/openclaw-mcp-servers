@@ -14,7 +14,7 @@ class_name = "AGIBrain"
 # DO migrations
 [[migrations]]
 tag = "v1"
-new_classes = ["OODAAgent", "AGIBrain"]
+new_sqlite_classes = ["OODAAgent", "AGIBrain"]
 
 # Workers AI via AI Gateway
 [ai]
