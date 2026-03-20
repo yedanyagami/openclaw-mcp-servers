@@ -1,4 +1,4 @@
-name: Claude Code Review
+name: AI Code Review (Groq)
 
 on:
   pull_request:
@@ -7,13 +7,13 @@ on:
     types: [created]
 
 jobs:
-  claude-review:
-    # Run on PRs automatically, or on @claude mentions in issue comments
+  ai-review:
+    # Run on PRs automatically, or on @ai/@review mentions in issue comments
     if: >
       github.event_name == 'pull_request' ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
-       contains(github.event.comment.body, '@claude'))
+       (contains(github.event.comment.body, '@ai') || contains(github.event.comment.body, '@review')))
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,10 +24,60 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Claude Code Review
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          allowed_tools: "Read,Glob,Grep,Bash(node -c *),Bash(npx wrangler deploy --dry-run *)"
-          model: claude-sonnet-4-6
-          timeout_minutes: 10
+      - name: Get PR diff
+        id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+          else
+            PR_NUMBER=${{ github.event.issue.number }}
+          fi
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          gh pr diff "$PR_NUMBER" > /tmp/pr_diff.txt 2>/dev/null || echo "No diff available" > /tmp/pr_diff.txt
+          # Truncate to ~12K chars to fit in Groq context
+          head -c 12000 /tmp/pr_diff.txt > /tmp/pr_diff_truncated.txt
+
+      - name: AI Code Review via Groq
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PR_NUMBER: ${{ steps.diff.outputs.pr_number }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DIFF=$(cat /tmp/pr_diff_truncated.txt | jq -Rs .)
+          PROMPT="You are an expert code reviewer for Cloudflare Workers (JavaScript). Review this PR diff and provide:
+          1. **Summary** — What changed (1-2 sentences)
+          2. **Issues** — Bugs, security issues, or bad patterns (if any)
+          3. **Suggestions** — Improvements (if any)
+          4. **Verdict** — APPROVE / REQUEST_CHANGES / COMMENT
+
+          Keep it concise. Use file:line references where possible. If the diff is clean, say so briefly.
+
+          PR Diff:
+          \`\`\`diff
+          $(cat /tmp/pr_diff_truncated.txt)
+          \`\`\`"
+
+          REVIEW=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Authorization: Bearer $GROQ_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"model\": \"llama-3.3-70b-versatile\",
+              \"messages\": [
+                {\"role\": \"system\", \"content\": \"You are a senior code reviewer specializing in Cloudflare Workers, JavaScript, and cloud security. Be concise and actionable.\"},
+                {\"role\": \"user\", \"content\": $(echo "$PROMPT" | jq -Rs .)}
+              ],
+              \"max_tokens\": 2048,
+              \"temperature\": 0.3
+            }" | jq -r '.choices[0].message.content // "Review failed — check Groq API key"')
+
+          # Post review as PR comment
+          COMMENT="## AI Code Review (Groq llama-3.3-70b)
+
+          $REVIEW
+
+          ---
+          *Automated review by OpenClaw AI Fleet*"
+
+          gh pr comment "$PR_NUMBER" --body "$COMMENT"

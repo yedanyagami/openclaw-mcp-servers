@@ -12,7 +12,7 @@ crons = ["*/15 * * * *"]
 # Workers AI binding via AI Gateway (caching, fallback, cost tracking)
 [ai]
 binding = "AI"
-gateway = { id = "openclaw-ai-gateway" }
+gateway = { id = "default" }
 
 # D1 database (shared with fleet)
 [[d1_databases]]

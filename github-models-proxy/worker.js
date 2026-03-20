@@ -73,6 +73,12 @@ export default {
       });
     }
 
+    // Auth check — all endpoints below require authentication
+    const authToken = request.headers.get('Authorization')?.replace('Bearer ', '');
+    if (!authToken || authToken !== env.AUTH_TOKEN) {
+      return jsonResp({ error: 'Unauthorized' }, 401);
+    }
+
     // List models (OpenAI-compat)
     if (path === '/v1/models') {
       return jsonResp({
@@ -92,12 +98,6 @@ export default {
         stats[model] = { used, limit: MODEL_LIMITS[model], remaining: MODEL_LIMITS[model] - used };
       }
       return jsonResp({ ok: true, stats });
-    }
-
-    // Auth check
-    const authToken = request.headers.get('Authorization')?.replace('Bearer ', '');
-    if (!authToken || authToken !== env.AUTH_TOKEN) {
-      return jsonResp({ error: 'Unauthorized' }, 401);
     }
 
     // Chat completions — the main endpoint

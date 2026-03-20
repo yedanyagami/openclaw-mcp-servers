@@ -8,7 +8,7 @@ VERSION = "1.0.0"
 # Workers AI via AI Gateway
 [ai]
 binding = "AI"
-gateway = { id = "openclaw-ai-gateway" }
+gateway = { id = "default" }
 
 # D1 database (shared)
 [[d1_databases]]

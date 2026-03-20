@@ -1,4 +1,4 @@
-name: Claude Security Review
+name: AI Security Audit (Groq)
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - '**/wrangler.toml'
 
 jobs:
-  security-review:
+  security-audit:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,27 +18,65 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Claude Security Audit
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          direct_prompt: |
-            Security review this PR for OWASP Agentic AI Top 10 vulnerabilities:
-            1. Prompt injection (user input reaching LLM prompts)
-            2. Insecure tool use (command injection via tool parameters)
-            3. Excessive agency (over-permissioned Workers/bindings)
-            4. Insufficient monitoring (missing auth/rate-limit checks)
-            5. Insecure output handling (unvalidated LLM responses used in code)
-            6. Data leakage (secrets in vars, tokens in logs)
-            7. Supply chain (untrusted npm packages, unverified dependencies)
+      - name: Get changed files
+        id: files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          gh pr diff "$PR_NUMBER" > /tmp/pr_diff.txt 2>/dev/null || echo "No diff" > /tmp/pr_diff.txt
+          head -c 12000 /tmp/pr_diff.txt > /tmp/pr_diff_truncated.txt
 
-            Also check for:
-            - SQL injection in D1 queries (non-parameterized)
-            - Missing Authorization header validation
-            - Exposed API tokens in wrangler.toml [vars] (should be secrets)
-            - CORS misconfiguration (overly permissive Allow-Origin)
+      - name: Security Audit via Groq
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PR_NUMBER: ${{ steps.files.outputs.pr_number }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PROMPT="Security audit this Cloudflare Workers PR diff for OWASP Agentic AI Top 10:
 
-            Report findings as: CRITICAL / HIGH / MEDIUM / LOW with file:line references.
-          allowed_tools: "Read,Grep,Glob"
-          model: claude-sonnet-4-6
-          timeout_minutes: 5
+          1. **Prompt Injection** — User input reaching LLM system prompts
+          2. **Insecure Tool Use** — Command injection via tool parameters
+          3. **Excessive Agency** — Over-permissioned Workers/bindings
+          4. **Insufficient Monitoring** — Missing auth/rate-limit checks
+          5. **Insecure Output** — Unvalidated LLM responses used in code
+          6. **Data Leakage** — Secrets in vars, tokens in logs
+          7. **Supply Chain** — Untrusted npm packages
+
+          Also check:
+          - SQL injection in D1 queries (non-parameterized)
+          - Missing Authorization header validation
+          - Exposed API tokens in wrangler.toml [vars]
+          - CORS misconfiguration (overly permissive Allow-Origin)
+
+          Report as: CRITICAL / HIGH / MEDIUM / LOW with file:line refs.
+          If no issues found, say 'No security issues detected.'
+
+          Diff:
+          \`\`\`diff
+          $(cat /tmp/pr_diff_truncated.txt)
+          \`\`\`"
+
+          AUDIT=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Authorization: Bearer $GROQ_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"model\": \"llama-3.3-70b-versatile\",
+              \"messages\": [
+                {\"role\": \"system\", \"content\": \"You are a security auditor specializing in OWASP Agentic AI Top 10, Cloudflare Workers security, and cloud infrastructure hardening. Report only real vulnerabilities with evidence.\"},
+                {\"role\": \"user\", \"content\": $(echo "$PROMPT" | jq -Rs .)}
+              ],
+              \"max_tokens\": 2048,
+              \"temperature\": 0.1
+            }" | jq -r '.choices[0].message.content // "Audit failed — check Groq API key"')
+
+          # Post as PR comment
+          COMMENT="## Security Audit (Groq llama-3.3-70b)
+
+          $AUDIT
+
+          ---
+          *Automated security review by OpenClaw AI Fleet*"
+
+          gh pr comment "$PR_NUMBER" --body "$COMMENT"

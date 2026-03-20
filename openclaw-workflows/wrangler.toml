@@ -16,7 +16,7 @@ class_name = "DeployWorkflow"
 # Workers AI via AI Gateway
 [ai]
 binding = "AI"
-gateway = { id = "openclaw-ai-gateway" }
+gateway = { id = "default" }
 
 # D1 database
 [[d1_databases]]

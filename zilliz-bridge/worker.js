@@ -181,12 +181,17 @@ async function handleSearch(request, env) {
   );
   const allResults = await Promise.all(promises);
 
-  // Merge + deduplicate
+  // Merge + deduplicate (SHA-256 hash for items without an id)
   const seen = new Set();
   const merged = [];
   for (const results of allResults) {
     for (const r of results) {
-      const id = r.id || r._id || JSON.stringify(r).slice(0, 64);
+      let id = r.id || r._id;
+      if (!id) {
+        const raw = JSON.stringify(r);
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+        id = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+      }
       if (!seen.has(id)) {
         seen.add(id);
         merged.push(r);
@@ -231,7 +236,7 @@ async function handleInsert(request, env) {
         continue;
       }
       zillizData.push({
-        id: e.id || `auto-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: e.id || `auto-${crypto.randomUUID()}`,
         vector,
         text: text.slice(0, 500),
         name: (e.name || '').slice(0, 200),
