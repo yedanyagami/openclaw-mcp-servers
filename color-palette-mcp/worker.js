@@ -1202,6 +1202,7 @@ async function handleMCPRequest(body, env, request) {
           version: SERVER_INFO.version,
           vendor: 'OpenClaw Intelligence',
           description: 'Color Palette MCP — design utility for AI agents. Generate palettes, check WCAG contrast, convert colors, create CSS gradients, and look up Tailwind CSS colors.',
+          instructions: 'Generate harmonious color palettes, check WCAG 2.1 contrast compliance, convert between color formats (Hex/RGB/HSL), create CSS gradients, and look up Tailwind colors. Use when: (1) you need a color scheme for a design, (2) you must verify accessibility contrast ratios, (3) you want to convert a hex color to RGB or HSL, (4) you need a CSS gradient, (5) you want the nearest Tailwind color. Example prompts: "Generate a blue palette", "Check contrast for white on #3B82F6", "Convert #FF6B35 to RGB". | 配色方案產生、WCAG 對比度檢查、色彩格式轉換、CSS 漸層、Tailwind 色彩查詢。',
         },
         capabilities: CAPABILITIES,
       },

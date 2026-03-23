@@ -9,7 +9,7 @@
  *   - get_all_fortunes: All 12 signs' fortunes
  */
 
-const SERVER_INFO = { name: 'openclaw-fortune', version: '2.0.1' };
+const SERVER_INFO = { name: 'openclaw-fortune', version: '2.0.1', instructions: 'Daily zodiac horoscopes and tarot card readings for all 12 signs. Multi-category scores (love, work, health, money), lucky numbers, and daily zodiac rankings. Use when: (1) you want today\'s horoscope for a zodiac sign, (2) you need a tarot card reading, (3) you want to see which signs are luckiest today, (4) you need fortune content for a chatbot or app. Example prompts: "What\'s my horoscope for Leo today?", "Draw a tarot card", "Rank all zodiac signs for today". | 每日星座運勢、塔羅牌占卜、幸運數字、12 星座排名。' };
 const CAPABILITIES = { tools: {} };
 const FORTUNE_RATE_LIMIT = 20; // 20 requests/day free
 

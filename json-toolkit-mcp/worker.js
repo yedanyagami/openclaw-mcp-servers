@@ -14,7 +14,7 @@
  * MCP Protocol: 2025-03-26
  */
 
-const SERVER_INFO = { name: 'json-toolkit', version: '1.0.0' };
+const SERVER_INFO = { name: 'json-toolkit', version: '1.0.0', instructions: 'Format, validate, diff, query (JSONPath), transform, and auto-generate JSON Schema. Use when: (1) you receive messy JSON and need to clean it, (2) you need to validate JSON and find exact error locations, (3) you want to compare two JSON documents, (4) you need to query nested data with JSONPath, (5) you want to generate a schema from sample data. Example prompts: "Format this JSON", "Find the error in this JSON", "Compare these two configs". | JSON 格式化、驗證、差異比對、JSONPath 查詢、轉換、Schema 自動產生。6 個工具，免費使用。' };
 const VENDOR = 'OpenClaw Intelligence';
 const CAPABILITIES = { tools: {} };
 const MCP_PROTOCOL_VERSION = '2025-03-26';

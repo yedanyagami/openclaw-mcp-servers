@@ -860,7 +860,7 @@ function handleMCPRequest(req) {
         capabilities: { tools: { listChanged: false } },
         serverInfo: { name: SERVER_INFO.name, version: SERVER_INFO.version },
         instructions:
-          'Regex Engine MCP by OpenClaw Intelligence. Use regex_build to create patterns from descriptions, regex_test to validate them, regex_explain to understand them, regex_replace to transform text, and regex_extract to pull out data.',
+          'Test, explain, build from natural language, replace, and extract with regular expressions. 25+ built-in patterns. Use when: (1) you need to build a regex but don\'t know the syntax, (2) you want to understand what a regex does, (3) you need to extract data from text with patterns, (4) you want to test a regex against sample input, (5) you need find-and-replace with backreferences. Example prompts: "Build a regex for email addresses", "Explain this regex", "Extract all URLs from this text". | 正則表達式測試、解釋、自然語言建立、取代、擷取。25+ 內建模式。',
       });
 
     case 'notifications/initialized':

@@ -14,7 +14,7 @@
  * Vendor: OpenClaw Intelligence
  */
 
-const SERVER_INFO = { name: 'timestamp-converter', version: '1.0.0', vendor: 'OpenClaw Intelligence' };
+const SERVER_INFO = { name: 'timestamp-converter', version: '1.0.0', vendor: 'OpenClaw Intelligence', instructions: 'Convert between Unix timestamps, ISO 8601, and human-readable dates. Handle timezone math, parse cron expressions, calculate time differences, and format durations. Use when: (1) you have a Unix timestamp and need a readable date, (2) you need to convert between timezones, (3) you want to understand a cron schedule, (4) you need the time difference between two dates, (5) you want to format seconds as "2h 30m". Example prompts: "Convert 1711929600 to a date", "What time is 3pm Tokyo in New York?", "Explain this cron: 0 */2 * * *". | 時間戳記轉換、時區計算、Cron 解析、時間差計算、時長格式化。' };
 const CAPABILITIES = { tools: {} };
 
 const ECOSYSTEM = {
