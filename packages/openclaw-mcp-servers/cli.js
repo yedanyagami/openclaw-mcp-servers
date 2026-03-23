@@ -18,8 +18,9 @@ Usage:
   npx openclaw-mcp-servers --claude     Output config for Claude Code
   npx openclaw-mcp-servers --cursor     Output config for Cursor
 
-Free: 3 calls/tool/day. x402: $0.05/call USDC on Base. Pro: $9 one-time.
+Free tier available (no account needed). Pro: $29/mo for all 9 servers.
 Docs: https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers
+Languages: English | 繁體中文 | 日本語
 `);
   process.exit(0);
 }
@@ -81,7 +82,7 @@ if (cmd === '--x402') {
   console.log(`  Currency:  ${data.x402.currency}`);
   console.log(`  Amount:    $${data.x402.amount}/call`);
   console.log(`  Recipient: ${data.x402.recipient}`);
-  console.log('\nFree tier: 3 calls/tool/day per IP');
+  console.log('\nFree tier available. Pro: $29/mo for all 9 servers, 50K calls/month.');
   console.log('After limit: HTTP 402 + X-Payment headers → auto-pay with @x402/fetch');
   process.exit(0);
 }

@@ -1,6 +1,6 @@
 {
   "name": "openclaw-mcp-servers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "49 AI tools across 9 MCP servers on Cloudflare Workers. JSON, regex, colors, timestamps, prompts, market intel, fortune, publishing, AI comparison. Free tier available. Trilingual docs (EN/繁中/JP).",
   "keywords": [
     "mcp",
