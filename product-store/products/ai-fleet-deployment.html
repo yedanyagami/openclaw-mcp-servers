@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Fleet Deployment Kit | AI 艦隊部署套件</title>
+<title>AI Fleet Deployment Kit | AI 艦隊部署套件 | AI フリートデプロイキット</title>
 <style>
   @page { margin: 15mm; }
   body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
@@ -12,6 +12,9 @@
   .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
   pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
   .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .beginner { background: #e3f2fd; border: 2px solid #1a73e8; border-radius: 12px; padding: 24px; margin: 20px 0; }
+  .steps { background: #fafafa; border: 2px solid #e0e0e0; border-radius: 12px; padding: 24px; margin: 20px 0; }
+  .step-num { display: inline-block; width: 36px; height: 36px; background: #1a73e8; color: #fff; border-radius: 50%; text-align: center; line-height: 36px; font-weight: bold; margin-right: 10px; }
   table { border-collapse: collapse; width: 100%; margin: 16px 0; }
   th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
   th { background: #f5f5f5; }
@@ -22,22 +25,71 @@
 <body>
 <h1>AI Fleet Deployment Kit</h1>
 <h1 style="font-size:1.4rem;">AI 艦隊部署套件</h1>
-<p class="subtitle">6 autonomous AI workers on Cloudflare free tier — zero DevOps<br>在 Cloudflare 免費方案上部署 6 個自主 AI 工作者</p>
+<h1 style="font-size:1.4rem;">AI フリートデプロイキット</h1>
+<p class="subtitle">6 autonomous AI workers on Cloudflare free tier — zero DevOps<br>在 Cloudflare 免費方案上部署 6 個自主 AI 工作者<br>Cloudflare 無料プランで6つの自律 AI ワーカーをデプロイ — DevOps 不要</p>
 <p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
 <hr>
 
-<h2>Fleet Overview</h2>
+<!-- What is an AI Fleet? -->
+<div class="beginner">
+<h2 style="border:none; margin-top:0; padding:0; color:#1a73e8;">What is an "AI Fleet"? | 什麼是「AI 艦隊」？ | 「AI フリート」とは？</h2>
+<p><strong>EN:</strong> An "AI fleet" is a team of small, specialized AI programs that each handle one job — like a crew on a ship. Instead of one big AI doing everything, you have multiple lightweight workers: one watches for market trends, one handles customer orders, one monitors system health, one generates content, and so on. Each worker runs on a schedule (every 2-30 minutes) on Cloudflare's free tier, so the entire fleet costs $0/month to operate. Think of it as hiring a 6-person team that works 24/7 and never takes a break.</p>
+<p><strong>繁中：</strong>「AI 艦隊」是一組小型、專門化的 AI 程式，各負責一項工作 — 就像船上的船員。你不需要一個大型 AI 處理所有事情，而是有多個輕量級工作者：一個監看市場趨勢、一個處理客戶訂單、一個監控系統健康、一個產生內容，依此類推。每個工作者按排程（每 2-30 分鐘）在 Cloudflare 免費方案上運作，因此整個艦隊每月營運成本為 $0。可以把它想像成雇用了一個 24/7 全天候工作、永不休息的 6 人團隊。</p>
+<p><strong>日本語：</strong>「AI フリート」とは、それぞれが1つの仕事を担当する小さな専門 AI プログラムのチームです。船の乗組員のようなものです。1つの大きな AI が全てを処理するのではなく、複数の軽量ワーカーがいます。市場トレンドの監視、顧客注文の処理、システムの健全性監視、コンテンツ生成など、それぞれが担当します。各ワーカーは Cloudflare の無料プランで定期的に（2〜30分ごとに）実行されるため、フリート全体の運用コストは月額 $0 です。24時間365日休みなく働く6人チームを雇ったようなものです。</p>
+</div>
+
+<!-- Who is this for? -->
+<div class="beginner">
+<h2 style="border:none; margin-top:0; padding:0; color:#1a73e8;">Who is this for? | 適合誰？ | 誰に向いていますか？</h2>
+<p><strong>EN:</strong></p>
+<ul>
+<li>Developers who want ready-to-deploy worker templates instead of building from scratch</li>
+<li>Anyone who wants autonomous monitoring, alerting, and task execution for their projects</li>
+<li>Indie hackers who need a free, self-healing infrastructure backbone</li>
+<li>Teams exploring serverless multi-agent architectures on Cloudflare</li>
+</ul>
+<p><strong>繁中：</strong></p>
+<ul>
+<li>想要即可部署的 Worker 模板、而非從零開始的開發者</li>
+<li>想要為專案建立自主監控、警報和任務執行的任何人</li>
+<li>需要免費、自我修復基礎設施骨幹的獨立創業者</li>
+<li>正在探索 Cloudflare 上無伺服器多代理架構的團隊</li>
+</ul>
+<p><strong>日本語：</strong></p>
+<ul>
+<li>ゼロから構築するのではなく、デプロイ可能なワーカーテンプレートが欲しい開発者</li>
+<li>プロジェクトに自律的な監視・アラート・タスク実行を導入したい方</li>
+<li>無料で自己修復するインフラ基盤が必要なインディーハッカー</li>
+<li>Cloudflare 上のサーバーレス・マルチエージェントアーキテクチャを検討しているチーム</li>
+</ul>
+</div>
+
+<!-- 3 Steps to Get Started -->
+<div class="steps">
+<h2 style="border:none; margin-top:0; padding:0; color:#1a73e8;">3 Steps to Get Started | 3 步驟開始 | 3ステップで始める</h2>
+<p><span class="step-num">1</span><strong>Clone and configure</strong> — Clone the template repo, create your D1 database and KV namespace, and run the setup script with your IDs.<br>
+<em>複製模板存儲庫，建立 D1 資料庫和 KV 命名空間，然後使用你的 ID 執行設定腳本。</em><br>
+<em>テンプレートリポジトリをクローンし、D1 データベースと KV ネームスペースを作成し、セットアップスクリプトを実行します。</em></p>
+<p><span class="step-num">2</span><strong>Deploy all 6 workers</strong> — Run <code>./deploy.sh</code> to push all workers to Cloudflare in under 5 minutes. Set FLEET_AUTH_TOKEN for security.<br>
+<em>執行 <code>./deploy.sh</code>，在 5 分鐘內將所有工作者推送到 Cloudflare。設定 FLEET_AUTH_TOKEN 以確保安全。</em><br>
+<em><code>./deploy.sh</code> を実行して5分以内に全ワーカーを Cloudflare にデプロイします。セキュリティのため FLEET_AUTH_TOKEN を設定します。</em></p>
+<p><span class="step-num">3</span><strong>Verify and customize</strong> — Check /health on each worker, then customize the cron schedules, intel sources, and alert channels to fit your needs.<br>
+<em>檢查每個工作者的 /health，然後自訂 cron 排程、情報來源和警報管道。</em><br>
+<em>各ワーカーの /health を確認し、cron スケジュール、インテリジェンスソース、アラートチャネルを必要に応じてカスタマイズします。</em></p>
+</div>
+
+<h2>Fleet Overview | 艦隊概覽 | フリート概要</h2>
 <table>
-<tr><th>Worker</th><th>Role</th><th>Cron</th><th>Key Features</th></tr>
-<tr><td>Orchestrator</td><td>Commander</td><td>*/15 min</td><td>OODA loop, task dispatch, confidence scoring</td></tr>
-<tr><td>Intel Ops</td><td>Scout</td><td>*/30 min</td><td>5-source intel sweep, AI analysis</td></tr>
-<tr><td>Cloud Executor</td><td>Soldier</td><td>*/2 min</td><td>Task execution, lesson recording</td></tr>
-<tr><td>Health Commander</td><td>Medic</td><td>*/10 min</td><td>Endpoint monitoring, auto-restart, SLA</td></tr>
-<tr><td>Revenue Sentinel</td><td>CFO</td><td>*/3 hr</td><td>Order detection, income tracking, alerts</td></tr>
-<tr><td>Content Engine</td><td>Marketing</td><td>2x daily</td><td>AI content generation, social media</td></tr>
+<tr><th>Worker</th><th>Role | 角色 | 役割</th><th>Cron</th><th>Key Features | 主要功能 | 主な機能</th></tr>
+<tr><td>Orchestrator</td><td>Commander | 指揮官 | 司令官</td><td>*/15 min</td><td>OODA loop, task dispatch, confidence scoring | OODA 迴圈、任務分發 | OODA ループ、タスク配信、信頼度スコアリング</td></tr>
+<tr><td>Intel Ops</td><td>Scout | 偵察兵 | 偵察兵</td><td>*/30 min</td><td>5-source intel sweep, AI analysis | 5 源情報掃描 | 5ソースのインテリジェンス収集、AI 分析</td></tr>
+<tr><td>Cloud Executor</td><td>Soldier | 戰士 | 実行兵</td><td>*/2 min</td><td>Task execution, lesson recording | 任務執行、學習紀錄 | タスク実行、学習記録</td></tr>
+<tr><td>Health Commander</td><td>Medic | 醫官 | 衛生兵</td><td>*/10 min</td><td>Endpoint monitoring, auto-restart, SLA | 端點監控、自動重啟 | エンドポイント監視、自動復旧、SLA</td></tr>
+<tr><td>Revenue Sentinel</td><td>CFO | 財務長 | CFO</td><td>*/3 hr</td><td>Order detection, income tracking, alerts | 訂單偵測、收入追蹤 | 注文検出、収益追跡、アラート</td></tr>
+<tr><td>Content Engine</td><td>Marketing | 行銷 | マーケティング</td><td>2x daily</td><td>AI content generation, social media | AI 內容生成 | AI コンテンツ生成、SNS</td></tr>
 </table>
 
-<h2>1. Quick Start (5 Minutes)</h2>
+<h2>1. Quick Start (5 Minutes) | 快速開始 | クイックスタート</h2>
 <pre><code># 1. Clone the templates
 git clone https://github.com/YOUR/fleet-templates.git
 cd fleet-templates
@@ -67,7 +119,7 @@ done</code></pre>
 
 <h2>2. Worker Templates</h2>
 
-<h3>2.1 Health Commander — Self-Healing Pattern</h3>
+<h3>2.1 Health Commander — Self-Healing Pattern | 自我修復模式 | 自己修復パターン</h3>
 <pre><code>// health-commander/worker.js
 const ENDPOINTS = [
   { name: 'orchestrator', url: 'https://my-orchestrator.YOUR.workers.dev/health' },
@@ -114,13 +166,13 @@ export default {
     const failures = results.filter(r => !r.ok);
     if (failures.length > 0) {
       await sendTelegram(env,
-        `🚨 Fleet Health Alert\n${failures.map(f => `❌ ${f.name}: ${f.error || f.status}`).join('\n')}`
+        `Fleet Health Alert\n${failures.map(f => `FAIL ${f.name}: ${f.error || f.status}`).join('\n')}`
       );
     }
   },
 };</code></pre>
 
-<h3>2.2 Revenue Sentinel — Order Detection</h3>
+<h3>2.2 Revenue Sentinel — Order Detection | 訂單偵測 | 注文検出</h3>
 <pre><code>// revenue-sentinel/worker.js
 export default {
   async scheduled(event, env) {
@@ -144,7 +196,7 @@ export default {
         ).run();
 
         await sendTelegram(env,
-          `💰 New Order: $${charge.amount / 100} — ${charge.metadata?.product_id || 'unknown'}`
+          `New Order: $${charge.amount / 100} — ${charge.metadata?.product_id || 'unknown'}`
         );
       }
     }
@@ -157,7 +209,7 @@ export default {
       ).bind(`${today}%`).first();
 
       await sendTelegram(env,
-        `📊 Daily Revenue: $${daily.total || 0} (${daily.orders || 0} orders)`
+        `Daily Revenue: $${daily.total || 0} (${daily.orders || 0} orders)`
       );
     }
   },
@@ -250,6 +302,7 @@ async function handleDashboard(env) {
 <div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
 <h2>Thank you for your purchase!</h2>
 <p>感謝您的購買！</p>
+<p>ご購入ありがとうございます！</p>
 <p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
 <p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
 </div>

@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Agent Builder Kit | AI 代理建置套件</title>
+<title>AI Agent Builder Kit | AI 代理建置套件 | AIエージェントビルダーキット</title>
 <style>
   @page { margin: 15mm; }
-  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
   h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
   h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
   h3 { color: #444; margin-top: 30px; }
@@ -17,26 +17,51 @@
   th { background: #f5f5f5; }
   hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
   .notice { text-align: center; color: #999; font-size: 0.85rem; }
+  .who-box { background: #f0f8ff; border: 2px solid #1a73e8; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .who-box h3 { color: #1a73e8; margin-top: 0; }
+  .steps-box { background: #f0fff0; border: 2px solid #4caf50; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .steps-box h3 { color: #2e7d32; margin-top: 0; }
 </style>
 </head>
 <body>
 <h1>AI Agent Builder Kit</h1>
 <h1 style="font-size:1.4rem;">AI 代理建置套件</h1>
-<p class="subtitle">Build and deploy MCP servers with auth, rate limiting, landing pages, and monetization<br>包含驗證、速率限制、著陸頁及變現流程的完整 MCP 伺服器模板</p>
-<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<h1 style="font-size:1.4rem;">AIエージェントビルダーキット</h1>
+<p class="subtitle">Build and deploy MCP servers with auth, rate limiting, landing pages, and monetization<br>包含驗證、速率限制、著陸頁及變現流程的完整 MCP 伺服器模板<br>認証・レート制限・ランディングページ・収益化を備えたMCPサーバーの構築とデプロイ</p>
+<p class="notice">For authorized purchasers only. | 僅限正式購買者。| 正規購入者限定。 &copy; 2026 OpenClaw Intelligence</p>
 <hr>
 
-<h2>Part 1: Advanced MCP Server Architecture</h2>
+<div class="who-box">
+<h3>Who is this for? | 適合誰？ | 誰に向いていますか？</h3>
+<ul>
+<li><strong>EN:</strong> Developers who already understand the basics of MCP and want to go further — building production-grade servers with authentication, payment integration, and marketplace publishing. Ideal if you have completed the MCP Starter Kit or have equivalent experience.</li>
+<li><strong>繁中:</strong> 已經了解 MCP 基礎，想更進一步的開發者——建立具備驗證、付款整合和市集發布功能的正式級伺服器。適合已完成 MCP 入門套件或具備同等經驗的人。</li>
+<li><strong>日本語:</strong> MCPの基礎を理解しており、さらに先に進みたい開発者の方へ。認証、決済連携、マーケットプレイス公開を備えた本番レベルのサーバーを構築します。MCPスターターキットを完了した方、または同等の経験をお持ちの方に最適です。</li>
+</ul>
+</div>
 
-<h3>1.1 Multi-Tool Server Pattern</h3>
+<div class="steps-box">
+<h3>3 Steps to Get Started | 3 步驟開始 | 3ステップで始める</h3>
+<ol>
+<li><strong>Set up the multi-tool server (20 min)</strong> | 建立多工具伺服器（20 分鐘）| マルチツールサーバーを構築（20分）<br>Copy the tool registry pattern from Part 1 and register your custom tools.</li>
+<li><strong>Add auth + payments (30 min)</strong> | 加入驗證和付款（30 分鐘）| 認証と決済を追加（30分）<br>Use the three-tier auth layer and Stripe webhook handler from Parts 1 and 3.</li>
+<li><strong>Publish to Smithery (10 min)</strong> | 發布到 Smithery（10 分鐘）| Smitheryに公開（10分）<br>Follow the Smithery publishing guide in Part 2 to list your server on the marketplace.</li>
+</ol>
+</div>
+
+<h2>Part 1: Advanced MCP Server Architecture | 進階 MCP 伺服器架構 | 高度なMCPサーバーアーキテクチャ</h2>
+
+<h3>1.1 Multi-Tool Server Pattern | 多工具伺服器模式 | マルチツールサーバーパターン</h3>
 <pre><code>// Production pattern: Tool registry with dynamic routing
+// 正式環境模式：工具註冊表與動態路由
+// 本番パターン：ツールレジストリと動的ルーティング
 const TOOL_REGISTRY = new Map();
 
 function registerTool(name, schema, handler) {
   TOOL_REGISTRY.set(name, { schema, handler });
 }
 
-// Register tools
+// Register tools | 註冊工具 | ツールを登録
 registerTool('search', {
   description: 'Search the knowledge base',
   inputSchema: {
@@ -69,7 +94,7 @@ registerTool('analyze', {
   return await callLLM(env, args.data, args.perspective || 'technical');
 });
 
-// Dynamic tool call routing
+// Dynamic tool call routing | 動態工具呼叫路由 | 動的ツール呼び出しルーティング
 async function handleToolCall(params, env, rateLimit) {
   const tool = TOOL_REGISTRY.get(params.name);
   if (!tool) throw new Error(`Unknown tool: ${params.name}`);
@@ -78,8 +103,10 @@ async function handleToolCall(params, env, rateLimit) {
   return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
 }</code></pre>
 
-<h3>1.2 Authentication Layer</h3>
+<h3>1.2 Authentication Layer | 驗證層 | 認証レイヤー</h3>
 <pre><code>// Three-tier auth: Public → Free → Pro
+// 三層驗證：匿名 → 免費 → 專業版
+// 3段階認証：匿名 → 無料 → プロ
 async function authenticate(request, env) {
   const apiKey = request.headers.get('X-API-Key') || '';
 
@@ -106,8 +133,10 @@ async function authenticate(request, env) {
   return { tier: 'invalid', limit: 0, features: [] };
 }</code></pre>
 
-<h3>1.3 Landing Page Template</h3>
+<h3>1.3 Landing Page Template | 著陸頁模板 | ランディングページテンプレート</h3>
 <pre><code>// Conversion-optimized landing page (dark mode, mobile-ready)
+// 轉換率優化著陸頁（深色模式、行動裝置適配）
+// コンバージョン最適化ランディングページ（ダークモード、モバイル対応）
 const LANDING_HTML = `&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -146,11 +175,11 @@ const LANDING_HTML = `&lt;!DOCTYPE html&gt;
 &lt;/body&gt;
 &lt;/html&gt;`;</code></pre>
 
-<h2>Part 2: Smithery Publishing Guide</h2>
+<h2>Part 2: Smithery Publishing Guide | Smithery 發布指南 | Smithery公開ガイド</h2>
 
-<h3>2.1 Prepare Your Server</h3>
+<h3>2.1 Prepare Your Server | 準備你的伺服器 | サーバーを準備する</h3>
 <table>
-<tr><th>Requirement</th><th>Status</th><th>How to Check</th></tr>
+<tr><th>Requirement | 需求 | 要件</th><th>Status</th><th>How to Check | 檢查方式 | 確認方法</th></tr>
 <tr><td>JSON-RPC 2.0 compliant</td><td>Required</td><td>Test with curl POST</td></tr>
 <tr><td>initialize method</td><td>Required</td><td>Returns protocolVersion</td></tr>
 <tr><td>tools/list method</td><td>Required</td><td>Returns tool schemas</td></tr>
@@ -159,8 +188,10 @@ const LANDING_HTML = `&lt;!DOCTYPE html&gt;
 <tr><td>Response &lt; 30s</td><td>Required</td><td>Add timeouts to external calls</td></tr>
 </table>
 
-<h3>2.2 Submit to Smithery</h3>
+<h3>2.2 Submit to Smithery | 提交到 Smithery | Smitheryに提出する</h3>
 <pre><code># 1. Create smithery.yaml in your repo root
+# 在倉庫根目錄建立 smithery.yaml
+# リポジトリのルートに smithery.yaml を作成
 name: your-mcp-server
 description: "Clear description for AI to understand capabilities"
 author: your-github-username
@@ -179,17 +210,19 @@ pricing:
 # 4. Smithery auto-detects smithery.yaml
 # 5. Your server appears in the marketplace within 24h</code></pre>
 
-<div class="tip">Smithery tip: The tool description is critical — AI clients like Claude Code read it to decide whether to use your tool. Be specific about inputs, outputs, and use cases.</div>
+<div class="tip">Smithery tip: The tool description is critical — AI clients like Claude Code read it to decide whether to use your tool. Be specific about inputs, outputs, and use cases.<br>
+Smithery 提示：工具描述至關重要——AI 用戶端會讀取它來決定是否使用你的工具。<br>
+Smitheryのヒント：ツールの説明は非常に重要です。AIクライアントがツールを使うかどうか判断するために読みます。入力、出力、ユースケースを具体的に記述してください。</div>
 
-<h2>Part 3: Monetization Playbook</h2>
+<h2>Part 3: Monetization Playbook | 變現手冊 | 収益化プレイブック</h2>
 
-<h3>3.1 Payment Integration (Stripe)</h3>
-<pre><code>// Stripe webhook handler
+<h3>3.1 Payment Integration (Stripe) | 付款整合 | 決済連携（Stripe）</h3>
+<pre><code>// Stripe webhook handler | Stripe Webhook 處理器 | Stripe Webhookハンドラー
 async function handleStripeWebhook(request, env) {
   const signature = request.headers.get('stripe-signature');
   const body = await request.text();
 
-  // Verify signature
+  // Verify signature | 驗證簽名 | 署名を検証
   const isValid = await verifyStripeSignature(body, signature, env.STRIPE_WEBHOOK_SECRET);
   if (!isValid) return new Response('Invalid signature', { status: 401 });
 
@@ -199,32 +232,33 @@ async function handleStripeWebhook(request, env) {
     const session = event.data.object;
     const email = session.customer_email;
 
-    // Generate Pro API key
+    // Generate Pro API key | 生成專業版 API 金鑰 | プロAPIキーを生成
     const apiKey = 'pro_' + crypto.randomUUID().replace(/-/g, '');
     await env.KV.put(`prokey:${apiKey}`, JSON.stringify({
       email, plan: 'pro', created: new Date().toISOString(),
       calls_per_day: 1000,
     }), { expirationTtl: 365 * 86400 });
 
-    // Send key via email (using your email API)
+    // Send key via email | 透過電子郵件發送金鑰 | メールでキーを送信
     await sendEmail(env, email, 'Your Pro API Key', `Your key: ${apiKey}`);
   }
 
   return new Response('OK');
 }</code></pre>
 
-<h3>3.2 Revenue Optimization</h3>
+<h3>3.2 Revenue Optimization | 營收優化 | 収益最適化</h3>
 <ul>
-<li><strong>Upsell in free responses</strong> — "Free: 3/day. Pro: 1000/day for $9" (3x conversion rate)</li>
-<li><strong>Feature gating</strong> — Advanced tools only for Pro users</li>
-<li><strong>Usage dashboard</strong> — Show remaining calls to create urgency</li>
-<li><strong>Annual option</strong> — $79/year vs $9/month = 27% savings, better retention</li>
+<li><strong>Upsell in free responses</strong> | 在免費回應中推銷 | 無料レスポンスでアップセル — "Free: 3/day. Pro: 1000/day for $9" (3x conversion rate)</li>
+<li><strong>Feature gating</strong> | 功能門檻 | 機能制限 — Advanced tools only for Pro users</li>
+<li><strong>Usage dashboard</strong> | 使用量儀表板 | 使用状況ダッシュボード — Show remaining calls to create urgency</li>
+<li><strong>Annual option</strong> | 年繳選項 | 年間プラン — $79/year vs $9/month = 27% savings, better retention</li>
 </ul>
 
 <hr>
 <div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
 <h2>Thank you for your purchase!</h2>
 <p>感謝您的購買！</p>
+<p>ご購入いただきありがとうございます！</p>
 <p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
 <p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
 </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>How to Build a 24/7 AI System | 打造 24 小時運作的 AI 系統</title>
+<title>How to Build a 24/7 AI System | 打造 24 小時運作的 AI 系統 | 24時間稼働AIシステムの構築方法</title>
 <style>
   @page { margin: 15mm; }
   * { box-sizing: border-box; }
@@ -25,35 +25,66 @@
   .toc { background: #f0f4ff; padding: 20px 30px; border-radius: 8px; margin: 20px 0; }
   .toc a { color: #1a73e8; text-decoration: none; }
   .toc li { margin: 6px 0; }
+  .who-box { background: #f0f8ff; border: 2px solid #1a73e8; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .who-box h3 { color: #1a73e8; margin-top: 0; }
+  .steps-box { background: #f0fff0; border: 2px solid #4caf50; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .steps-box h3 { color: #2e7d32; margin-top: 0; }
+  .explain-box { background: #fffde7; border-left: 4px solid #fbc02d; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
 </style>
 </head>
 <body>
 <h1>How to Build a 24/7 AI System</h1>
 <h1 style="font-size:1.5rem;">打造 24 小時運作的 AI 系統</h1>
-<p class="subtitle">Claude Code x OpenClaw — From Zero to Always-On AI<br>從零開始的實作指南 | Under $8/month</p>
-<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<h1 style="font-size:1.5rem;">24時間稼働AIシステムの構築方法</h1>
+<p class="subtitle">Claude Code x OpenClaw — From Zero to Always-On AI<br>從零開始的實作指南 | ゼロから始める実践ガイド | Under $8/month</p>
+<p class="notice">For authorized purchasers only. | 僅限正式購買者閱覽。| 正規購入者限定。 &copy; 2026 OpenClaw Intelligence</p>
 <hr>
 
-<div class="toc">
-<strong>Table of Contents | 目錄</strong>
+<div class="who-box">
+<h3>Who is this for? | 適合誰？ | 誰に向いていますか？</h3>
+<ul>
+<li><strong>EN:</strong> Developers, indie hackers, and solopreneurs who want their AI to work for them around the clock — even while they sleep. No prior cloud or DevOps experience required.</li>
+<li><strong>繁中:</strong> 想讓 AI 全天候為你工作的開發者、獨立創業者和副業者。不需要雲端或 DevOps 經驗，從零開始手把手教學。</li>
+<li><strong>日本語:</strong> AIを24時間自分のために働かせたい開発者、個人開発者、副業をお探しの方に最適です。クラウドやDevOpsの経験は不要です。ゼロから丁寧にご案内します。</li>
+</ul>
+</div>
+
+<div class="explain-box">
+<h3>What does "24/7 AI System" actually mean? | 「24 小時 AI 系統」到底是什麼？ | 「24時間AIシステム」とは具体的に何ですか？</h3>
+<p><strong>EN:</strong> A "24/7 AI system" is a set of small programs (called Workers and agents) that run on cloud servers automatically, without you needing to be at your computer. They can: monitor websites for news, analyze data, send you Telegram alerts, and more — all on a schedule you define. Think of it as a digital assistant that never sleeps.</p>
+<p><strong>繁中:</strong> 「24 小時 AI 系統」是一組在雲端伺服器上自動執行的小程式（稱為 Workers 和代理），不需要你坐在電腦前。它們可以：監控網站新聞、分析資料、傳送 Telegram 通知等——全部按照你設定的排程運行。就像一個永遠不會睡覺的數位助手。</p>
+<p><strong>日本語:</strong> 「24時間AIシステム」とは、クラウドサーバー上で自動的に動作する小さなプログラム群（WorkerやAgentと呼ばれます）のことです。パソコンの前にいなくても、ウェブサイトの監視、データ分析、Telegram通知の送信などを、設定したスケジュールで自動実行します。眠らないデジタルアシスタントのようなものです。</p>
+</div>
+
+<div class="steps-box">
+<h3>3 Steps to Get Started | 3 步驟開始 | 3ステップで始める</h3>
 <ol>
-<li><a href="#ch1">Chapter 1: Environment Setup (WSL2 + OpenClaw)</a></li>
-<li><a href="#ch2">Chapter 2: Your First AI Agent</a></li>
-<li><a href="#ch3">Chapter 3: Cron Automation — 24/7 Operations</a></li>
-<li><a href="#ch4">Chapter 4: Telegram Integration — Control from Anywhere</a></li>
-<li><a href="#ch5">Chapter 5: Cloudflare Workers — Serverless Edge AI</a></li>
-<li><a href="#ch6">Chapter 6: Monitoring &amp; Self-Healing</a></li>
-<li><a href="#ch7">Chapter 7: Real-World Troubleshooting</a></li>
-<li><a href="#ch8">Chapter 8: Scaling to Production</a></li>
+<li><strong>Set up your environment (30 min)</strong> | 環境建置（30 分鐘）| 環境構築（30分）<br>Install Node.js and create a free Cloudflare account. That's all you need.</li>
+<li><strong>Build your first agent (1 hour)</strong> | 建立第一個代理（1 小時）| 最初のエージェントを作る（1時間）<br>Copy and customize the templates in Chapter 2 to create an AI agent that monitors the web for you.</li>
+<li><strong>Deploy and automate (15 min)</strong> | 部署並自動化（15 分鐘）| デプロイして自動化（15分）<br>Run one command to deploy. Your AI agent is now live 24/7 at zero cost.</li>
 </ol>
 </div>
 
-<div class="cost">Total Monthly Cost: $0-8 (free tier for everything except optional Claude API)</div>
+<div class="toc">
+<strong>Table of Contents | 目錄 | 目次</strong>
+<ol>
+<li><a href="#ch1">Chapter 1: Environment Setup | 環境建置 | 環境構築</a></li>
+<li><a href="#ch2">Chapter 2: Your First AI Agent | 你的第一個 AI 代理 | 初めてのAIエージェント</a></li>
+<li><a href="#ch3">Chapter 3: Cron Automation | Cron 自動化 | Cron自動化</a></li>
+<li><a href="#ch4">Chapter 4: Telegram Integration | Telegram 整合 | Telegram連携</a></li>
+<li><a href="#ch5">Chapter 5: Cloudflare Workers | Serverless Edge AI | サーバーレスEdge AI</a></li>
+<li><a href="#ch6">Chapter 6: Monitoring &amp; Self-Healing | 監控與自我修復 | 監視と自己修復</a></li>
+<li><a href="#ch7">Chapter 7: Real-World Troubleshooting | 疑難排解 | トラブルシューティング</a></li>
+<li><a href="#ch8">Chapter 8: Scaling to Production | 擴展到正式環境 | 本番環境へのスケーリング</a></li>
+</ol>
+</div>
 
-<h2 id="ch1">Chapter 1: Environment Setup | 環境建置</h2>
+<div class="cost">Total Monthly Cost | 毎月の合計費用: $0-8 (free tier for everything except optional Claude API)</div>
+
+<h2 id="ch1">Chapter 1: Environment Setup | 環境建置 | 環境構築</h2>
 <p>We'll set up a complete AI development environment using WSL2 on Windows or native Linux. This takes about 30 minutes.</p>
 
-<h3>1.1 Prerequisites | 前置需求</h3>
+<h3>1.1 Prerequisites | 前置需求 | 前提条件</h3>
 <table>
 <tr><th>Component</th><th>Version</th><th>Cost</th></tr>
 <tr><td>Node.js</td><td>20+ LTS</td><td>Free</td></tr>
@@ -78,7 +109,7 @@ node --version  # Should show v20.x.x</code></pre>
 wrangler login  # Opens browser for OAuth
 wrangler whoami  # Verify: should show your account</code></pre>
 
-<h3>1.4 Project Structure</h3>
+<h3>1.4 Project Structure | 專案結構 | プロジェクト構成</h3>
 <pre><code>~/my-ai-system/
 ├── agents/           # AI agent configurations
 │   ├── main.json     # Primary agent config
@@ -91,11 +122,13 @@ wrangler whoami  # Verify: should show your account</code></pre>
 │   └── deploy.sh
 └── .env              # API keys (NEVER commit this)</code></pre>
 
-<div class="tip">Tip: Keep all API keys in <span class="inline-code">.env</span> and add it to <span class="inline-code">.gitignore</span>. Never hardcode secrets.</div>
+<div class="tip">Tip: Keep all API keys in <span class="inline-code">.env</span> and add it to <span class="inline-code">.gitignore</span>. Never hardcode secrets.<br>
+提示：將所有 API 金鑰放在 .env 並加入 .gitignore，絕對不要寫死在程式碼裡。<br>
+ヒント：全てのAPIキーは .env に保存し、.gitignore に追加してください。コード内にハードコードしないでください。</div>
 
-<h2 id="ch2">Chapter 2: Your First AI Agent | 你的第一個 AI 代理</h2>
+<h2 id="ch2">Chapter 2: Your First AI Agent | 你的第一個 AI 代理 | 初めてのAIエージェント</h2>
 
-<h3>2.1 Understanding the Agent Loop</h3>
+<h3>2.1 Understanding the Agent Loop | 理解代理迴圈 | エージェントループを理解する</h3>
 <p>Every AI agent follows a simple loop:</p>
 <pre><code>while (running) {
   // 1. OBSERVE — Gather information
@@ -114,7 +147,7 @@ wrangler whoami  # Verify: should show your account</code></pre>
   await sleep(INTERVAL);
 }</code></pre>
 
-<h3>2.2 Building a Market Intel Agent</h3>
+<h3>2.2 Building a Market Intel Agent | 建立市場情報代理 | マーケットインテルエージェントの構築</h3>
 <p>Let's build a real agent that monitors HackerNews for AI trends:</p>
 <pre><code>// agents/intel-agent.js
 const SOURCES = {
@@ -172,9 +205,11 @@ Stories: ${JSON.stringify(stories, null, 2)}`;
   return response.json();
 }</code></pre>
 
-<div class="tip">Tip: Groq offers free API access with 120 RPM for llama-3.3-70b. Perfect for automation.</div>
+<div class="tip">Tip: Groq offers free API access with 120 RPM for llama-3.3-70b. Perfect for automation.<br>
+提示：Groq 提供免費 API，llama-3.3-70b 可達 120 RPM，非常適合自動化。<br>
+ヒント：Groqは llama-3.3-70b に120RPMの無料APIアクセスを提供しています。自動化に最適です。</div>
 
-<h3>2.3 Free LLM Providers (2026)</h3>
+<h3>2.3 Free LLM Providers (2026) | 免費 LLM 供應商 | 無料LLMプロバイダー</h3>
 <table>
 <tr><th>Provider</th><th>Model</th><th>Free Tier</th><th>Best For</th></tr>
 <tr><td>Groq</td><td>llama-3.3-70b</td><td>30 RPM / 120 with rotation</td><td>Fast analysis</td></tr>
@@ -183,9 +218,9 @@ Stories: ${JSON.stringify(stories, null, 2)}`;
 <tr><td>Cloudflare AI</td><td>Various</td><td>10K tokens/day</td><td>Edge inference</td></tr>
 </table>
 
-<h2 id="ch3">Chapter 3: Cron Automation | Cron 自動化</h2>
+<h2 id="ch3">Chapter 3: Cron Automation | Cron 自動化 | Cron自動化</h2>
 
-<h3>3.1 Understanding Cron Expressions</h3>
+<h3>3.1 Understanding Cron Expressions | 理解 Cron 表達式 | Cron式を理解する</h3>
 <pre><code># Format: minute hour day-of-month month day-of-week
 # ┌───────── minute (0-59)
 # │ ┌─────── hour (0-23)
@@ -220,12 +255,14 @@ export default {
 
     // Alert via Telegram if high-value intel found
     if (analysis.highPriority) {
-      await sendTelegram(env, `🚨 High-value intel detected:\n${analysis.summary}`);
+      await sendTelegram(env, `High-value intel detected:\n${analysis.summary}`);
     }
   },
 };</code></pre>
 
-<div class="cost">Cost: $0 — Cloudflare Workers free plan includes 100,000 requests/day + cron triggers</div>
+<div class="cost">Cost: $0 — Cloudflare Workers free plan includes 100,000 requests/day + cron triggers<br>
+費用：$0 — Cloudflare Workers 免費方案包含每日 10 萬次請求 + Cron 排程<br>
+費用：$0 — Cloudflare Workers無料プランには1日10万リクエスト + Cronトリガーが含まれます</div>
 
 <h3>3.3 Systemd Cron (Linux/WSL2)</h3>
 <p>For tasks that need full Node.js runtime:</p>
@@ -246,9 +283,9 @@ systemctl --user enable ai-intel.timer
 systemctl --user start ai-intel.timer
 systemctl --user list-timers  # Verify</code></pre>
 
-<h2 id="ch4">Chapter 4: Telegram Integration | Telegram 整合</h2>
+<h2 id="ch4">Chapter 4: Telegram Integration | Telegram 整合 | Telegram連携</h2>
 
-<h3>4.1 Create Your Bot</h3>
+<h3>4.1 Create Your Bot | 建立你的機器人 | ボットを作成する</h3>
 <ol>
 <li>Message <span class="inline-code">@BotFather</span> on Telegram</li>
 <li>Send <span class="inline-code">/newbot</span>, give it a name</li>
@@ -256,7 +293,7 @@ systemctl --user list-timers  # Verify</code></pre>
 <li>Get your chat ID: message <span class="inline-code">@userinfobot</span></li>
 </ol>
 
-<h3>4.2 Send Alerts from Your Agent</h3>
+<h3>4.2 Send Alerts from Your Agent | 從代理發送通知 | エージェントからアラートを送信する</h3>
 <pre><code>async function sendTelegram(env, text) {
   const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
   await fetch(url, {
@@ -271,9 +308,11 @@ systemctl --user list-timers  # Verify</code></pre>
 }</code></pre>
 
 <div class="warn">Warning: Store your bot token as a Wrangler secret, NEVER in source code:<br>
-<span class="inline-code">npx wrangler secret put TELEGRAM_BOT_TOKEN</span></div>
+<span class="inline-code">npx wrangler secret put TELEGRAM_BOT_TOKEN</span><br>
+警告：Bot token 必須用 Wrangler secret 儲存，絕對不要寫在程式碼裡。<br>
+警告：ボットトークンはWrangler secretとして保存し、ソースコードに書かないでください。</div>
 
-<h3>4.3 Receive Commands</h3>
+<h3>4.3 Receive Commands | 接收指令 | コマンドを受信する</h3>
 <pre><code>// Handle incoming Telegram webhook
 async function handleTelegramWebhook(request, env) {
   const update = await request.json();
@@ -298,9 +337,9 @@ async function handleTelegramWebhook(request, env) {
   return new Response('OK');
 }</code></pre>
 
-<h2 id="ch5">Chapter 5: Cloudflare Workers | Serverless Edge AI</h2>
+<h2 id="ch5">Chapter 5: Cloudflare Workers | Serverless Edge AI | サーバーレスEdge AI</h2>
 
-<h3>5.1 Your First Worker</h3>
+<h3>5.1 Your First Worker | 你的第一個 Worker | 初めてのWorker</h3>
 <pre><code># Create a new worker
 mkdir my-ai-worker && cd my-ai-worker
 npx wrangler init
@@ -319,7 +358,7 @@ database_id = "your-db-id"
 binding = "KV"
 id = "your-kv-id"</code></pre>
 
-<h3>5.2 D1 Database (SQLite at the Edge)</h3>
+<h3>5.2 D1 Database (SQLite at the Edge) | D1 資料庫 | D1データベース</h3>
 <pre><code># Create database
 npx wrangler d1 create my-ai-db
 
@@ -335,7 +374,7 @@ npx wrangler d1 execute my-ai-db --command "
   CREATE INDEX idx_reports_date ON intel_reports(created_at);
 "</code></pre>
 
-<h3>5.3 KV Storage (Key-Value at the Edge)</h3>
+<h3>5.3 KV Storage (Key-Value at the Edge) | KV 儲存 | KVストレージ</h3>
 <pre><code># Create namespace
 npx wrangler kv namespace create "CACHE"
 
@@ -347,9 +386,9 @@ await env.KV.put('latest-report', JSON.stringify(report), { expirationTtl: 3600 
 const cached = await env.KV.get('latest-report', { type: 'json' });
 if (cached) return cached;  // Cache hit!</code></pre>
 
-<div class="cost">Free Tier Limits: D1 = 5M rows read, 100K writes/day | KV = 100K reads, 1K writes/day</div>
+<div class="cost">Free Tier Limits | 免費方案限制 | 無料プラン制限: D1 = 5M rows read, 100K writes/day | KV = 100K reads, 1K writes/day</div>
 
-<h3>5.4 Deploy</h3>
+<h3>5.4 Deploy | 部署 | デプロイ</h3>
 <pre><code># Deploy to production
 npx wrangler deploy
 
@@ -360,9 +399,9 @@ npx wrangler deploy
 npx wrangler secret put GROQ_API_KEY
 npx wrangler secret put TELEGRAM_BOT_TOKEN</code></pre>
 
-<h2 id="ch6">Chapter 6: Monitoring &amp; Self-Healing | 監控與自我修復</h2>
+<h2 id="ch6">Chapter 6: Monitoring &amp; Self-Healing | 監控與自我修復 | 監視と自己修復</h2>
 
-<h3>6.1 Health Check Pattern</h3>
+<h3>6.1 Health Check Pattern | 健康檢查模式 | ヘルスチェックパターン</h3>
 <pre><code>// Every worker should have a /health endpoint
 if (url.pathname === '/health') {
   const checks = {
@@ -390,7 +429,7 @@ if (url.pathname === '/health') {
   return Response.json(checks, { status: allOk ? 200 : 503 });
 }</code></pre>
 
-<h3>6.2 Self-Healing Patterns</h3>
+<h3>6.2 Self-Healing Patterns | 自我修復模式 | 自己修復パターン</h3>
 <pre><code>// Retry with exponential backoff
 async function retryWithBackoff(fn, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
@@ -431,9 +470,9 @@ class CircuitBreaker {
   }
 }</code></pre>
 
-<h2 id="ch7">Chapter 7: Troubleshooting | 疑難排解</h2>
+<h2 id="ch7">Chapter 7: Troubleshooting | 疑難排解 | トラブルシューティング</h2>
 
-<h3>Common Issues &amp; Solutions</h3>
+<h3>Common Issues &amp; Solutions | 常見問題 | よくある問題と解決策</h3>
 <table>
 <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
 <tr><td><span class="inline-code">Error 10021: worker exceeded CPU limit</span></td><td>Worker running >10ms CPU</td><td>Move heavy computation to scheduled handler or use streaming</td></tr>
@@ -444,7 +483,7 @@ class CircuitBreaker {
 <tr><td><span class="inline-code">fetch failed</span></td><td>DNS or timeout</td><td>Add <span class="inline-code">signal: AbortSignal.timeout(5000)</span></td></tr>
 </table>
 
-<h3>Debugging with Wrangler Tail</h3>
+<h3>Debugging with Wrangler Tail | 使用 Wrangler Tail 除錯 | Wrangler Tailでデバッグ</h3>
 <pre><code># Watch real-time logs
 npx wrangler tail my-ai-worker
 
@@ -454,9 +493,9 @@ npx wrangler tail my-ai-worker --status error
 # View cron executions
 npx wrangler tail my-ai-worker --format json | jq '.logs[]'</code></pre>
 
-<h2 id="ch8">Chapter 8: Scaling to Production | 擴展到正式環境</h2>
+<h2 id="ch8">Chapter 8: Scaling to Production | 擴展到正式環境 | 本番環境へのスケーリング</h2>
 
-<h3>8.1 Architecture Overview</h3>
+<h3>8.1 Architecture Overview | 架構概覽 | アーキテクチャ概要</h3>
 <pre><code>
 ┌─────────────────────────────────────────────┐
 │              Your 24/7 AI System             │
@@ -474,7 +513,7 @@ npx wrangler tail my-ai-worker --format json | jq '.logs[]'</code></pre>
 └─────────────────────────────────────────────┘
 </code></pre>
 
-<h3>8.2 Cost Breakdown</h3>
+<h3>8.2 Cost Breakdown | 費用明細 | コスト内訳</h3>
 <table>
 <tr><th>Service</th><th>Free Tier</th><th>Your Usage</th><th>Cost</th></tr>
 <tr><td>Cloudflare Workers</td><td>100K req/day</td><td>~5K req/day</td><td>$0</td></tr>
@@ -482,23 +521,24 @@ npx wrangler tail my-ai-worker --format json | jq '.logs[]'</code></pre>
 <tr><td>KV Storage</td><td>100K reads/day</td><td>~1K reads/day</td><td>$0</td></tr>
 <tr><td>Groq API</td><td>30 RPM</td><td>~720 calls/day</td><td>$0</td></tr>
 <tr><td>Telegram Bot API</td><td>Unlimited</td><td>~50 msgs/day</td><td>$0</td></tr>
-<tr><td>Claude Code (optional)</td><td>—</td><td>Development</td><td>$0-20</td></tr>
+<tr><td>Claude Code (optional)</td><td>--</td><td>Development</td><td>$0-20</td></tr>
 <tr><td><strong>Total</strong></td><td></td><td></td><td><strong>$0-8/mo</strong></td></tr>
 </table>
 
-<h3>8.3 Next Steps</h3>
+<h3>8.3 Next Steps | 下一步 | 次のステップ</h3>
 <ol>
-<li><strong>Add more agents</strong> — Revenue tracking, content generation, competitive intel</li>
-<li><strong>Build an MCP server</strong> — Expose your agent's capabilities to Claude Code</li>
-<li><strong>Set up multi-cloud</strong> — Add Render/Koyeb/Fly.io for resilience</li>
-<li><strong>Implement OODA loop</strong> — Observe → Orient → Decide → Act autonomously</li>
-<li><strong>Monetize</strong> — Sell your MCP server access or agent outputs</li>
+<li><strong>Add more agents</strong> | 新增更多代理 | エージェントを追加する — Revenue tracking, content generation, competitive intel</li>
+<li><strong>Build an MCP server</strong> | 建立 MCP 伺服器 | MCPサーバーを構築する — Expose your agent's capabilities to Claude Code</li>
+<li><strong>Set up multi-cloud</strong> | 設定多雲架構 | マルチクラウドを構築する — Add Render/Koyeb/Fly.io for resilience</li>
+<li><strong>Implement OODA loop</strong> | 實作 OODA 迴圈 | OODAループを実装する — Observe, Orient, Decide, Act autonomously</li>
+<li><strong>Monetize</strong> | 變現 | 収益化する — Sell your MCP server access or agent outputs</li>
 </ol>
 
 <hr>
 <div style="text-align:center; margin-top:60px; padding: 30px; background: #f0f4ff; border-radius: 12px;">
 <h2>Thank you for your purchase!</h2>
 <p>感謝您的購買！</p>
+<p>ご購入いただきありがとうございます！</p>
 <p style="color:#666;">Questions? Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
 <p style="color:#666;">Advanced kit: <a href="https://openclaw-product-store.yagami8095.workers.dev/">OODA System Blueprint ($59)</a></p>
 <p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>

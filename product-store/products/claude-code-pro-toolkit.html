@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Claude Code Pro Toolkit | Claude Code 專業版工具包</title>
+<title>Claude Code Pro Toolkit | Claude Code 專業版工具包 | Claude Code プロツールキット</title>
 <style>
   @page { margin: 15mm; }
   body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
@@ -12,6 +12,9 @@
   .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
   pre { background: #1e1e2e; color: #cdd6f4; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
   .tip { background: #f3e8ff; border-left: 4px solid #7c3aed; padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .beginner { background: #f0f4ff; border: 2px solid #7c3aed; border-radius: 12px; padding: 24px; margin: 20px 0; }
+  .steps { background: #fafafa; border: 2px solid #e0e0e0; border-radius: 12px; padding: 24px; margin: 20px 0; }
+  .step-num { display: inline-block; width: 36px; height: 36px; background: #7c3aed; color: #fff; border-radius: 50%; text-align: center; line-height: 36px; font-weight: bold; margin-right: 10px; }
   table { border-collapse: collapse; width: 100%; margin: 16px 0; }
   th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
   th { background: #f5f5f5; }
@@ -23,9 +26,58 @@
 <body>
 <h1>Claude Code Pro Toolkit</h1>
 <h1 style="font-size:1.4rem;">Claude Code 專業版工具包</h1>
-<p class="subtitle">20+ hooks, 15+ skills, agent configs, and power-user techniques<br>基於 500+ 小時正式環境使用經驗</p>
+<h1 style="font-size:1.4rem;">Claude Code プロツールキット</h1>
+<p class="subtitle">20+ hooks, 15+ skills, agent configs, and power-user techniques<br>基於 500+ 小時正式環境使用經驗<br>500時間以上の本番環境での使用経験に基づく</p>
 <p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
 <hr>
+
+<!-- What is Claude Code? / 什麼是 Claude Code？ / Claude Code とは？ -->
+<div class="beginner">
+<h2 style="border:none; margin-top:0; padding:0;">What is Claude Code? | 什麼是 Claude Code？ | Claude Code とは？</h2>
+<p><strong>EN:</strong> Claude Code is Anthropic's AI coding agent that runs directly in your terminal. Think of it as a senior developer sitting beside you — it can read your entire codebase, write and edit files, run commands, create commits, and even deploy your projects. Unlike chat-based AI, Claude Code works autonomously on real tasks across your entire project.</p>
+<p><strong>繁中：</strong>Claude Code 是 Anthropic 推出的 AI 程式碼代理，直接在你的終端機中運作。你可以把它想像成一位坐在你旁邊的資深開發者 — 它能讀取你的整個程式碼庫、撰寫和編輯檔案、執行指令、建立提交，甚至部署專案。與聊天式 AI 不同，Claude Code 能在你的整個專案中自主完成真正的工作任務。</p>
+<p><strong>日本語：</strong>Claude Code は、Anthropic が提供するターミナルで直接動作する AI コーディングエージェントです。隣に座っているシニア開発者のようなものです。プロジェクト全体のコードを読み取り、ファイルの作成・編集、コマンドの実行、コミットの作成、さらにはデプロイまで行えます。チャット型 AI とは異なり、Claude Code はプロジェクト全体で実際のタスクを自律的にこなします。</p>
+</div>
+
+<!-- Who is this for? / 適合誰？ / 誰に向いていますか？ -->
+<div class="beginner">
+<h2 style="border:none; margin-top:0; padding:0;">Who is this for? | 適合誰？ | 誰に向いていますか？</h2>
+<p><strong>EN:</strong></p>
+<ul>
+<li>Developers who already use Claude Code and want to unlock its full potential</li>
+<li>Teams looking to standardize AI-assisted development workflows</li>
+<li>Power users who want production-ready hooks, skills, and config templates</li>
+<li>Anyone building autonomous coding agents on top of Claude Code</li>
+</ul>
+<p><strong>繁中：</strong></p>
+<ul>
+<li>已在使用 Claude Code、想要解鎖其全部潛力的開發者</li>
+<li>希望標準化 AI 輔助開發流程的團隊</li>
+<li>想要現成可用的 hooks、skills 和設定模板的進階使用者</li>
+<li>任何在 Claude Code 基礎上建構自主程式碼代理的人</li>
+</ul>
+<p><strong>日本語：</strong></p>
+<ul>
+<li>Claude Code を既に使用しており、その潜在能力を最大限に引き出したい開発者</li>
+<li>AI 支援の開発ワークフローを標準化したいチーム</li>
+<li>本番環境対応の hooks、skills、設定テンプレートが欲しいパワーユーザー</li>
+<li>Claude Code をベースに自律型コーディングエージェントを構築している方</li>
+</ul>
+</div>
+
+<!-- 3 Steps to Get Started / 3 步驟開始 / 3ステップで始める -->
+<div class="steps">
+<h2 style="border:none; margin-top:0; padding:0;">3 Steps to Get Started | 3 步驟開始 | 3ステップで始める</h2>
+<p><span class="step-num">1</span><strong>Copy hooks to your project</strong> — Copy the hook files into your <code>.claude/hooks/</code> directory.<br>
+<em>將 hook 檔案複製到你的 <code>.claude/hooks/</code> 目錄。</em><br>
+<em>hook ファイルを <code>.claude/hooks/</code> ディレクトリにコピーします。</em></p>
+<p><span class="step-num">2</span><strong>Add skills</strong> — Place the skill files in <code>.claude/skills/</code> and start using slash commands like <code>/deploy</code>.<br>
+<em>將 skill 檔案放入 <code>.claude/skills/</code>，然後開始使用 <code>/deploy</code> 等斜線指令。</em><br>
+<em>skill ファイルを <code>.claude/skills/</code> に配置し、<code>/deploy</code> などのスラッシュコマンドを使い始めます。</em></p>
+<p><span class="step-num">3</span><strong>Customize CLAUDE.md</strong> — Use the included templates to configure Claude Code for your project's stack and conventions.<br>
+<em>使用附帶的模板，根據你的專案技術棧和慣例設定 Claude Code。</em><br>
+<em>付属のテンプレートを使い、プロジェクトの技術スタックと規約に合わせて Claude Code を設定します。</em></p>
+</div>
 
 <h2>1. Production Hooks (20+)</h2>
 
@@ -121,17 +173,17 @@ export default {
 
 <h3>1.4 All Hook Templates</h3>
 <table>
-<tr><th>#</th><th>Hook</th><th>Event</th><th>Purpose</th></tr>
-<tr><td>1</td><td>pre-commit-security</td><td>pre_commit</td><td>Block secret commits</td></tr>
-<tr><td>2</td><td>auto-format</td><td>post_tool_use</td><td>Format after edit</td></tr>
-<tr><td>3</td><td>auto-test</td><td>post_tool_use</td><td>Run related tests</td></tr>
-<tr><td>4</td><td>lint-check</td><td>pre_commit</td><td>ESLint/pylint validation</td></tr>
+<tr><th>#</th><th>Hook</th><th>Event</th><th>Purpose | 用途 | 用途</th></tr>
+<tr><td>1</td><td>pre-commit-security</td><td>pre_commit</td><td>Block secret commits | 阻擋機密提交 | シークレットのコミットをブロック</td></tr>
+<tr><td>2</td><td>auto-format</td><td>post_tool_use</td><td>Format after edit | 編輯後自動格式化 | 編集後に自動フォーマット</td></tr>
+<tr><td>3</td><td>auto-test</td><td>post_tool_use</td><td>Run related tests | 執行相關測試 | 関連テストを実行</td></tr>
+<tr><td>4</td><td>lint-check</td><td>pre_commit</td><td>ESLint/pylint validation | ESLint/pylint 檢查 | ESLint/pylint 検証</td></tr>
 <tr><td>5</td><td>type-check</td><td>pre_commit</td><td>TypeScript tsc --noEmit</td></tr>
-<tr><td>6</td><td>dependency-audit</td><td>post_tool_use</td><td>npm audit on package changes</td></tr>
-<tr><td>7</td><td>git-branch-naming</td><td>pre_commit</td><td>Enforce branch naming convention</td></tr>
+<tr><td>6</td><td>dependency-audit</td><td>post_tool_use</td><td>npm audit on package changes | 套件變更時審計 | パッケージ変更時に監査</td></tr>
+<tr><td>7</td><td>git-branch-naming</td><td>pre_commit</td><td>Enforce branch naming convention | 強制分支命名規範 | ブランチ命名規則を強制</td></tr>
 <tr><td>8</td><td>file-size-guard</td><td>pre_commit</td><td>Block files &gt; 1MB</td></tr>
 <tr><td>9</td><td>changelog-update</td><td>pre_commit</td><td>Auto-update CHANGELOG.md</td></tr>
-<tr><td>10</td><td>deploy-after-merge</td><td>post_tool_use</td><td>Auto-deploy on main merge</td></tr>
+<tr><td>10</td><td>deploy-after-merge</td><td>post_tool_use</td><td>Auto-deploy on main merge | 合併後自動部署 | マージ後に自動デプロイ</td></tr>
 <tr><td>11-20</td><td>...</td><td>Various</td><td>See individual files</td></tr>
 </table>
 
@@ -182,22 +234,22 @@ args: PR_NUMBER
 
 <h3>2.3 Complete Skills List</h3>
 <table>
-<tr><th>Skill</th><th>Args</th><th>Description</th></tr>
-<tr><td>/deploy</td><td>--env [staging|prod]</td><td>Deploy to production</td></tr>
-<tr><td>/review-pr</td><td>PR_NUMBER</td><td>AI-powered code review</td></tr>
-<tr><td>/commit</td><td>-m "message"</td><td>Smart commit with conventional format</td></tr>
-<tr><td>/test-all</td><td>--coverage</td><td>Run full test suite</td></tr>
-<tr><td>/audit</td><td>--fix</td><td>Security + dependency audit</td></tr>
-<tr><td>/refactor</td><td>FILE_PATH</td><td>AI-suggested refactoring</td></tr>
-<tr><td>/explain</td><td>FILE_PATH</td><td>Generate code documentation</td></tr>
-<tr><td>/perf</td><td>FILE_PATH</td><td>Performance analysis</td></tr>
-<tr><td>/db-migrate</td><td>--up|--down</td><td>Run database migrations</td></tr>
-<tr><td>/env-check</td><td>—</td><td>Verify all env vars are set</td></tr>
-<tr><td>/benchmark</td><td>ENDPOINT</td><td>Load test an endpoint</td></tr>
-<tr><td>/changelog</td><td>—</td><td>Generate changelog from git log</td></tr>
-<tr><td>/release</td><td>VERSION</td><td>Tag, build, deploy release</td></tr>
-<tr><td>/health</td><td>—</td><td>Check all service health</td></tr>
-<tr><td>/cost</td><td>—</td><td>Estimate cloud costs</td></tr>
+<tr><th>Skill</th><th>Args</th><th>Description | 說明 | 説明</th></tr>
+<tr><td>/deploy</td><td>--env [staging|prod]</td><td>Deploy to production | 部署到正式環境 | 本番環境にデプロイ</td></tr>
+<tr><td>/review-pr</td><td>PR_NUMBER</td><td>AI-powered code review | AI 程式碼審查 | AI コードレビュー</td></tr>
+<tr><td>/commit</td><td>-m "message"</td><td>Smart commit with conventional format | 智慧提交 | スマートコミット</td></tr>
+<tr><td>/test-all</td><td>--coverage</td><td>Run full test suite | 執行完整測試 | 全テスト実行</td></tr>
+<tr><td>/audit</td><td>--fix</td><td>Security + dependency audit | 安全性審計 | セキュリティ監査</td></tr>
+<tr><td>/refactor</td><td>FILE_PATH</td><td>AI-suggested refactoring | AI 重構建議 | AI リファクタリング提案</td></tr>
+<tr><td>/explain</td><td>FILE_PATH</td><td>Generate code documentation | 產生文件 | ドキュメント生成</td></tr>
+<tr><td>/perf</td><td>FILE_PATH</td><td>Performance analysis | 效能分析 | パフォーマンス分析</td></tr>
+<tr><td>/db-migrate</td><td>--up|--down</td><td>Run database migrations | 資料庫遷移 | データベースマイグレーション</td></tr>
+<tr><td>/env-check</td><td>—</td><td>Verify all env vars are set | 驗證環境變數 | 環境変数の検証</td></tr>
+<tr><td>/benchmark</td><td>ENDPOINT</td><td>Load test an endpoint | 負載測試 | 負荷テスト</td></tr>
+<tr><td>/changelog</td><td>—</td><td>Generate changelog from git log | 產生變更記錄 | 変更履歴の生成</td></tr>
+<tr><td>/release</td><td>VERSION</td><td>Tag, build, deploy release | 標記、建置、部署 | タグ付け・ビルド・デプロイ</td></tr>
+<tr><td>/health</td><td>—</td><td>Check all service health | 服務健康檢查 | サービスヘルスチェック</td></tr>
+<tr><td>/cost</td><td>—</td><td>Estimate cloud costs | 估算雲端費用 | クラウドコスト見積もり</td></tr>
 </table>
 
 <h2>3. CLAUDE.md Templates</h2>
@@ -252,30 +304,31 @@ You have full authority to read, write, and deploy code.
 
 <h2>4. Power-User Keyboard Shortcuts</h2>
 <table>
-<tr><th>Shortcut</th><th>Action</th><th>Notes</th></tr>
-<tr><td><span class="shortcut">Ctrl+C</span></td><td>Cancel current generation</td><td>Saves tokens</td></tr>
-<tr><td><span class="shortcut">Ctrl+L</span></td><td>Clear conversation</td><td>Fresh context</td></tr>
-<tr><td><span class="shortcut">Tab</span></td><td>Accept suggestion</td><td>Inline completions</td></tr>
-<tr><td><span class="shortcut">Esc</span></td><td>Dismiss suggestion</td><td></td></tr>
-<tr><td><span class="shortcut">/help</span></td><td>Show all commands</td><td></td></tr>
-<tr><td><span class="shortcut">/compact</span></td><td>Compress context</td><td>Saves tokens</td></tr>
-<tr><td><span class="shortcut">/fast</span></td><td>Toggle fast mode</td><td>Same model, faster</td></tr>
+<tr><th>Shortcut</th><th>Action | 動作 | アクション</th><th>Notes | 備註 | 備考</th></tr>
+<tr><td><span class="shortcut">Ctrl+C</span></td><td>Cancel current generation | 取消目前的生成 | 現在の生成をキャンセル</td><td>Saves tokens | 節省 token | トークン節約</td></tr>
+<tr><td><span class="shortcut">Ctrl+L</span></td><td>Clear conversation | 清除對話 | 会話をクリア</td><td>Fresh context | 全新上下文 | コンテキストをリセット</td></tr>
+<tr><td><span class="shortcut">Tab</span></td><td>Accept suggestion | 接受建議 | 提案を受け入れる</td><td>Inline completions | 行內補全 | インライン補完</td></tr>
+<tr><td><span class="shortcut">Esc</span></td><td>Dismiss suggestion | 取消建議 | 提案を閉じる</td><td></td></tr>
+<tr><td><span class="shortcut">/help</span></td><td>Show all commands | 顯示所有指令 | 全コマンドを表示</td><td></td></tr>
+<tr><td><span class="shortcut">/compact</span></td><td>Compress context | 壓縮上下文 | コンテキストを圧縮</td><td>Saves tokens | 節省 token | トークン節約</td></tr>
+<tr><td><span class="shortcut">/fast</span></td><td>Toggle fast mode | 切換快速模式 | 高速モード切替</td><td>Same model, faster | 同模型更快 | 同じモデルで高速化</td></tr>
 </table>
 
 <h2>5. Context Management Tips</h2>
 <div class="tip">
-<strong>Keep context clean:</strong><br>
-- Use /compact when context gets large<br>
-- Reference files by path instead of pasting content<br>
-- Use CLAUDE.md for persistent instructions<br>
-- Use memory files for cross-session knowledge<br>
-- Launch subagents for parallel tasks (saves main context)
+<strong>Keep context clean: | 保持上下文精簡： | コンテキストを整理しましょう：</strong><br>
+- Use /compact when context gets large | 上下文過大時使用 /compact | コンテキストが大きくなったら /compact を使う<br>
+- Reference files by path instead of pasting content | 用路徑引用檔案，而非貼上內容 | 内容を貼り付けるのではなく、パスでファイルを参照する<br>
+- Use CLAUDE.md for persistent instructions | 使用 CLAUDE.md 儲存持久指示 | CLAUDE.md に永続的な指示を保存する<br>
+- Use memory files for cross-session knowledge | 使用記憶檔案跨 session 保存知識 | メモリファイルでセッション間の知識を保持する<br>
+- Launch subagents for parallel tasks (saves main context) | 啟動子代理處理平行任務 | サブエージェントを起動して並列タスクを処理する
 </div>
 
 <hr>
 <div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
 <h2>Thank you for your purchase!</h2>
 <p>感謝您的購買！</p>
+<p>ご購入ありがとうございます！</p>
 <p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
 <p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
 </div>

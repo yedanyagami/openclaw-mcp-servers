@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MCP Server Starter Kit | MCP 伺服器開發入門套件</title>
+<title>MCP Server Starter Kit | MCP 伺服器開發入門套件 | MCPサーバースターターキット</title>
 <style>
   @page { margin: 15mm; }
-  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; line-height: 1.8; }
   h1 { text-align: center; font-size: 2rem; margin-bottom: 8px; }
   h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 6px; margin-top: 50px; }
   h3 { color: #444; margin-top: 30px; }
@@ -19,16 +19,39 @@
   hr { border: none; border-top: 1px solid #e0e0e0; margin: 40px 0; }
   .notice { text-align: center; color: #999; font-size: 0.85rem; }
   .file-tree { background: #f8f9fa; padding: 16px 24px; border-radius: 8px; font-family: monospace; white-space: pre; }
+  .who-box { background: #f0f8ff; border: 2px solid #1a73e8; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .who-box h3 { color: #1a73e8; margin-top: 0; }
+  .steps-box { background: #f0fff0; border: 2px solid #4caf50; border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .steps-box h3 { color: #2e7d32; margin-top: 0; }
 </style>
 </head>
 <body>
 <h1>MCP Server Starter Kit</h1>
 <h1 style="font-size:1.4rem;">MCP 伺服器開發入門套件</h1>
-<p class="subtitle">Build &amp; deploy your own MCP server in 30 minutes<br>30 分鐘內建置並部署你自己的 MCP 伺服器</p>
-<p class="notice">For authorized purchasers only. &copy; 2026 OpenClaw Intelligence</p>
+<h1 style="font-size:1.4rem;">MCPサーバースターターキット</h1>
+<p class="subtitle">Build &amp; deploy your own MCP server in 30 minutes<br>30 分鐘內建置並部署你自己的 MCP 伺服器<br>30分でMCPサーバーを構築・デプロイ</p>
+<p class="notice">For authorized purchasers only. | 僅限正式購買者。| 正規購入者限定。 &copy; 2026 OpenClaw Intelligence</p>
 <hr>
 
-<h2>1. Project Structure</h2>
+<div class="who-box">
+<h3>Who is this for? | 適合誰？ | 誰に向いていますか？</h3>
+<ul>
+<li><strong>EN:</strong> Developers who want to build their own MCP (Model Context Protocol) server — the standard way AI assistants like Claude Code, Cursor, and Windsurf connect to external tools. If you can write basic JavaScript, you can build and sell an MCP server. No cloud experience needed.</li>
+<li><strong>繁中:</strong> 想建立自己的 MCP（模型上下文協定）伺服器的開發者——這是 Claude Code、Cursor、Windsurf 等 AI 助手連接外部工具的標準方式。只要你會基本的 JavaScript，就能建置和銷售 MCP 伺服器。不需要雲端經驗。</li>
+<li><strong>日本語:</strong> 独自のMCP（Model Context Protocol）サーバーを構築したい開発者の方へ。MCPは、Claude Code、Cursor、Windsurfなどの AIアシスタントが外部ツールに接続するための標準プロトコルです。基本的なJavaScriptが書ければ、MCPサーバーを構築・販売できます。クラウドの経験は不要です。</li>
+</ul>
+</div>
+
+<div class="steps-box">
+<h3>3 Steps to Get Started | 3 步驟開始 | 3ステップで始める</h3>
+<ol>
+<li><strong>Copy the template (5 min)</strong> | 複製模板（5 分鐘）| テンプレートをコピー（5分）<br>Use the complete worker.js template in Section 2 as your starting point.</li>
+<li><strong>Customize your tool (15 min)</strong> | 自訂你的工具（15 分鐘）| ツールをカスタマイズ（15分）<br>Replace the example tool with your own logic — database queries, API calls, or data processing.</li>
+<li><strong>Deploy to Cloudflare (10 min)</strong> | 部署到 Cloudflare（10 分鐘）| Cloudflareにデプロイ（10分）<br>Run <code>npx wrangler deploy</code> and your MCP server is live. Optionally publish to Smithery marketplace.</li>
+</ol>
+</div>
+
+<h2>1. Project Structure | 專案結構 | プロジェクト構成</h2>
 <div class="file-tree">
 mcp-server/
 ├── worker.js          # Main MCP server (JSON-RPC 2.0)
@@ -39,7 +62,7 @@ mcp-server/
 └── README.md          # Quick start guide
 </div>
 
-<h2>2. Complete Worker Template</h2>
+<h2>2. Complete Worker Template | 完整 Worker 模板 | 完全なWorkerテンプレート</h2>
 <pre><code>// worker.js — Production-ready MCP Server Template
 // MCP Protocol: 2025-03-26 | JSON-RPC 2.0
 
@@ -136,7 +159,7 @@ export default {
   },
 };
 
-// Tool execution
+// Tool execution | 工具執行 | ツール実行
 async function handleToolCall(params, env, rateLimit) {
   const { name, arguments: args } = params;
 
@@ -158,6 +181,7 @@ async function handleToolCall(params, env, rateLimit) {
 }
 
 // Rate limiting (Pro tier: 1000/day, Free: 3/day)
+// 速率限制 | レート制限
 async function checkRateLimit(request, env) {
   const apiKey = request.headers.get('X-API-Key') || '';
   const isPro = apiKey &amp;&amp; await env.KV?.get(`prokey:${apiKey}`);
@@ -183,7 +207,7 @@ async function checkRateLimit(request, env) {
   return { ok: true, tier, remaining: limit - current - 1 };
 }</code></pre>
 
-<h2>3. D1 Database Schema</h2>
+<h2>3. D1 Database Schema | D1 資料庫結構 | D1データベーススキーマ</h2>
 <pre><code>-- schema.sql
 CREATE TABLE IF NOT EXISTS data (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -197,7 +221,7 @@ CREATE TABLE IF NOT EXISTS data (
 CREATE INDEX idx_data_key ON data(key);
 CREATE INDEX idx_data_created ON data(created_at);
 
--- Usage tracking
+-- Usage tracking | 使用追蹤 | 使用状況トラッキング
 CREATE TABLE IF NOT EXISTS usage_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   api_key TEXT,
@@ -209,7 +233,7 @@ CREATE TABLE IF NOT EXISTS usage_log (
 
 CREATE INDEX idx_usage_date ON usage_log(created_at);</code></pre>
 
-<h2>4. Wrangler Configuration</h2>
+<h2>4. Wrangler Configuration | Wrangler 設定 | Wrangler設定</h2>
 <pre><code># wrangler.toml
 name = "your-mcp-server"
 main = "worker.js"
@@ -228,8 +252,8 @@ id = "YOUR_KV_ID"
 [triggers]
 crons = ["0 */6 * * *"]  # Optional: scheduled tasks</code></pre>
 
-<h2>5. Monetization: Payment Flow</h2>
-<pre><code>// Stripe Checkout integration
+<h2>5. Monetization: Payment Flow | 變現：付款流程 | 収益化：決済フロー</h2>
+<pre><code>// Stripe Checkout integration | Stripe 結帳整合 | Stripe決済連携
 async function handleCheckout(request, env) {
   // 1. Create Stripe Payment Link (one-time setup in Stripe Dashboard)
   // 2. On successful payment, Stripe webhook fires
@@ -248,28 +272,28 @@ async function handleCheckout(request, env) {
   return apiKey;
 }</code></pre>
 
-<h2>6. Deploy in 30 Seconds</h2>
-<pre><code># 1. Install dependencies
+<h2>6. Deploy in 30 Seconds | 30 秒部署 | 30秒でデプロイ</h2>
+<pre><code># 1. Install dependencies | 安裝依賴 | 依存関係をインストール
 npm install
 
-# 2. Create D1 database
+# 2. Create D1 database | 建立 D1 資料庫 | D1データベースを作成
 npx wrangler d1 create your-mcp-db
 # Copy database_id to wrangler.toml
 
-# 3. Create KV namespace
+# 3. Create KV namespace | 建立 KV 命名空間 | KVネームスペースを作成
 npx wrangler kv namespace create KV
 # Copy id to wrangler.toml
 
-# 4. Run schema
+# 4. Run schema | 執行結構 | スキーマを実行
 npx wrangler d1 execute your-mcp-db --file schema.sql
 
-# 5. Deploy!
+# 5. Deploy! | 部署！ | デプロイ！
 npx wrangler deploy
 
 # Your MCP server is live at:
 # https://your-mcp-server.YOUR.workers.dev</code></pre>
 
-<h2>7. Smithery Publishing</h2>
+<h2>7. Smithery Publishing | Smithery 發布 | Smithery公開</h2>
 <pre><code># smithery.yaml (place in repo root)
 name: your-mcp-server
 description: "Your tool description for AI discovery"
@@ -285,10 +309,13 @@ pricing:
 
 # Submit at: https://smithery.ai/submit</code></pre>
 
-<div class="tip">Smithery gets your tool discovered by Claude Code, Cursor, Windsurf, and Cline users automatically. This is the highest-converting distribution channel for MCP tools in 2026.</div>
+<div class="tip">Smithery tip: The tool description is critical — AI clients like Claude Code read it to decide whether to use your tool. Be specific about inputs, outputs, and use cases.<br>
+Smithery 提示：工具描述至關重要——AI 用戶端（如 Claude Code）會讀取它來決定是否使用你的工具。請明確說明輸入、輸出和使用場景。<br>
+Smitheryのヒント：ツールの説明は非常に重要です。Claude CodeなどのAIクライアントは、ツールを使うかどうかを判断するためにこの説明を読みます。入力、出力、ユースケースを具体的に記述してください。</div>
 
-<h2>8. Cross-Promotion Pattern</h2>
+<h2>8. Cross-Promotion Pattern | 交叉行銷模式 | クロスプロモーションパターン</h2>
 <pre><code>// Add to your free-tier responses:
+// 加入免費版回應中 | 無料版のレスポンスに追加:
 const UPSELL = {
   free_limit: `Free tier: 3 calls/day. Upgrade to Pro (1000/day): YOUR_STORE_URL`,
   pro_feature: `This feature requires Pro tier. Get it: YOUR_STORE_URL`,
@@ -306,6 +333,7 @@ if (rateLimit.remaining &lt;= 1 &amp;&amp; rateLimit.tier === 'free') {
 <div style="text-align:center; padding: 30px; background: #f0f4ff; border-radius: 12px;">
 <h2>Thank you for your purchase!</h2>
 <p>感謝您的購買！</p>
+<p>ご購入いただきありがとうございます！</p>
 <p style="color:#666;">Next step: <a href="https://openclaw-product-store.yagami8095.workers.dev/">AI Agent Builder Kit ($49)</a> for advanced patterns</p>
 <p style="color:#666;">Contact: <a href="mailto:Yagami8095@gmail.com">Yagami8095@gmail.com</a></p>
 <p style="color:#999; font-size:0.85rem;">&copy; 2026 OpenClaw Intelligence. All rights reserved.</p>
