@@ -1,6 +1,6 @@
 // database-toolkit-mcp — DataBridge Protocol MCP Server
 // Tools: query_database, insert_records, update_records(Pro), get_schema, migrate_schema(Pro)
-// Free: 20 req/day | Pro: 1000 req/day ($9/mo)
+// Free: 20 req/day | Pro: 1000 req/day ($29/mo)
 
 const SERVER_INFO = { name: 'database-toolkit', version: '1.0.0' };
 const VENDOR = 'OpenClaw';
@@ -531,7 +531,7 @@ const LANDING_HTML = `<!DOCTYPE html>
     </div>
     <div class="tier pro">
       <h3>Pro</h3>
-      <div class="price">$9<span style="font-size:1rem">/mo</span></div>
+      <div class="price">$29<span style="font-size:1rem">/mo</span></div>
       <p>1000 requests/day · All tools · update_records · migrate_schema · SafeWrite Guard</p>
       <p style="margin-top:8px"><a href="https://buy.stripe.com/4gw5na5U19SP9TW288">Upgrade →</a></p>
     </div>
@@ -587,7 +587,7 @@ async function handleMcp(request, env) {
       return Response.json(jsonRpcResponse(id, toolResult({
         error: `${name} requires Pro subscription`,
         upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288',
-        message: 'Upgrade to Pro ($9/mo) for SafeWrite Guard updates and schema migrations.',
+        message: 'Upgrade to Pro ($29/mo) for SafeWrite Guard updates and schema migrations.',
         free_tools: ['query_database', 'insert_records', 'get_schema'],
       })), { headers: CORS });
     }
@@ -651,7 +651,7 @@ export default {
         ...TOOLS.map(t => `- ${t.name}: ${t.description}`),
         '',
         '## Tiers',
-        `Free: ${RATE_LIMIT_MAX} req/day | Pro: ${PRO_DAILY_LIMIT} req/day ($9/mo)`,
+        `Free: ${RATE_LIMIT_MAX} req/day | Pro: ${PRO_DAILY_LIMIT} req/day ($29/mo)`,
         '',
         '## Endpoint',
         `POST ${url.origin}/mcp (MCP Streamable HTTP, JSON-RPC 2.0)`,

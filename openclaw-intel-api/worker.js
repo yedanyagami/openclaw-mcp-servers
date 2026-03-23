@@ -241,7 +241,7 @@ const LANDING_HTML = `<!DOCTYPE html>
       <div class="bg-gray-800/50 border-2 border-blue-500 rounded-xl p-8 card-glow transition relative">
         <div class="absolute -top-3 right-6 bg-blue-600 text-xs px-3 py-1 rounded-full">BEST FOR AGENTS</div>
         <div class="text-blue-400 text-sm font-semibold mb-2">PRO</div>
-        <div class="text-3xl font-bold mb-1">$9<span class="text-lg text-gray-400">/mo</span></div>
+        <div class="text-3xl font-bold mb-1">$29<span class="text-lg text-gray-400">/mo</span></div>
         <div class="text-gray-500 text-sm mb-6">1,000 calls/day</div>
         <ul class="space-y-3 text-sm text-gray-300 mb-8">
           <li>All reports (daily + weekly)</li>
@@ -385,7 +385,7 @@ export default {
           auth: 'Bearer token in Authorization header',
           tiers: {
             free: { limit: '3 calls/day', price: '$0', auth: 'none (IP-based)' },
-            pro: { limit: '1,000 calls/day', price: '$9/mo', auth: 'API key' },
+            pro: { limit: '1,000 calls/day', price: '$29/mo', auth: 'API key' },
             enterprise: { limit: '10,000 calls/day', price: '$99/mo', auth: 'API key' },
           },
           endpoints: [
@@ -408,7 +408,7 @@ export default {
         rateResult = await checkRateLimit(ipH, tier, 'api', env);
         if (!rateResult.allowed) {
           await logAccess(ipH, keyPrefix, path, 429, tier, env);
-          return errorResponse('Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login | Pro ($9): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)', cors, 429, rateResult);
+          return errorResponse('Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login | Pro ($29/mo): https://paypal.me/Yagami8095/29 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)', cors, 429, rateResult);
         }
       }
 

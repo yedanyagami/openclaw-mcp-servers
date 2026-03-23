@@ -203,7 +203,7 @@ async function setAlertRules({ url, telegram_chat_id, latency_threshold_ms = 300
     return toolResult({
       error: 'set_alert_rules requires a Pro key',
       upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288',
-      message: 'Get Pro ($9/mo) for alert rules, Telegram notifications, and 1000 calls/day',
+      message: 'Get Pro ($29/mo) for alert rules, Telegram notifications, and 1000 calls/day',
       ecosystem: ECOSYSTEM,
     });
   }
@@ -301,7 +301,7 @@ const TOOLS = [
   },
   {
     name: 'set_alert_rules',
-    description: 'PRO: Configure Telegram alerts for a URL. Triggers when site goes down, latency exceeds threshold, or SSL is expiring. Requires Pro key ($9/mo).',
+    description: 'PRO: Configure Telegram alerts for a URL. Triggers when site goes down, latency exceeds threshold, or SSL is expiring. Requires Pro key ($29/mo).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -364,8 +364,8 @@ const LANDING_HTML = `<!DOCTYPE html>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-health-monitor":{"type":"streamable-http","url":"https://health-monitor-mcp.yagami8095.workers.dev/mcp"}}</pre>
 <p><strong>Free:</strong> 20 req/day &nbsp;|&nbsp; <strong>Pro:</strong> 1,000/day, all tools, Telegram alerts</p>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo</a>
-<p style="margin-top:32px;color:#666;font-size:0.8rem">Part of the <a href="${ECOSYSTEM.store}" style="color:#ff4444">OpenClaw Intelligence Stack</a> — 9 MCP servers, one Pro key, $9/mo</p>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo</a>
+<p style="margin-top:32px;color:#666;font-size:0.8rem">Part of the <a href="${ECOSYSTEM.store}" style="color:#ff4444">OpenClaw Intelligence Stack</a> — 9 MCP servers, one Pro key, $29/mo</p>
 </body></html>`;
 
 // ============================================================
@@ -448,7 +448,7 @@ export default {
     if (url.pathname === '/') return new Response(LANDING_HTML, { headers: { 'Content-Type': 'text/html', ...cors } });
 
     if (url.pathname === '/llms.txt') {
-      const txt = `# OpenClaw Health Monitor MCP\n\nMCP endpoint: https://health-monitor-mcp.yagami8095.workers.dev/mcp\nProtocol: MCP Streamable HTTP 2025-03-26\nVendor: OpenClaw Intelligence\n\n## Tools\n- check_health: Instant health check for any URL\n- get_uptime_report: SLA metrics and uptime percentage\n- set_alert_rules: Configure Telegram alerts (Pro)\n- get_incident_history: Full incident log\n\n## Pricing\nFree: 20 req/day | Pro: $9/mo, 1000/day\nUpgrade: https://buy.stripe.com/4gw5na5U19SP9TW288\n`;
+      const txt = `# OpenClaw Health Monitor MCP\n\nMCP endpoint: https://health-monitor-mcp.yagami8095.workers.dev/mcp\nProtocol: MCP Streamable HTTP 2025-03-26\nVendor: OpenClaw Intelligence\n\n## Tools\n- check_health: Instant health check for any URL\n- get_uptime_report: SLA metrics and uptime percentage\n- set_alert_rules: Configure Telegram alerts (Pro)\n- get_incident_history: Full incident log\n\n## Pricing\nFree: 20 req/day | Pro: $29/mo, 1000/day\nUpgrade: https://buy.stripe.com/4gw5na5U19SP9TW288\n`;
       return new Response(txt, { headers: { 'Content-Type': 'text/plain', ...cors } });
     }
 

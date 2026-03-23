@@ -10,7 +10,7 @@
  *   - get_tool_profile: Detailed profile for a single tool
  *   - recommend_tool: AI-powered recommendation based on use case (Pro)
  *   - get_pricing_comparison: All tools pricing at a glance
- *   - purchase_pro_key: Machine-readable purchase flow ($9)
+ *   - purchase_pro_key: Machine-readable purchase flow ($29/mo)
  */
 
 const SERVER_INFO = { name: 'agentforge-compare', version: '1.0.0' };
@@ -31,7 +31,7 @@ const ENDPOINTS = {
   intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page: 'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   provision_api: 'https://product-store.yagami8095.workers.dev/api/provision',
-  paypal_direct: 'https://paypal.me/Yagami8095/9',
+  paypal_direct: 'https://paypal.me/Yagami8095/29',
 };
 
 // ============================================================
@@ -140,7 +140,7 @@ const AI_TOOLS = {
     release: 'Agent mode (2026-02)',
     language: 'Closed',
     license: 'Proprietary',
-    pricing: { free_tier: 'Free tier (2000 completions/mo)', pro: '$10/mo', business: '$19/mo/user', enterprise: '$39/mo/user' },
+    pricing: { free_tier: 'Free tier', pro: '$29/mo', enterprise: '$99/mo' },
     strengths: ['GitHub integration', 'VS Code native', 'Agent mode', 'Workspace understanding', 'Cheapest paid option'],
     weaknesses: ['Tied to GitHub ecosystem', 'Agent mode still preview', 'Less autonomous than Claude Code'],
     platforms: ['VS Code', 'JetBrains', 'Neovim', 'Web'],
@@ -193,7 +193,7 @@ const TOOL_IDS = Object.keys(AI_TOOLS);
 const TOOLS = [
   {
     name: 'compare_ai_tools',
-    description: 'Compare 2 or more AI coding tools side-by-side. Free tier returns a summary comparison table. Pro tier ($9) returns full detailed analysis with recommendations, pricing breakdowns, and growth trends. Available tools: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline. | 並排比較 2 個以上 AI 程式工具。免費版返回摘要比較表，Pro 版（$9）返回完整詳細分析含推薦、定價及趨勢。',
+    description: 'Compare 2 or more AI coding tools side-by-side. Free tier returns a summary comparison table. Pro tier ($29/mo) returns full detailed analysis with recommendations, pricing breakdowns, and growth trends. Available tools: claude-code, cursor, windsurf, devin, openhands, github-copilot, aider, cline. | 並排比較 2 個以上 AI 程式工具。免費版返回摘要比較表，Pro 版（$29/月）返回完整詳細分析含推薦、定價及趨勢。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -223,7 +223,7 @@ const TOOLS = [
   },
   {
     name: 'recommend_tool',
-    description: 'Get an AI-powered recommendation for which tool best fits your use case. Analyzes your requirements and returns ranked suggestions with reasoning. [PRO ONLY — $9 one-time key] | 獲得 AI 驅動的工具推薦，分析需求並返回排名建議。[僅限 PRO — $9 一次性金鑰]',
+    description: 'Get an AI-powered recommendation for which tool best fits your use case. Analyzes your requirements and returns ranked suggestions with reasoning. [PRO ONLY — $29/mo key] | 獲得 AI 驅動的工具推薦，分析需求並返回排名建議。[僅限 PRO — $29/月]',
     inputSchema: {
       type: 'object',
       properties: {
@@ -251,7 +251,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_pro_key',
-    description: 'Get instructions to purchase a Pro API key ($9 one-time) for full comparisons and AI recommendations. Unlock detailed analysis, growth trends, and personalized tool recommendations. | 取得 Pro API 金鑰購買說明（$9 一次性付費），解鎖完整比較、成長趨勢及個人化工具推薦。',
+    description: 'Get instructions to purchase a Pro API key ($29/mo) for full comparisons and AI recommendations. Unlock detailed analysis, growth trends, and personalized tool recommendations. | 取得 Pro API 金鑰購買說明（$29/月），解鎖完整比較、成長趨勢及個人化工具推薦。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -385,11 +385,11 @@ function handleCompareTools(args, isPro) {
     comparison.head_to_head = generateHeadToHead(tools);
     comparison.recommendation_summary = generateQuickRecommendation(tools);
   } else {
-    comparison.note = 'Free tier: summary table only. Upgrade to Pro ($9 one-time) for detailed analysis, head-to-head comparisons, and personalized recommendations.';
+    comparison.note = 'Free tier: summary table only. Upgrade to Pro ($29/mo) for detailed analysis, head-to-head comparisons, and personalized recommendations.';
     comparison.upgradeSignal = {
       action: 'purchase_pro_key',
       reason: 'Full comparison includes detailed strengths/weaknesses analysis, head-to-head scoring, and AI-powered recommendations. 10x more data than free tier.',
-      price: '$9 one-time',
+      price: '$29/mo',
       url: ENDPOINTS.pro_page,
     };
   }
@@ -461,12 +461,12 @@ function handleGetToolProfile(args) {
 function handleRecommendTool(args, isPro) {
   if (!isPro) {
     return {
-      error: 'recommend_tool requires a Pro API key ($9 one-time).',
+      error: 'recommend_tool requires a Pro API key ($29/mo).',
       hint: 'Use compare_ai_tools (free) for basic comparisons, or upgrade to Pro for personalized AI recommendations.',
       upgradeSignal: {
         action: 'purchase_pro_key',
         reason: 'Personalized tool recommendations analyze your use case, budget, and preferences to find the perfect AI coding tool. Worth $9 to avoid choosing the wrong $20/mo subscription.',
-        price: '$9 one-time',
+        price: '$29/mo',
         url: ENDPOINTS.pro_page,
       },
       ecosystem: getEcosystem(),
@@ -581,7 +581,7 @@ function handlePricingComparison(args) {
 function handlePurchaseProKey(args) {
   return {
     product: 'AgentForge Compare Pro',
-    price: '$9 USD (one-time)',
+    price: '$29/mo USD',
     what_you_get: [
       'Detailed comparison analysis with head-to-head scoring',
       'AI-powered personalized tool recommendations',
@@ -662,7 +662,7 @@ function landingPage() {
         </ul>
       </div>
       <div class="bg-blue-900/30 rounded-xl p-6 border border-blue-500/30">
-        <h3 class="text-lg font-semibold text-yellow-400 mb-3">&#x1F451; Pro — $9 one-time | $9 一次性付費</h3>
+        <h3 class="text-lg font-semibold text-yellow-400 mb-3">&#x1F451; Pro — $29/mo | $29/月</h3>
         <ul class="space-y-2 text-gray-300 text-sm">
           <li>&#x2B50; Full detailed analysis + head-to-head scoring | 完整詳細分析 + 對決評分</li>
           <li>&#x2B50; AI-powered personalized recommendations | AI 驅動的個人化推薦</li>
@@ -930,7 +930,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $9: paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $29/mo: paypal.me/Yagami8095/29 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }
@@ -977,12 +977,12 @@ async function handleMCPRequest(body, env, request) {
 
       if (!rateCheck.allowed) {
         return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: JSON.stringify({
-          error: 'Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base',
+          error: 'Rate limit exceeded. FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base',
           limit: rateCheck.limit,
           reset: 'Daily at 00:00 UTC',
           upgradeSignal: isPro ? null : {
             action: 'purchase_pro_key',
-            reason: 'Pro users get 1000 requests/day (50x free tier). One-time $9.',
+            reason: 'Pro users get 1000 requests/day (50x free tier). $29/mo.',
             url: ENDPOINTS.pro_page,
           },
           ecosystem: getEcosystem(),

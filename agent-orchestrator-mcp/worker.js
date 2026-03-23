@@ -113,7 +113,7 @@ function scopeFromIp(ip, proKey) {
 // ============================================================
 async function spawnAgent({ role = 'general', model = null, task = null, max_children = 3 }, kv, scope, proKey) {
   if (!proKey) {
-    return toolResult({ error: 'spawn_agent requires a Pro key', upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288', message: 'Get Pro ($9/mo) for agent spawning, 8 concurrent agents, and 1000 calls/day', ecosystem: ECOSYSTEM });
+    return toolResult({ error: 'spawn_agent requires a Pro key', upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288', message: 'Get Pro ($29/mo) for agent spawning, 8 concurrent agents, and 1000 calls/day', ecosystem: ECOSYSTEM });
   }
 
   const validRoles = Object.keys(ROLE_MODELS);
@@ -409,7 +409,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 </table>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-agent-orchestrator":{"type":"streamable-http","url":"https://agent-orchestrator-mcp.yagami8095.workers.dev/mcp"}}</pre>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo</a>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo</a>
 </body></html>`;
 
 async function handleMcp(request, env) {
