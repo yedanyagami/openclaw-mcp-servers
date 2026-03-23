@@ -14,7 +14,7 @@
  *   - validate_api_key: Check key status and remaining quota
  */
 
-const SERVER_INFO = { name: 'openclaw-intel', version: '3.0.0' };
+const SERVER_INFO = { name: 'openclaw-intel', version: '3.0.0', instructions: 'AI agent market intelligence — track GitHub stars, releases, and growth trends for Claude Code, Cursor, Devin, Windsurf, and more. Get market reports, ecosystem statistics, and competitive analysis. Use when: (1) you need current AI tool adoption data, (2) you want to compare growth trends across AI coding tools, (3) you need market statistics for a report, (4) you want competitive intelligence on the AI agent ecosystem. Example prompts: "Get the latest AI market report", "Show me GitHub growth trends for Cursor vs Claude Code", "What are the current AI tool market stats?". | AI 代理工具市場情報 — GitHub 追蹤、成長趨勢、競爭分析。' };
 const CAPABILITIES = { tools: {} };
 
 const ENDPOINTS = {

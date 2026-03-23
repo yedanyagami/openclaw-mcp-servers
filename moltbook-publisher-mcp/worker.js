@@ -10,6 +10,7 @@ const SERVER_INFO = {
   version: '1.0.0',
   vendor: 'MoltBook Labs',
   description: 'Japanese content publishing toolkit — Markdown to HTML conversion, SEO optimization, EN→JP translation, trending topics, cross-platform formatting for note.com, Zenn, and Qiita.',
+  instructions: 'Japanese content publishing toolkit — convert Markdown to HTML, analyze SEO, translate English to natural Japanese, generate article outlines, and format for note.com, Zenn, and Qiita. Use when: (1) you\'re publishing content on Japanese platforms, (2) you need to translate an article to natural Japanese, (3) you want SEO analysis for Japanese content, (4) you need cross-platform formatting, (5) you want trending topics on note.com/Zenn/Qiita (Pro). Example prompts: "Convert this markdown to HTML for Zenn", "Translate this article to Japanese", "Analyze SEO for this Japanese blog post". | 日本語コンテンツ発行ツール — note.com/Zenn/Qiita 対応。',
 };
 
 const CAPABILITIES = { tools: {} };

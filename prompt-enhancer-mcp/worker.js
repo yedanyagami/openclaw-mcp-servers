@@ -29,7 +29,7 @@ const ECOSYSTEM = {
   paypal:      'https://paypal.me/Yagami8095/29',
 };
 
-const SERVER_INFO = { name: 'prompt-enhancer', version: '1.0.0' };
+const SERVER_INFO = { name: 'prompt-enhancer', version: '1.0.0', instructions: 'Score, optimize, and convert AI prompts. Generate system prompts for any role. Access 30+ production prompt templates (Pro). Use when: (1) you want to improve a prompt\'s clarity and structure, (2) you need a quality score for your prompt, (3) you want to convert between Plain/XML/Markdown/JSON prompt formats, (4) you need a system prompt for a specific role, (5) you want production-ready prompt templates. Example prompts: "Score this prompt and suggest improvements", "Generate a system prompt for a code reviewer", "Convert this prompt to XML format". | 提示詞評分、優化、格式轉換、系統提示詞產生、30+ 生產級模板（Pro）。' };
 const VENDOR      = 'OpenClaw Intelligence';
 
 // ---------------------------------------------------------------------------

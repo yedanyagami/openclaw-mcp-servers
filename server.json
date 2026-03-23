@@ -12,39 +12,48 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://json-toolkit-mcp.yagami8095.workers.dev/mcp",
+      "description": "Format, validate, diff, query (JSONPath), transform, and auto-generate JSON Schema. 6 tools, free tier available."
     },
     {
       "type": "streamable-http",
-      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://regex-engine-mcp.yagami8095.workers.dev/mcp",
+      "description": "Test, explain, build from natural language, replace, and extract with regular expressions. 25+ built-in patterns. 5 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://color-palette-mcp.yagami8095.workers.dev/mcp",
+      "description": "Generate color palettes, check WCAG contrast, convert formats (Hex/RGB/HSL), create CSS gradients, look up Tailwind colors. 5 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://timestamp-converter-mcp.yagami8095.workers.dev/mcp",
+      "description": "Convert Unix/ISO timestamps, timezone math, cron parsing, time differences, duration formatting. 5 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp",
+      "description": "Score, optimize, and convert AI prompts. Generate system prompts. 30+ production templates (Pro). 6 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://openclaw-intel-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://openclaw-intel-mcp.yagami8095.workers.dev/mcp",
+      "description": "AI agent market intelligence — GitHub trends, market reports, ecosystem statistics, competitive analysis. 6 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp",
+      "description": "Daily zodiac horoscopes, tarot card readings, lucky numbers, zodiac rankings for all 12 signs. 3 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp",
+      "description": "Japanese content publishing — MD to HTML, SEO, EN-JP translation, article outlines for note.com/Zenn/Qiita. 8 tools."
     },
     {
       "type": "streamable-http",
-      "url": "https://agentforge-compare-mcp.yagami8095.workers.dev/mcp"
+      "url": "https://agentforge-compare-mcp.yagami8095.workers.dev/mcp",
+      "description": "Compare AI coding tools side-by-side — Claude Code, Cursor, Copilot, Devin, and more. Profiles, pricing, recommendations. 5 tools."
     }
   ]
 }

@@ -14,8 +14,8 @@
 | Average Order Value | $24.57 |
 | Product Range | $12 – $79 (7 digital products) |
 | MCP Servers | 9 servers, 49 tools total |
-| Pro Plan | $9/mo shared key |
-| Intel Pro API | $19/mo or $0.05/query |
+| Pro Plan | $29/mo shared key |
+| Intel Pro API | $29/mo or $0.05/query |
 | x402 USDC | $0.05/call micropayments |
 | ClawHub Skills | 9 published (5 live v2.0, 4 pending) |
 | Fleet Workers | 6 deployed (health, revenue, intel, content, executor, orchestrator) |
@@ -27,21 +27,21 @@
 
 ## $10,000/DAY Revenue Architecture
 
-### Tier 1: MCP Pro Subscriptions ($9/mo × subscribers)
+### Tier 1: MCP Pro Subscriptions ($29/mo × subscribers)
 
 - **Daily Target**: $300/day
-- **Path**: 1,000 Pro subscribers = $9,000/mo
+- **Path**: 1,000 Pro subscribers = $29,000/mo
 - **Growth Levers**: ClawHub visibility, GitHub stars, SEO, developer community word-of-mouth
 - **Immediate Actions**:
   - Publish 10 new skills targeting trending AI agent use cases
   - Optimize all skill descriptions with SEO keywords
   - Cross-promote across MoltBook, Telegram, GitHub README
-  - Add a "49 tools for $9" CTA to every published content piece
+  - Add a "49 tools for $29/mo" CTA to every published content piece
 
 ### Tier 2: Intel Pro API ($19/mo or $0.05/query)
 
 - **Daily Target**: $500/day
-- **Path**: 500 Pro subscribers + 10,000 agent queries/day = $9,500/mo + $500/day
+- **Path**: 500 Pro subscribers + 10,000 agent queries/day = $29,500/mo + $500/day
 - **Growth Levers**: Marketing to AI agent builders, differentiated live data quality
 - **Immediate Actions**:
   - Replace all hardcoded trending data with live GitHub/npm/Smithery scraping
@@ -109,7 +109,7 @@
 
 | Channel | Daily Target | Monthly | How |
 |---------|-------------|---------|-----|
-| Pro Subs | $300 | $9,000 | 1,000 subs × $9 |
+| Pro Subs | $300 | $9,000 | 1,000 subs × $29 |
 | Intel Pro | $500 | $15,000 | 500 subs + 10K queries |
 | Enterprise | $170 | $5,000 | 20 enterprise customers |
 | Products | $1,500 | $45,000 | 50 sales/day × $30 avg |

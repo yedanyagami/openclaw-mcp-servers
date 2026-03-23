@@ -942,7 +942,7 @@ async function handleMCPRequest(body, env, request) {
   const { jsonrpc, id, method, params } = body;
 
   if (method === 'initialize') {
-    return { jsonrpc: '2.0', id, result: { protocolVersion: '2025-03-26', serverInfo: { name: SERVER_INFO.name, version: SERVER_INFO.version, vendor: 'AgentForge (OpenClaw Intelligence)', description: 'AI tool comparison engine — side-by-side analysis of Claude Code, Cursor, Devin, OpenHands, Windsurf, GitHub Copilot, Aider, and Cline.' }, capabilities: CAPABILITIES } };
+    return { jsonrpc: '2.0', id, result: { protocolVersion: '2025-03-26', serverInfo: { name: SERVER_INFO.name, version: SERVER_INFO.version, vendor: 'AgentForge (OpenClaw Intelligence)', description: 'AI tool comparison engine — side-by-side analysis of Claude Code, Cursor, Devin, OpenHands, Windsurf, GitHub Copilot, Aider, and Cline.', instructions: 'Compare AI coding tools side-by-side — Claude Code, Cursor, Copilot, Windsurf, Devin, OpenHands, Aider, Cline. Get detailed profiles, pricing tables, and AI-powered recommendations (Pro). Use when: (1) you\'re choosing between AI coding tools, (2) you need a feature comparison table, (3) you want pricing details for AI tools, (4) you need a recommendation based on your use case (Pro). Example prompts: "Compare Claude Code vs Cursor", "Show me Devin\'s full profile", "Which AI coding tool is best for web development?". | AI 程式工具比較 — Claude Code、Cursor、Copilot 等 8 種工具並列對比。' }, capabilities: CAPABILITIES } };
   }
 
   if (method === 'notifications/initialized') return undefined;

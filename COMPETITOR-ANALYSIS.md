@@ -14,7 +14,7 @@ This document compares OpenClaw MCP Servers against three categories of alternat
 | **Beginner Friendliness** | Low (requires Node.js, git, CLI) | Medium (marketplace UI, some config) | Low (varies wildly per server) | **High (paste URL, restart)** |
 | **Multilingual Docs** | Rare (English only) | English only | English only, if docs exist | **EN + ZH-TW + JA** |
 | **Tool Coverage** | Depends on what you build | Broad but inconsistent quality | 1-5 tools per server | **49 tools, 9 curated servers** |
-| **Pricing** | Free (but your compute/time) | Free tier + paid plans ($15-30/mo) | Usually free, sometimes paid | **Free (3 servers) / $9/mo Pro** |
+| **Pricing** | Free (but your compute/time) | Free tier + paid plans ($15-30/mo) | Usually free, sometimes paid | **Free (3 servers) / $29/mo Pro** |
 | **Visual Docs** | Rarely | Basic | Often none | **Trilingual guides, FAQ, troubleshooting** |
 | **Maintenance** | You handle updates, uptime | Marketplace handles hosting | You handle per-server | **Zero -- Cloudflare edge, managed** |
 | **Consistency** | As good as you make it | Varies by author | No consistency | **Same team, same quality, same docs** |
@@ -60,7 +60,7 @@ This document compares OpenClaw MCP Servers against three categories of alternat
 - Faster setup (10 seconds vs 5-15 minutes)
 - Consistent quality across all servers (one team maintains everything)
 - Trilingual documentation (Smithery is English-only)
-- Lower Pro price ($9/mo vs $15-30/mo typical)
+- Lower Pro price ($29/mo vs $15-30/mo typical)
 - Predictable behavior (same architecture, same error handling, same auth)
 - Single source of support (not fragmented across server authors)
 
@@ -100,9 +100,9 @@ This document compares OpenClaw MCP Servers against three categories of alternat
 | Self-Hosted | "Free" (your compute + time) | N/A | Whatever you build |
 | Smithery | Limited free usage | $15-30/month | Marketplace access |
 | Individual Servers | Usually free | Varies ($5-20/mo per server) | Per-server access |
-| **OpenClaw** | 3 servers, 20 calls/day | **$9/month** | All 9 servers, 50K calls/month |
+| **OpenClaw** | 3 servers, 20 calls/day | **$29/month** | All 9 servers, 50K calls/month |
 
-OpenClaw Pro at $9/month is the lowest-cost option for access to a full suite of managed MCP tools.
+OpenClaw Pro at $29/month is the lowest-cost option for access to a full suite of managed MCP tools.
 
 ---
 
