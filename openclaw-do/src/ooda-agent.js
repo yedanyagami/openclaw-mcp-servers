@@ -153,6 +153,51 @@ export class OODAAgent extends DurableObject {
       decisions.push({ action: 'kg-refresh', priority: 'normal', reason: 'Knowledge may be stale' });
     }
 
+    // Consult AGIBrain DO for routing recommendation
+    try {
+      const brainId = this.env.AGI_BRAIN.idFromName('primary');
+      const brainStub = this.env.AGI_BRAIN.get(brainId);
+      const rec = await brainStub.fetch(new Request('http://internal/recommend?task_type=monitoring'));
+      const recData = await rec.json();
+      if (recData.recommendation) {
+        this._setState('preferred_brain', recData.recommendation.recommended);
+      }
+    } catch (e) {
+      // AGIBrain may not be initialized yet — non-fatal
+    }
+
+    // For complex analysis, consult VM brains via external fetch
+    if (analysis.summary.length > 200 || analysis.observations_count > 3) {
+      try {
+        const rendanUrl = this.env.RENDAN_URL || 'http://161.33.7.159:18790';
+        const rendanToken = this.env.RENDAN_API_TOKEN || '';
+        const resp = await fetch(`${rendanUrl}/v1/plan`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${rendanToken}`,
+          },
+          body: JSON.stringify({ payload: `Based on fleet analysis: ${analysis.summary.substring(0, 500)}. What actions should the OODA agent take?` }),
+          signal: AbortSignal.timeout(15000),
+        });
+        if (resp.ok) {
+          const planData = await resp.json();
+          if (planData.plan?.steps) {
+            for (const step of planData.plan.steps.slice(0, 3)) {
+              decisions.push({
+                action: 'vm-brain-recommended',
+                priority: 'normal',
+                reason: step.description,
+                source: 'rendan',
+              });
+            }
+          }
+        }
+      } catch (e) {
+        // VM brain unreachable — continue with edge-only decisions
+      }
+    }
+
     return decisions;
   }
 

@@ -297,6 +297,71 @@ async function fleetStatus(env) {
   return Promise.all(checks);
 }
 
+// ── Helpers: Hash + Cohere Embedding ──
+function simpleQueryHash(query) {
+  const normalized = query.toLowerCase().trim().replace(/\s+/g, ' ');
+  let hash = 0;
+  for (let i = 0; i < normalized.length; i++) {
+    hash = ((hash << 5) - hash + normalized.charCodeAt(i)) | 0;
+  }
+  return hash.toString(36);
+}
+
+// Cohere embedding — for future use when Vectorize index is recreated at 1024d
+// Current index is 768d (BGE-base). No Cohere model supports 768d:
+//   embed-v4.0: [256, 512, 1024, 1536]
+//   embed-english-v3.0: fixed 1024
+// To enable: recreate Vectorize index at 1024d, then switch
+async function embedCohere(env, texts, inputType = 'search_query') {
+  const resp = await fetch('https://api.cohere.com/v2/embed', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${env.COHERE_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'embed-v4.0',
+      texts: texts.map(t => t.slice(0, 2000)),
+      input_type: inputType,
+      embedding_types: ['float'],
+      truncate: 'END',
+      output_dimension: 1024
+    }),
+    signal: AbortSignal.timeout(5000)
+  });
+  const json = await resp.json();
+  if (json.embeddings?.float?.[0]) return json.embeddings.float[0];
+  if (json.embeddings?.[0]) return json.embeddings[0];
+  throw new Error(json.message || 'Cohere embed failed');
+}
+
+// ── RAGAS-inspired Retrieval Evaluation (no ground truth needed) ──
+function evaluateRetrieval(query, results, rerankScores) {
+  const metrics = {};
+
+  // 1. Source Diversity — unique sources / total possible sources
+  const uniqueSources = new Set();
+  results.forEach(r => (r._sources || []).forEach(s => uniqueSources.add(s)));
+  metrics.source_diversity = uniqueSources.size / 7; // 7 default sources
+
+  // 2. Confidence Spread — std dev of rerank/RRF scores (higher = more differentiated = better)
+  const scores = results.map(r => r._rerank_score || r._rrf_score || 0).filter(s => s > 0);
+  if (scores.length > 1) {
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const variance = scores.reduce((a, b) => a + (b - mean) ** 2, 0) / scores.length;
+    metrics.confidence_spread = Math.sqrt(variance);
+  } else {
+    metrics.confidence_spread = 0;
+  }
+
+  // 3. Result density — how many results have meaningful content
+  const withContent = results.filter(r => (r.summary || '').length > 20).length;
+  metrics.content_density = results.length > 0 ? withContent / results.length : 0;
+
+  // 4. Cross-source agreement — fraction of results appearing in >1 source
+  const crossSource = results.filter(r => (r._sources || []).length > 1).length;
+  metrics.cross_source_agreement = results.length > 0 ? crossSource / results.length : 0;
+
+  return metrics;
+}
+
 // ── Unified Memory Query (11-source: D1+Vectorize+Zilliz×3+KG+Neo4j+Mem0+Brave+Neon+Tavily) ──
 // Service Binding URLs (used as fallback when bindings unavailable)
 const ZILLIZ_BRIDGE_URL = 'https://zilliz-bridge.yagami8095.workers.dev';
@@ -312,21 +377,51 @@ function bindingOrFetch(env, bindingName, httpUrl, path, opts) {
 const NEO4J_URL = 'https://b43cdce1.databases.neo4j.io/db/b43cdce1/query/v2';
 const MEM0_URL = 'https://api.mem0.ai/v1';
 
-async function memoryQuery(env, query, sources, limit = 10) {
+async function memoryQuery(env, query, sources, limit = 10, opts = {}) {
   const startTime = Date.now();
+
+  // Semantic cache — check KV for exact query match (5-min TTL)
+  if (!opts.skip_cache) {
+    const cacheKey = `rag-cache-${simpleQueryHash(query)}`;
+    try {
+      const cached = await env.KV.get(cacheKey, 'json');
+      if (cached && cached._cached_at > Date.now() - 300000) {
+        return { ...cached, meta: { ...cached.meta, cache_hit: true, latency_ms: Date.now() - startTime } };
+      }
+    } catch { /* no cache, continue */ }
+  }
+
   // Default sources: skip Zilliz and KG (cause 1042 CPU timeout on free plan when combined with 7+ other sources)
   // Users can explicitly request them via sources parameter
   const allSources = sources || ['d1', 'vectorize', 'neo4j', 'mem0', 'brave', 'neon', 'tavily'];
   const results = {};
   const errors = [];
 
-  // 1. Embed query
-  let embedding = null;
-  try {
-    const emb = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [query.slice(0, 500)] });
-    embedding = emb?.data?.[0] || null;
-  } catch (e) {
-    errors.push(`Embedding: ${e.message}`);
+  // 1. Embed query (use pre-computed embedding if provided by Agentic RAG)
+  let embedding = opts.embedding || null;
+  let embedModelUsed = 'pre-computed';
+  if (!embedding) {
+    try {
+      // Determine embedding model
+      // NOTE: Cohere A/B disabled — embed-v4.0 outputs 1024d, Vectorize index is 768d (BGE-base)
+      // To enable Cohere: recreate Vectorize index at 1024d first
+      // Manual override via opts.embed_model='cohere' still works (caller must handle dimension mismatch)
+      let useCohere = false;
+      if (opts.embed_model === 'cohere' && env.COHERE_API_KEY) {
+        useCohere = true; // explicit override only
+      }
+
+      if (useCohere) {
+        embedding = await embedCohere(env, [query.slice(0, 500)], 'search_query');
+        embedModelUsed = 'cohere-embed-v4.0-1024d';
+      } else {
+        const emb = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [query.slice(0, 500)] });
+        embedding = emb?.data?.[0] || null;
+        embedModelUsed = 'bge-base-en-v1.5';
+      }
+    } catch (e) {
+      errors.push(`Embedding: ${e.message}`);
+    }
   }
 
   // 2. Parallel fetch all sources
@@ -502,18 +597,12 @@ async function memoryQuery(env, query, sources, limit = 10) {
     })());
   }
 
-  // Neon Postgres via Hyperdrive (connection pooling + edge caching, up to 17x faster)
-  // Falls back to raw HTTP if Hyperdrive binding not available
-  if (allSources.includes('neon') && (env.NEON || env.NEON_CONNECTION_STRING)) {
+  // Neon Postgres via HTTP SQL API (needs original Neon host, NOT Hyperdrive-rewritten)
+  // Hyperdrive rewrites host for TCP — but we use HTTP /sql API, so need the original host
+  if (allSources.includes('neon') && env.NEON_CONNECTION_STRING) {
     tasks.push((async () => {
       try {
-        let connStr;
-        if (env.NEON) {
-          // Hyperdrive binding — connection string auto-rewritten to edge proxy
-          connStr = env.NEON.connectionString;
-        } else {
-          connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
-        }
+        const connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
         const connParts = connStr.match(/postgresql:\/\/[^@]+@([^/?]+)/);
         if (connParts) {
           const host = connParts[1];
@@ -576,6 +665,30 @@ async function memoryQuery(env, query, sources, limit = 10) {
 
   await Promise.all(tasks);
 
+  // 2.5. Chunk deduplication — remove exact dupes before RRF scoring
+  let dedupCount = 0;
+  for (const [sourceName, items] of Object.entries(results)) {
+    if (!Array.isArray(items)) continue;
+    const seen = new Set();
+    const before = items.length;
+    results[sourceName] = items.filter(r => {
+      const key = `${(r.name || '').toLowerCase().trim()}::${(r.summary || '').slice(0, 100).toLowerCase().trim()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    dedupCount += before - results[sourceName].length;
+  }
+
+  // 2.6. Filter exclude_ids (for iterative Agentic RAG — avoid returning already-seen results)
+  if (opts.exclude_ids && Array.isArray(opts.exclude_ids) && opts.exclude_ids.length > 0) {
+    const excludeSet = new Set(opts.exclude_ids);
+    for (const [sourceName, items] of Object.entries(results)) {
+      if (!Array.isArray(items)) continue;
+      results[sourceName] = items.filter(r => !excludeSet.has(r.id));
+    }
+  }
+
   // 3. RRF fusion (k=60)
   const k = 60;
   const scores = {};
@@ -630,13 +743,47 @@ async function memoryQuery(env, query, sources, limit = 10) {
     }
   }
 
-  return {
+  // 5. Injection detection on retrieved context — filter prompt injection in results
+  const INJECTION_PATTERNS = [
+    /ignore\s+(previous|all|above)\s+instructions/i,
+    /you\s+are\s+now\s+/i,
+    /system:\s*override/i,
+    /\[INST\]/i,
+    /<\|im_start\|>/i,
+    /disregard\s+(all|any)\s+(prior|previous)/i,
+    /new\s+system\s+prompt/i,
+  ];
+  let injectionFiltered = 0;
+  finalResults = finalResults.filter(r => {
+    const text = `${r.name || ''} ${r.summary || ''}`;
+    for (const pat of INJECTION_PATTERNS) {
+      if (pat.test(text)) { injectionFiltered++; return false; }
+    }
+    return true;
+  });
+
+  const response = {
     ok: true,
     query,
     count: finalResults.length,
     results: finalResults,
-    meta: { sources_queried: Object.keys(sourceCounts), source_counts: sourceCounts, latency_ms: Date.now() - startTime, reranked: finalResults !== merged, errors: errors.length > 0 ? errors : undefined }
+    meta: {
+      sources_queried: Object.keys(sourceCounts), source_counts: sourceCounts,
+      latency_ms: Date.now() - startTime, reranked: finalResults !== merged,
+      embed_model: embedModelUsed, dedup_removed: dedupCount, injection_filtered: injectionFiltered,
+      errors: errors.length > 0 ? errors : undefined
+    }
   };
+
+  // Write to semantic cache (5-min TTL)
+  if (!opts.skip_cache && finalResults.length > 0) {
+    const cacheKey = `rag-cache-${simpleQueryHash(query)}`;
+    try {
+      await env.KV.put(cacheKey, JSON.stringify({ ...response, _cached_at: Date.now() }), { expirationTtl: 300 });
+    } catch { /* non-fatal */ }
+  }
+
+  return response;
 }
 
 // ── Unified Memory Write (D1 + Vectorize + Zilliz + KG + Neo4j + Mem0 + Neon) ──
@@ -762,15 +909,10 @@ async function memoryWrite(env, items, targets = 'all') {
       } catch (e) { errors.push(`Mem0 ${item.id}: ${e.message}`); }
     }
 
-    // Neon Postgres via Hyperdrive (or raw HTTP fallback)
-    if (targetList.includes('neon') && (env.NEON || env.NEON_CONNECTION_STRING)) {
+    // Neon Postgres via HTTP SQL API (needs original host, not Hyperdrive)
+    if (targetList.includes('neon') && env.NEON_CONNECTION_STRING) {
       try {
-        let connStr;
-        if (env.NEON) {
-          connStr = env.NEON.connectionString;
-        } else {
-          connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
-        }
+        const connStr = env.NEON_CONNECTION_STRING + (env.NEON_CONNECTION_STRING.includes('sslmode') ? '' : '?sslmode=require');
         const connParts = connStr.match(/postgresql:\/\/[^@]+@([^/?]+)/);
         if (connParts) {
           const host = connParts[1];
@@ -932,8 +1074,33 @@ export default {
     if (path === '/v1/memory/query' && request.method === 'POST') {
       const body = await request.json();
       if (!body.query) return jsonResponse({ error: 'Missing query' }, 400);
-      const result = await memoryQuery(env, body.query, body.sources, body.limit || 10);
+      const opts = {};
+      if (body.embedding) opts.embedding = body.embedding;
+      if (body.exclude_ids) opts.exclude_ids = body.exclude_ids;
+      if (body.skip_cache) opts.skip_cache = true;
+      if (body.embed_model) opts.embed_model = body.embed_model;
+      const result = await memoryQuery(env, body.query, body.sources, body.limit || 10, opts);
       return jsonResponse(result);
+    }
+
+    // POST /v1/memory/query/evaluated — query with RAGAS-style evaluation metrics
+    if (path === '/v1/memory/query/evaluated' && request.method === 'POST') {
+      const body = await request.json();
+      if (!body.query) return jsonResponse({ error: 'Missing query' }, 400);
+      const opts = { skip_cache: true }; // always fresh for evaluation
+      if (body.embedding) opts.embedding = body.embedding;
+      if (body.embed_model) opts.embed_model = body.embed_model;
+      const result = await memoryQuery(env, body.query, body.sources, body.limit || 10, opts);
+      const evaluation = evaluateRetrieval(body.query, result.results || [], null);
+      // Store evaluation to D1
+      try {
+        const evalId = `eval-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        await env.DB.prepare(
+          `INSERT INTO rag_evaluations (id, query, source_diversity, confidence_spread, content_density, cross_source_agreement, result_count, latency_ms, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+        ).bind(evalId, body.query.slice(0, 500), evaluation.source_diversity, evaluation.confidence_spread, evaluation.content_density, evaluation.cross_source_agreement, result.count, result.meta?.latency_ms || 0).run();
+      } catch { /* table may not exist yet, non-fatal */ }
+      return jsonResponse({ ...result, evaluation });
     }
 
     // POST /v1/memory/write — unified multi-target write
@@ -953,7 +1120,153 @@ export default {
       return jsonResponse({ total: status.length, alive, healthy, workers: status });
     }
 
-    return jsonResponse({ error: 'Not found', routes: ['/v1/dispatch', '/v1/queue', '/v1/discuss', '/v1/llm', '/v1/memory/save', '/v1/memory/query', '/v1/memory/write', '/v1/fleet/status'] }, 404);
+    // Unified Metrics — aggregate from rendan + GOLEM + CF fleet (cached 60s in KV)
+    if (path === '/v1/metrics/unified') {
+      const cacheKey = 'unified-metrics-cache';
+      try {
+        const cached = await env.KV.get(cacheKey, 'json');
+        if (cached) return jsonResponse(cached);
+      } catch { /* no cache */ }
+
+      const unified = { timestamp: new Date().toISOString(), brains: {}, fleet: {}, agi_scores: {} };
+
+      // Read VM brain metrics from KV (pushed by VMs every 5min via cron)
+      for (const brain of ['rendan', 'golem']) {
+        try {
+          const vmData = await env.KV.get(`vm-metrics-${brain}`, 'json');
+          if (vmData) {
+            unified.brains[brain] = vmData.metrics || {};
+            unified.agi_scores[brain] = vmData.agi_score || {};
+            unified.brains[brain]._pushed_at = vmData.pushed_at;
+            unified.brains[brain]._source = 'kv-push';
+          }
+        } catch { /* no data yet */ }
+      }
+
+      // Fleet status
+      try {
+        const status = await fleetStatus(env);
+        unified.fleet = {
+          total: status.length,
+          alive: status.filter(s => s.alive).length,
+          healthy: status.filter(s => s.ok).length,
+        };
+      } catch (e) { unified.fleet = { error: e.message }; }
+
+      // D1 task stats
+      try {
+        const stats = await env.DB.prepare(
+          `SELECT COUNT(*) as total, SUM(CASE WHEN status='completed' THEN 1 ELSE 0 END) as completed FROM fleet_tasks`
+        ).first();
+        unified.d1_tasks = stats || {};
+      } catch { /* table may not exist */ }
+
+      // Cache for 60s
+      try { await env.KV.put(cacheKey, JSON.stringify(unified), { expirationTtl: 60 }); } catch { /* non-fatal */ }
+
+      return jsonResponse(unified);
+    }
+
+    // GitHub status endpoint
+    if (path === '/v1/github/status') {
+      try {
+        const ghToken = env.GITHUB_TOKEN;
+        if (!ghToken) return jsonResponse({ error: 'GITHUB_TOKEN not configured' }, 500);
+
+        const headers = { 'Authorization': `Bearer ${ghToken}`, 'User-Agent': 'OpenClaw-FleetGateway/2.0', 'Accept': 'application/vnd.github+json' };
+        const repo = 'yagami8095/openclaw-mcp-servers';
+
+        const [prs, commits, runs] = await Promise.allSettled([
+          fetch(`https://api.github.com/repos/${repo}/pulls?state=open&per_page=5`, { headers, signal: AbortSignal.timeout(5000) }).then(r => r.json()),
+          fetch(`https://api.github.com/repos/${repo}/commits?per_page=5`, { headers, signal: AbortSignal.timeout(5000) }).then(r => r.json()),
+          fetch(`https://api.github.com/repos/${repo}/actions/runs?per_page=5`, { headers, signal: AbortSignal.timeout(5000) }).then(r => r.json()),
+        ]);
+
+        return jsonResponse({
+          repo,
+          open_prs: prs.status === 'fulfilled' && Array.isArray(prs.value) ? prs.value.length : 0,
+          prs: prs.status === 'fulfilled' && Array.isArray(prs.value) ? prs.value.map(p => ({ number: p.number, title: p.title, state: p.state })) : [],
+          recent_commits: commits.status === 'fulfilled' && Array.isArray(commits.value) ? commits.value.map(c => ({ sha: c.sha?.substring(0, 7), message: c.commit?.message?.substring(0, 80) })) : [],
+          workflow_runs: runs.status === 'fulfilled' && runs.value?.workflow_runs ? runs.value.workflow_runs.map(r => ({ name: r.name, status: r.status, conclusion: r.conclusion })) : [],
+          timestamp: new Date().toISOString(),
+        });
+      } catch (e) {
+        return jsonResponse({ error: e.message }, 500);
+      }
+    }
+
+    // Unified skills endpoint (merged from all brains)
+    if (path === '/v1/skills/unified') {
+      try {
+        const skills = {};
+        for (const brain of ['rendan', 'golem']) {
+          const data = await env.KV.get(`vm-metrics-${brain}`, 'json');
+          if (data?.health?.skills) {
+            skills[brain] = { count: data.health.skills, agi_score: data.agi_score?.total || 0 };
+          }
+        }
+        return jsonResponse({ skills, total_brains: Object.keys(skills).length, timestamp: new Date().toISOString() });
+      } catch (e) {
+        return jsonResponse({ error: e.message }, 500);
+      }
+    }
+
+    // ═══ Shared Scratchpad — Cross-Brain Working Memory ═══
+
+    // POST /v1/scratchpad/write — write intermediate reasoning
+    if (path === '/v1/scratchpad/write' && request.method === 'POST') {
+      const body = await request.json();
+      const { taskId, brainId, step, content } = body;
+      if (!taskId || !brainId || !content) return jsonResponse({ error: 'taskId, brainId, content required' }, 400);
+      try {
+        // Auto-create table if not exists
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS scratchpad (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          task_id TEXT NOT NULL,
+          brain_id TEXT NOT NULL,
+          step TEXT DEFAULT 'general',
+          content TEXT NOT NULL,
+          created_at TEXT DEFAULT (datetime('now'))
+        )`).run();
+        await env.DB.prepare(
+          'INSERT INTO scratchpad (task_id, brain_id, step, content) VALUES (?, ?, ?, ?)'
+        ).bind(taskId, brainId, step || 'general', content.substring(0, 4000)).run();
+        // Auto-expire entries older than 24h
+        await env.DB.prepare("DELETE FROM scratchpad WHERE created_at < datetime('now', '-24 hours')").run();
+        return jsonResponse({ written: true, taskId, brainId });
+      } catch (e) { return jsonResponse({ error: e.message }, 500); }
+    }
+
+    // GET /v1/scratchpad/read — read other brains' reasoning for a task
+    if (path === '/v1/scratchpad/read' && request.method === 'GET') {
+      const url = new URL(request.url);
+      const taskId = url.searchParams.get('taskId');
+      const excludeBrain = url.searchParams.get('excludeBrain');
+      const limit = Math.min(parseInt(url.searchParams.get('limit') || '10'), 50);
+      try {
+        let query, params;
+        if (taskId) {
+          if (excludeBrain) {
+            query = 'SELECT * FROM scratchpad WHERE task_id = ? AND brain_id != ? ORDER BY created_at DESC LIMIT ?';
+            params = [taskId, excludeBrain, limit];
+          } else {
+            query = 'SELECT * FROM scratchpad WHERE task_id = ? ORDER BY created_at DESC LIMIT ?';
+            params = [taskId, limit];
+          }
+        } else {
+          query = 'SELECT * FROM scratchpad ORDER BY created_at DESC LIMIT ?';
+          params = [limit];
+        }
+        const results = await env.DB.prepare(query).bind(...params).all();
+        return jsonResponse({ entries: results.results || [], count: (results.results || []).length });
+      } catch (e) {
+        // Table might not exist yet
+        if (e.message.includes('no such table')) return jsonResponse({ entries: [], count: 0 });
+        return jsonResponse({ error: e.message }, 500);
+      }
+    }
+
+    return jsonResponse({ error: 'Not found', routes: ['/v1/dispatch', '/v1/queue', '/v1/discuss', '/v1/llm', '/v1/memory/save', '/v1/memory/query', '/v1/memory/query/evaluated', '/v1/memory/write', '/v1/fleet/status', '/v1/metrics/unified', '/v1/github/status', '/v1/skills/unified', '/v1/scratchpad/write', '/v1/scratchpad/read'] }, 404);
   },
 
   // ── Cron: Auto-save fleet state every 15 minutes ──

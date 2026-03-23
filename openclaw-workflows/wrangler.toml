@@ -2,7 +2,7 @@ name = "openclaw-workflows"
 main = "src/index.js"
 compatibility_date = "2024-12-01"
 
-# Workflow bindings
+# Workflow bindings (6 workflows)
 [[workflows]]
 name = "evolution-workflow"
 binding = "EVOLUTION"
@@ -12,6 +12,26 @@ class_name = "EvolutionWorkflow"
 name = "deploy-workflow"
 binding = "DEPLOY"
 class_name = "DeployWorkflow"
+
+[[workflows]]
+name = "research-workflow"
+binding = "RESEARCH"
+class_name = "ResearchWorkflow"
+
+[[workflows]]
+name = "security-audit-workflow"
+binding = "SECURITY_AUDIT"
+class_name = "SecurityAuditWorkflow"
+
+[[workflows]]
+name = "skill-evolution-workflow"
+binding = "SKILL_EVOLUTION"
+class_name = "SkillEvolutionWorkflow"
+
+[[workflows]]
+name = "ab-test-workflow"
+binding = "AB_TEST"
+class_name = "ABTestWorkflow"
 
 # Workers AI via AI Gateway
 [ai]
@@ -23,6 +43,11 @@ gateway = { id = "default" }
 binding = "DB"
 database_name = "yedan-army-command"
 database_id = "48fa9025-84ba-448a-9993-1d88e37f0a5c"
+
+# KV for reading VM metrics (skill-evolution needs this)
+[[kv_namespaces]]
+binding = "KV"
+id = "51826cd6550a40e79a61d462b084a1c8"
 
 # Service Bindings
 [[services]]

@@ -5,9 +5,9 @@ compatibility_date = "2024-12-01"
 [vars]
 BUNSHIN_URL = "https://openclaw-mcp-servers.onrender.com"
 
-# Health monitoring every 3 minutes
+# Health monitoring every 1 minute (overclocked)
 [triggers]
-crons = ["*/3 * * * *"]
+crons = ["*/1 * * * *"]
 
 [[kv_namespaces]]
 binding = "KV"
@@ -30,3 +30,7 @@ service = "fleet-gateway"
 [[services]]
 binding = "ORCHESTRATOR"
 service = "yedan-orchestrator"
+
+[[services]]
+binding = "CORTEX"
+service = "openclaw-do"

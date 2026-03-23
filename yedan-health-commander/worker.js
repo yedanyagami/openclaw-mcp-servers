@@ -213,6 +213,35 @@ async function healthSweep(env) {
     ).run();
   } catch {}
 
+  // Feed UnifiedCortex with health observations
+  try {
+    if (env.CORTEX) {
+      await env.CORTEX.fetch(new Request('http://internal/cortex/observe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'health',
+          type: 'fleet_sweep',
+          content: JSON.stringify({ up: totalUp, down: totalDown, incidents: incidents.length, sla: sla?.overall }),
+          score: totalDown === 0 ? 1.0 : Math.max(0, 1 - totalDown / (totalUp + totalDown)),
+        }),
+      }));
+      // Send individual incidents as high-priority observations
+      for (const incident of incidents.filter(i => i.severity === 'critical')) {
+        await env.CORTEX.fetch(new Request('http://internal/cortex/observe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'health',
+            type: 'incident',
+            content: incident.message,
+            score: 0.95,
+          }),
+        }));
+      }
+    }
+  } catch { /* Cortex may not be available */ }
+
   // Auto-heal: retry failed endpoints with wake-up pings
   const downEndpoints = incidents.filter(i => i.type === 'endpoint_down' || i.type === 'unreachable');
   if (downEndpoints.length > 0) {
