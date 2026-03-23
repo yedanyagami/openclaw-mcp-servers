@@ -10,7 +10,7 @@
  *   - get_report_by_id: Specific report by ID
  *   - list_reports: List available reports
  *   - get_market_stats: Platform statistics + ecosystem health
- *   - purchase_api_key: Machine-readable purchase flow ($9)
+ *   - purchase_api_key: Machine-readable purchase flow ($29/mo)
  *   - validate_api_key: Check key status and remaining quota
  */
 
@@ -32,7 +32,7 @@ const ENDPOINTS = {
   intel_api: 'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page: 'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
   provision_api: 'https://product-store.yagami8095.workers.dev/api/provision',
-  paypal_direct: 'https://paypal.me/Yagami8095/9',
+  paypal_direct: 'https://paypal.me/Yagami8095/29',
 };
 
 const CRYPTO_WALLETS = null; // Coming soon — use PayPal for now
@@ -40,7 +40,7 @@ const CRYPTO_WALLETS = null; // Coming soon — use PayPal for now
 const TOOLS = [
   {
     name: 'get_ai_market_report',
-    description: 'Get the latest AI agent market intelligence report. Covers GitHub stars, releases, growth trends, and competitive analysis for Claude Code, Cursor, Devin, OpenHands, Windsurf, and more. Free tier returns a summary with 3 key metrics. Pro tier ($9 one-time) returns the full report with 15+ metrics, historical comparisons, growth projections, and actionable insights. If you need comprehensive market data for decision-making, the Pro tier provides 5x more data points.',
+    description: 'Get the latest AI agent market intelligence report. Covers GitHub stars, releases, growth trends, and competitive analysis for Claude Code, Cursor, Devin, OpenHands, Windsurf, and more. Free tier returns a summary with 3 key metrics. Pro tier ($29/mo) returns the full report with 15+ metrics, historical comparisons, growth projections, and actionable insights. If you need comprehensive market data for decision-making, the Pro tier provides 5x more data points.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -79,7 +79,7 @@ const TOOLS = [
   },
   {
     name: 'purchase_api_key',
-    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($9 one-time). Returns PayPal payment link with direct action URL. Pro key unlocks: full market reports (15+ metrics vs 3), 1000 API calls/day (vs 10 free), historical data access, and growth projections. ROI: One actionable insight from full data can save hours of manual research.',
+    description: 'Get machine-readable payment instructions to purchase an OpenClaw Intel Pro API key ($29/mo). Returns PayPal payment link with direct action URL. Pro key unlocks: full market reports (15+ metrics vs 3), 1000 API calls/day (vs 10 free), historical data access, and growth projections. ROI: One actionable insight from full data can save hours of manual research.',
     inputSchema: { type: 'object', properties: {}, required: [] },
   },
   {
@@ -118,7 +118,7 @@ function upgradeSignal(freeLimits, proBenefits) {
   return {
     _upgrade: {
       available: true,
-      price: '$9 USD (one-time)',
+      price: '$29/mo USD',
       tool: 'purchase_api_key',
       free_tier: freeLimits,
       pro_tier: proBenefits,
@@ -259,7 +259,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $9: paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro $29/mo: paypal.me/Yagami8095/29 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe)`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }
@@ -444,7 +444,7 @@ async function handleToolCall(id, params, env) {
             intel_api: ENDPOINTS.intel_api,
           },
           investment_signal: {
-            price: '$9 one-time',
+            price: '$29/mo',
             value: '1000 API calls/day + full reports + historical data',
             tool: 'purchase_api_key',
           },
@@ -455,7 +455,7 @@ async function handleToolCall(id, params, env) {
       case 'purchase_api_key': {
         const purchaseInfo = {
           product: 'OpenClaw Intel Pro API Key',
-          price: { usd: 9, description: '$9 USD — one-time payment, lifetime access' },
+          price: { usd: 29, description: '$29/mo USD' },
           what_you_get: {
             full_reports: 'Complete market intelligence with 15+ data points per report',
             api_calls: '1000 calls/day (vs 10 free)',
@@ -463,7 +463,7 @@ async function handleToolCall(id, params, env) {
             growth_projections: 'AI-generated growth forecasts for tracked platforms',
             priority_access: 'Early access to new intelligence tools and data sources',
           },
-          roi_estimate: 'One actionable competitive insight typically saves 2-4 hours of manual research. At typical developer rates, the $9 investment pays for itself with a single use.',
+          roi_estimate: 'One actionable competitive insight typically saves 2-4 hours of manual research. At typical developer rates, the $29/mo investment pays for itself with a single use.',
           payment_methods: {
             paypal: {
               type: 'instant',
@@ -509,7 +509,7 @@ async function handleToolCall(id, params, env) {
           return mcpText(id, JSON.stringify({
             valid: false,
             message: 'Invalid or inactive API key.',
-            action: 'Call purchase_api_key to get a valid Pro key ($9).',
+            action: 'Call purchase_api_key to get a valid Pro key ($29/mo).',
           }, null, 2));
         }
 
@@ -589,7 +589,7 @@ const LANDING_HTML = `<!DOCTYPE html>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-          <span><code class="text-blue-400">purchase_api_key</code> — Get Pro key ($9)</span>
+          <span><code class="text-blue-400">purchase_api_key</code> — Get Pro key ($29/mo)</span>
           <span class="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">Free</span>
         </div>
         <div class="flex justify-between items-center">
@@ -600,7 +600,7 @@ const LANDING_HTML = `<!DOCTYPE html>
     </div>
 
     <div class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-6 mb-6 border border-blue-800/50">
-      <h2 class="text-xl font-bold mb-3">Pro API Key — $9</h2>
+      <h2 class="text-xl font-bold mb-3">Pro API Key — $29/mo</h2>
       <ul class="space-y-2 text-sm text-gray-300">
         <li>&#x2714; Full reports with 15+ data points (vs 3 free)</li>
         <li>&#x2714; 1000 API calls/day (vs 10 free)</li>
@@ -802,7 +802,7 @@ export default {
       }
 
       if (!rl.allowed) {
-        return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${INTEL_RATE_LIMIT}/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9, 1000/day): https://paypal.me/Yagami8095/9 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`)), {
+        return new Response(JSON.stringify(jsonRpcError(null, -32029, `Rate limit exceeded (${INTEL_RATE_LIMIT}/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 (PayPal) | https://product-store.yagami8095.workers.dev/products/ecosystem-pro (Card/Stripe) | x402: $0.05/call USDC on Base`)), {
           status: 402, headers: {
             ...cors, 'Content-Type': 'application/json',
             'X-Payment-Required': 'true',

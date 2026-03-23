@@ -1,6 +1,6 @@
 // crypto-payments-mcp — CryptoPay Protocol MCP Server
 // Tools: create_payment, verify_payment, get_balance, list_transactions, generate_invoice
-// Free: 20 req/day | Pro: 1000 req/day ($9/mo)
+// Free: 20 req/day | Pro: 1000 req/day ($29/mo)
 
 const SERVER_INFO = { name: 'crypto-payments', version: '1.0.0' };
 const VENDOR = 'OpenClaw';
@@ -620,7 +620,7 @@ const LANDING_HTML = `<!DOCTYPE html>
     </div>
     <div class="tier pro">
       <h3>Pro</h3>
-      <div class="price">$9<span style="font-size:1rem">/mo</span></div>
+      <div class="price">$29<span style="font-size:1rem">/mo</span></div>
       <p>1000 requests/day · Priority RPC · Extended transaction history · Webhooks</p>
       <p style="margin-top:8px"><a href="https://buy.stripe.com/4gw5na5U19SP9TW288">Upgrade →</a></p>
     </div>
@@ -734,7 +734,7 @@ export default {
         ...Object.entries(CHAINS).map(([k, v]) => `- ${v.name} (chain ID: ${v.chainId}): USDC ${v.usdc}`),
         '',
         '## Tiers',
-        `Free: ${RATE_LIMIT_MAX} req/day | Pro: ${PRO_DAILY_LIMIT} req/day ($9/mo)`,
+        `Free: ${RATE_LIMIT_MAX} req/day | Pro: ${PRO_DAILY_LIMIT} req/day ($29/mo)`,
         '',
         '## Endpoint',
         `POST ${url.origin}/mcp (MCP Streamable HTTP, JSON-RPC 2.0)`,

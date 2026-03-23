@@ -1561,10 +1561,10 @@ code{background:#222;padding:2px 6px;border-radius:3px;font-size:0.85em}
     <strong>Usage | 使用方式:</strong> Add header <code>X-API-Key: ${proKey}</code> to any OpenClaw MCP request. | 將此標頭加入任何 OpenClaw MCP 請求。<br>
     <strong>Limit | 限制:</strong> 100 calls/day (vs 10-50 free) | 每日 100 次呼叫（免費版 10-50 次）<br>
     <strong>Expires | 到期:</strong> ${keyData.expires.split('T')[0]}<br>
-    <strong>Upgrade | 升級:</strong> <a href="https://paypal.me/Yagami8095/9" style="color:#ff6b35">Pay $9 for unlimited Pro | 支付 $9 升級為無限專業版</a>
+    <strong>Upgrade | 升級:</strong> <a href="https://paypal.me/Yagami8095/29" style="color:#ff6b35">Pay $29/mo for Pro | 支付 $29/月升級為 Pro</a>
   </div>
   <div class="info">
-    After trial, upgrade to permanent Pro ($9 one-time) for 1000 calls/day across all 9 MCP servers. | 試用結束後，升級為永久專業版（一次性 $9）即可每日 1000 次呼叫跨全部 9 個 MCP 伺服器。<br>
+    After trial, upgrade to permanent Pro ($29/mo) for 1000 calls/day across all 9 MCP servers. | 試用結束後，升級為永久專業版（$29/月）即可每日 1000 次呼叫跨全部 9 個 MCP 伺服器。<br>
     Servers | 伺服器: json-toolkit, regex-engine, color-palette, timestamp-converter, prompt-enhancer, agentforge, moltbook, fortune, intel
   </div>
 </div>
@@ -1643,7 +1643,7 @@ function handleTokushoho() {
       <tr><th>メールアドレス</th><td>yedanyagamiai@gmail.com</td></tr>
       <tr><th>販売URL</th><td><a href="https://product-store.yagami8095.workers.dev">https://product-store.yagami8095.workers.dev</a></td></tr>
       <tr><th>販売価格</th><td>各商品ページに記載の価格（税込）<br>
-        ・MCP Server Pro: $9/月 (約1,400円)<br>
+        ・MCP Server Pro: $29/月 (約4,480円)<br>
         ・MCP Server Enterprise: $29/月 (約4,500円)<br>
         ・デジタル商品: 各商品ページ参照</td></tr>
       <tr><th>商品代金以外の必要料金</th><td>なし（インターネット接続料金はお客様負担）</td></tr>

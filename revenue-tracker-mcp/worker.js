@@ -259,7 +259,7 @@ async function setMilestoneAlert({ target_amount, metric = 'daily', telegram_cha
     return toolResult({
       error: 'set_milestone_alert requires a Pro key',
       upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288',
-      message: 'Get Pro ($9/mo) for milestone alerts, MRR tracking, and 1000 calls/day',
+      message: 'Get Pro ($29/mo) for milestone alerts, MRR tracking, and 1000 calls/day',
       ecosystem: ECOSYSTEM,
     });
   }
@@ -376,7 +376,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-revenue-tracker":{"type":"streamable-http","url":"https://revenue-tracker-mcp.yagami8095.workers.dev/mcp"}}</pre>
 <p><strong>Free:</strong> 20 req/day &nbsp;|&nbsp; <strong>Pro:</strong> 1,000/day, milestone alerts, MRR tracking</p>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo</a>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo</a>
 </body></html>`;
 
 // ============================================================
@@ -438,7 +438,7 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (url.pathname === '/') return new Response(LANDING_HTML, { headers: { 'Content-Type': 'text/html', ...cors } });
     if (url.pathname === '/llms.txt') {
-      const txt = `# OpenClaw Revenue Tracker MCP\n\nMCP endpoint: https://revenue-tracker-mcp.yagami8095.workers.dev/mcp\nProtocol: MCP Streamable HTTP 2025-03-26\nVendor: OpenClaw Intelligence\n\n## Tools\n- get_revenue_summary: Aggregate revenue across all sources\n- track_order: Log orders from any source\n- get_daily_report: Daily revenue report with breakdown\n- set_milestone_alert: Telegram alerts on revenue targets (Pro)\n\n## Pricing\nFree: 20 req/day | Pro: $9/mo, 1000/day\nUpgrade: https://buy.stripe.com/4gw5na5U19SP9TW288\n`;
+      const txt = `# OpenClaw Revenue Tracker MCP\n\nMCP endpoint: https://revenue-tracker-mcp.yagami8095.workers.dev/mcp\nProtocol: MCP Streamable HTTP 2025-03-26\nVendor: OpenClaw Intelligence\n\n## Tools\n- get_revenue_summary: Aggregate revenue across all sources\n- track_order: Log orders from any source\n- get_daily_report: Daily revenue report with breakdown\n- set_milestone_alert: Telegram alerts on revenue targets (Pro)\n\n## Pricing\nFree: 20 req/day | Pro: $29/mo, 1000/day\nUpgrade: https://buy.stripe.com/4gw5na5U19SP9TW288\n`;
       return new Response(txt, { headers: { 'Content-Type': 'text/plain', ...cors } });
     }
     if (url.pathname === '/mcp') {

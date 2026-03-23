@@ -26,7 +26,7 @@ const ECOSYSTEM = {
   fortune_api: 'https://fortune-api.yagami8095.workers.dev',
   intel_api:   'https://openclaw-intel-api.yagami8095.workers.dev',
   pro_page:    'https://product-store.yagami8095.workers.dev/products/intel-api-pro',
-  paypal:      'https://paypal.me/Yagami8095/9',
+  paypal:      'https://paypal.me/Yagami8095/29',
 };
 
 const SERVER_INFO = { name: 'prompt-enhancer', version: '1.0.0' };
@@ -101,14 +101,14 @@ const TOOLS = [
           enum: ['coding', 'analysis', 'writing', 'translation', 'debugging', 'data-extraction'],
           description: 'Template category.',
         },
-        api_key: { type: 'string', description: 'Pro API key ($9 one-time — see purchase_pro_key).' },
+        api_key: { type: 'string', description: 'Pro API key ($29/mo — see purchase_pro_key).' },
       },
       required: ['category', 'api_key'],
     },
   },
   {
     name: 'purchase_pro_key',
-    description: 'Get purchase instructions for a Pro API key ($9 one-time). Unlocks prompt_template_library and higher rate limits (1000 req/day). FREE tool. | 取得 Pro API 金鑰購買說明（$9 一次性付費）。解鎖提示詞模板庫及更高頻率限制（1000 次/天）。免費工具。',
+    description: 'Get purchase instructions for a Pro API key ($29/mo). Unlocks prompt_template_library and higher rate limits (1000 req/day). FREE tool. | 取得 Pro API 金鑰購買說明（$29/月）。解鎖提示詞模板庫及更高頻率限制（1000 次/天）。免費工具。',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1424,7 +1424,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 | x402: $0.05/call USDC on Base`,
         data: {
           upgradeSignal: true,
           upgrade_url:   ECOSYSTEM.pro_page,
@@ -1447,7 +1447,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 | x402: $0.05/call USDC on Base`,
         data: {
           upgradeSignal: true,
           upgrade_url:   ECOSYSTEM.pro_page,
@@ -1472,7 +1472,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 | x402: $0.05/call USDC on Base`,
         data: { upgradeSignal: true, upgrade_url: ECOSYSTEM.pro_page, paypal: ECOSYSTEM.paypal },
       };
     }
@@ -1489,7 +1489,7 @@ async function dispatchTool(toolName, params, env, request) {
     if (!rl.allowed) {
       throw {
         code: RATE_LIMITED,
-        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($9 one-time, 1000/day): https://paypal.me/Yagami8095/9 | x402: $0.05/call USDC on Base`,
+        message: `Rate limit exceeded (20/day). FREE 7-day trial (100 calls/day): https://product-store.yagami8095.workers.dev/auth/login\n\nPro ($29/mo, 50,000/month): https://paypal.me/Yagami8095/29 | x402: $0.05/call USDC on Base`,
         data: { upgradeSignal: true, upgrade_url: ECOSYSTEM.pro_page, paypal: ECOSYSTEM.paypal },
       };
     }
@@ -1512,7 +1512,7 @@ async function dispatchTool(toolName, params, env, request) {
         upgradeSignal: true,
         upgrade_url:   ECOSYSTEM.pro_page,
         paypal:        ECOSYSTEM.paypal,
-        price:         '$9 one-time',
+        price:         '$29/mo',
       },
     };
 
@@ -1563,7 +1563,7 @@ async function dispatchTool(toolName, params, env, request) {
     const paymentMethod = params?.payment_method || 'PayPal';
     return {
       product:        'Prompt Enhancer MCP — Pro Access',
-      price:          '$9 USD (one-time payment)',
+      price:          '$29/mo USD',
       what_you_get: [
         'Unlock prompt_template_library (30+ professional templates across 6 categories)',
         'Increased rate limit: 1000 requests/day (vs 20 free)',
@@ -1571,7 +1571,7 @@ async function dispatchTool(toolName, params, env, request) {
         'Access to all future Pro tools in this MCP',
       ],
       how_to_purchase: {
-        step_1: `Pay $9 via PayPal: ${ECOSYSTEM.paypal}`,
+        step_1: `Pay $29/mo via PayPal: ${ECOSYSTEM.paypal}`,
         step_2: 'Include your email address in the PayPal note',
         step_3: 'Your API key will be delivered to that email within 24 hours',
         step_4: 'Use the key as api_key parameter in Pro tools',
@@ -1605,7 +1605,7 @@ function addUpgradePrompt(response, rateLimitInfo) {
 
   let msg = '';
   if (remaining <= 2 && remaining > 0) {
-    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro: $9 → 1000/day → paypal.me/Yagami8095/9`;
+    msg = `\n\n⚡ ${remaining} call${remaining === 1 ? '' : 's'} left today. Pro: $29/mo → 1000/day → paypal.me/Yagami8095/29`;
   } else if (used <= 3) {
     msg = '\n\n— powered by OpenClaw (openclaw.dev)';
   }
@@ -1857,7 +1857,7 @@ function landingPageHTML() {
     <p class="tagline" style="font-size:1rem;opacity:0.7;margin-top:-20px;">AI 代理的元工具。以程式化方式大規模優化、分析、轉換和生成提示詞。</p>
     <div class="cta-row">
       <a href="/mcp" class="btn btn-primary">Connect via MCP</a>
-      <a href="${ECOSYSTEM.pro_page}" class="btn btn-outline">Get Pro — $9</a>
+      <a href="${ECOSYSTEM.pro_page}" class="btn btn-outline">Get Pro — $29</a>
     </div>
     <div class="endpoint-chip">
       <span class="dot"></span>
@@ -1908,7 +1908,7 @@ function landingPageHTML() {
           <span class="tool-name">purchase_pro_key</span>
           <span class="tier-badge tier-free">FREE</span>
         </div>
-        <p class="tool-desc">Get instructions to purchase a Pro API key. One-time $9 payment unlocks template library and 1000 req/day rate limit.<br><span style="opacity:0.7;font-size:13px;">取得 Pro API 金鑰購買說明。一次性 $9 付費解鎖模板庫和 1000 次/天限制。</span></p>
+        <p class="tool-desc">Get instructions to purchase a Pro API key. $29/mo payment unlocks template library and 1000 req/day rate limit.<br><span style="opacity:0.7;font-size:13px;">取得 Pro API 金鑰購買說明。$29/月 付費解鎖模板庫和 1000 次/天限制。</span></p>
       </div>
     </div>
   </section>
@@ -1916,7 +1916,7 @@ function landingPageHTML() {
   <section>
     <h2>Upgrade to Pro | 升級到 Pro</h2>
     <div class="pricing-box">
-      <div class="price">$9</div>
+      <div class="price">$29/mo</div>
       <div class="price-sub">One-time payment — no subscription | 一次性付費 — 無需訂閱</div>
       <ul class="features-list">
         <li>prompt_template_library (30+ templates)</li>
@@ -2107,7 +2107,7 @@ export default {
         "- MoltBook Publisher: https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp",
         "- AgentForge Compare: https://agentforge-compare-mcp.yagami8095.workers.dev/mcp",
         "",
-        "## Pro: $9, 1000 calls/day - https://product-store.yagami8095.workers.dev/products/ecosystem-pro",
+        "## Pro: $29/mo, 50,000 calls/month - https://product-store.yagami8095.workers.dev/products/ecosystem-pro",
       ];
       return corsResponse(lines.join("\n"), 200, 'text/plain; charset=utf-8');
     }
