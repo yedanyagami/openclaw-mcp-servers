@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-25%2Fday-green)](https://color-palette-mcp.yagami8095.workers.dev/mcp)
 
-> 5 color & design tools for AI agents — palettes, WCAG, CSS gradients
+> EN: Generate color palettes, check accessibility contrast, and create CSS gradients through your AI assistant.
+> 繁中: 透過 AI 助手產生配色方案、檢查無障礙對比度、建立 CSS 漸層。
+> 日本語: AIアシスタントでカラーパレット生成、アクセシビリティコントラスト確認、CSSグラデーション作成ができます。
 
-Generate harmonious color palettes, check WCAG accessibility contrast, convert between color formats, create CSS gradients, and get Tailwind color mappings.
+## What is this? Why do I need it?
 
-## Features
-
-- **Color theory palettes** — complementary, triadic, analogous, split-complementary, tetradic
-- **WCAG 2.1 contrast** — instant AA/AAA pass/fail for accessibility compliance
-- **Format conversion** — hex, RGB, HSL, CSS named colors, all interchangeable
-- **CSS gradients** — generate linear, radial, and conic gradient code ready to paste
-- **Tailwind mapping** — find the nearest Tailwind CSS utility class for any color
-- **Designer-friendly** — human-readable color names included in results
+- **Choosing colors that look good together is harder than it sounds.** Color theory exists for a reason. This server generates harmonious palettes using real color theory (complementary, triadic, analogous, split-complementary) so your designs look professional without a design degree.
+- **Accessibility is not optional anymore.** WCAG 2.1 requires minimum contrast ratios between text and background colors. The contrast checker instantly tells you if your color combination passes AA or AAA standards -- no need to visit a separate accessibility testing site.
+- **Switching between hex, RGB, HSL, and Tailwind classes is tedious.** Designers give you hex codes, your CSS uses RGB, your framework uses Tailwind classes. This server converts between all formats instantly and finds the closest Tailwind utility class for any color.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=color-palette&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=color-palette&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vY29sb3ItcGFsZXR0ZS1tY3AueWFnYW1pODA5NS53b3JrZXJzLmRldi9tY3AifQ==)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your MCP config file (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,88 +41,52 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/color-palette-mcp
 ```
 
-## Tools (5)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `generate_palette` | Generate harmonious palettes using color theory (complementary, triadic, analogous, etc.) |
-| `contrast_check` | WCAG 2.1 accessibility contrast ratio checker — AA/AAA pass/fail |
-| `color_convert` | Convert colors between hex, RGB, HSL, and CSS named colors |
-| `css_gradient` | Generate ready-to-use CSS gradient code (linear, radial, conic) |
-| `tailwind_colors` | Map any hex color to the nearest Tailwind CSS color class |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `generate_palette` | Create a harmonious color palette from a base color using color theory | "Generate a 5-color palette based on #3b82f6 using complementary harmony" |
+| `contrast_check` | Check WCAG 2.1 contrast ratio between two colors (AA/AAA pass/fail) | "Is white text readable on a #3b82f6 blue background?" |
+| `color_convert` | Convert between hex, RGB, HSL, and CSS named colors | "Convert #ff6b35 to RGB and HSL" |
+| `css_gradient` | Generate ready-to-paste CSS gradient code (linear, radial, conic) | "Create a CSS gradient from ocean blue to sunset orange" |
+| `tailwind_colors` | Find the closest Tailwind CSS utility class for any hex color | "What Tailwind class is closest to #3b82f6?" |
 
-## Examples
+## Copy-Paste Examples
 
-### Generate a Palette
-```json
-// Input
-{"base_color": "#3b82f6", "harmony": "complementary", "count": 5}
+### Example 1: Generate a palette for a new project
 
-// Output
-{
-  "palette": ["#3b82f6", "#f6a93b", "#3bf6d4", "#f63b82", "#82f63b"],
-  "harmony": "complementary",
-  "names": ["Royal Blue", "Amber", "Turquoise", "Hot Pink", "Lime"]
-}
-```
+Just say to your AI: "I'm building a SaaS dashboard. Generate a professional 5-color palette based on #3b82f6 with complementary harmony, and check if white text is accessible on each color."
 
-### Check WCAG Contrast
-```json
-// Input
-{"foreground": "#ffffff", "background": "#3b82f6"}
+### Example 2: Check if your design is accessible
 
-// Output
-{"ratio": 3.44, "AA_normal": false, "AA_large": true, "AAA_normal": false, "AAA_large": false}
-```
+Just say to your AI: "Check the WCAG contrast ratio between my text color #333333 and background color #f5f5f5. Does it pass AA and AAA?"
 
-### Convert Colors
-```json
-// Input
-{"color": "#ff6b35", "to_format": "hsl"}
+### Example 3: Get CSS gradient code
 
-// Output
-{"hex": "#ff6b35", "rgb": "rgb(255, 107, 53)", "hsl": "hsl(16, 100%, 60%)"}
-```
+Just say to your AI: "Create a CSS linear gradient from #667eea to #764ba2 going left to right, ready to paste into my stylesheet"
 
-## Rate Limits
+## Plans
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 25/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 25/day |
+| Pro | $29/mo | 50,000/month |
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## FAQ
 
-## Part of OpenClaw MCP Ecosystem
+**Q: Do I need to install anything?**
+A: No. This is a cloud service on Cloudflare Workers. Add the URL to your MCP config and start using it. No API key required for the free tier.
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+**Q: What color theory harmonies are supported?**
+A: Complementary, triadic, analogous, split-complementary, and tetradic. These are the five most useful harmonies for real-world design work.
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Does the contrast checker follow the latest WCAG standards?**
+A: Yes. It checks against WCAG 2.1 criteria for both normal text (AA: 4.5:1, AAA: 7:1) and large text (AA: 3:1, AAA: 4.5:1). The exact contrast ratio is always included in the response.
 
-## Transport
+## Links
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
-
-```
-Endpoint: https://color-palette-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
-
-## Keywords
-
-`color`, `palette`, `design`, `WCAG`, `accessibility`, `CSS`, `gradient`, `tailwind`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
 
 ## License
 

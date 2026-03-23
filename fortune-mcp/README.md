@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-50%2Fday-green)](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp)
 
-> 3 fortune tools — daily zodiac horoscopes + tarot readings for AI agents
+> EN: Daily horoscopes, tarot readings, and zodiac rankings for all 12 signs -- add fun to any AI chat.
+> 繁中: 每日星座運勢、塔羅牌解讀、十二星座排行 -- 讓你的 AI 聊天更有趣。
+> 日本語: 12星座の毎日の占い、タロットリーディング、星座ランキング -- AIチャットに楽しさをプラス。
 
-Daily zodiac fortune and tarot card readings for all 12 signs. Get individual horoscopes, daily overview summaries, and all-signs rankings. Perfect for AI chatbots and content generation.
+## What is this? Why do I need it?
 
-## Features
-
-- **12 zodiac signs** — complete daily horoscopes for every sign
-- **Multi-category scores** — love, work, health, money, and overall fortune
-- **Tarot integration** — each reading includes a tarot card with interpretation
-- **Daily rankings** — see which signs are luckiest today
-- **Lucky numbers** — personalized lucky numbers for each sign
-- **AI chatbot ready** — perfect for embedding in conversational AI agents
+- **People love daily horoscopes.** If you are building a chatbot, content feed, or daily newsletter, fortune content drives engagement and gives users a reason to come back every day.
+- **This server gives your AI assistant fortune-telling abilities.** Ask for any zodiac sign's daily reading and get scores for love, work, health, and money, plus a tarot card interpretation and lucky numbers.
+- **It is completely free and requires zero setup.** 50 free calls per day, no API key needed, and it works with Claude Desktop, Cursor, or any MCP-compatible client out of the box.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=fortune&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=fortune&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vb3BlbmNsYXctZm9ydHVuZS1tY3AueWFnYW1pODA5NS53b3JrZXJzLmRldi9tY3AifQ==)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your Claude Desktop MCP config (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,91 +41,51 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/fortune-mcp
 ```
 
-## Tools (3)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `daily_fortune` | Get daily horoscope + tarot card reading for a zodiac sign (love, work, health, money) |
-| `daily_overview` | Get today's fortune overview summary across all signs |
-| `all_signs_ranking` | Complete fortune data for all 12 signs with rankings and tarot cards |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `get_daily_fortune` | Get today's horoscope + tarot card for a specific zodiac sign | "What's my horoscope for Aries today?" |
+| `get_fortune_ranking` | See which zodiac signs are luckiest today, ranked 1-12 | "Which zodiac sign has the best luck today?" |
+| `get_all_fortunes` | Get the full fortune data for all 12 signs at once | "Show me today's horoscope for every zodiac sign" |
 
-## Examples
+## Copy-Paste Examples
 
-### Get Daily Fortune
-```json
-// Input
-{"sign": "aries"}
+### Example 1: Check your daily fortune
 
-// Output
-{
-  "sign": "Aries",
-  "date": "2024-01-15",
-  "overall": 85,
-  "love": 90,
-  "work": 78,
-  "health": 88,
-  "money": 82,
-  "lucky_number": 7,
-  "tarot": {"card": "The Star", "meaning": "Hope and inspiration guide your path today"},
-  "advice": "Trust your instincts in a key decision today"
-}
-```
+Just say to your AI: "What's today's fortune for Leo? Include the tarot card reading and lucky numbers"
 
-### All Signs Ranking
-```json
-// Input
-{}
+You will get a complete reading with scores for love, work, health, and money, a tarot card with its interpretation, and your lucky numbers for the day.
 
-// Output
-{
-  "date": "2024-01-15",
-  "ranking": [
-    {"rank": 1, "sign": "Leo", "score": 95},
-    {"rank": 2, "sign": "Aries", "score": 85},
-    ...
-  ]
-}
-```
+### Example 2: Find the luckiest sign today
 
-## Rate Limits
+Just say to your AI: "Rank all 12 zodiac signs by today's fortune -- who's the luckiest?"
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 50/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+Returns a ranked list from 1 to 12 with overall scores, so you can see which signs are having the best day.
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## Plans
 
-## Part of OpenClaw MCP Ecosystem
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 50/day |
+| Pro | $29/mo | 50,000/month |
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+## FAQ
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Do I need to install anything on my computer?**
+A: No. This is a remote MCP server hosted on Cloudflare Workers. You just add the URL to your MCP client config and it works immediately. No downloads, no dependencies.
 
-## Transport
+**Q: Which zodiac signs are supported?**
+A: All 12: Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, and Pisces. Just ask by name.
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+**Q: Can I use this for a chatbot or app?**
+A: Absolutely. The 50 free calls per day are enough for personal chatbots and small projects. For higher-traffic applications, upgrade to Pro.
 
-```
-Endpoint: https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
+## Links
 
-## Keywords
-
-`fortune`, `horoscope`, `tarot`, `zodiac`, `astrology`, `daily`, `reading`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
+- [Smithery listing](https://smithery.ai/server/@openclaw-ai/fortune-mcp)
 
 ## License
 

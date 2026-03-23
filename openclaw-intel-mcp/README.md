@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday-green)](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp)
 
-> Track AI coding tool trends — Claude Code vs Cursor vs Copilot vs Devin — market data, growth analysis, competitor intelligence
+> EN: Stay ahead of the AI market with on-demand intelligence reports, ecosystem stats, and trend analysis.
+> 繁中: 即時掌握 AI 市場情報 -- 產業報告、生態統計、趨勢分析，一鍵取得。
+> 日本語: AI市場の最新動向をオンデマンドで取得 -- 業界レポート、エコシステム統計、トレンド分析。
 
-AI market intelligence for developers and AI agents. Compare Claude Code, Cursor, Copilot, Windsurf, Devin and 8+ tools with real data. Get market reports, growth trends, investment signals, and competitor analysis. Works with Claude Desktop, Cursor IDE, and any MCP-compatible client.
+## What is this? Why do I need it?
 
-## Features
-
-- **Market intelligence** — AI industry trends, market size, and growth data
-- **Competitor analysis** — strengths, weaknesses, and threat assessment
-- **Trend reports** — emerging technologies and market shifts
-- **Investment signals** — funding rounds, acquisitions, and partnerships
-- **Custom depth** — quick summaries or detailed research reports
-- **Always current** — data refreshed regularly from multiple sources
+- **The AI industry changes every week.** New tools launch, companies raise funding, and market dynamics shift constantly. Keeping up manually is exhausting and easy to fall behind on.
+- **This server delivers market intelligence directly inside your AI assistant.** Ask a question like "What's happening in the AI coding tools market?" and get a structured report with data, trends, and analysis -- no browser tabs or Google searches needed.
+- **It works for developers, founders, and analysts.** Whether you are evaluating competitors, writing a market overview, or just staying informed, you get real data instead of guesswork.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=openclaw-intel&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=openclaw-intel&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vb3BlbmNsYXctaW50ZWwtbWNwLnlhZ2FtaTgwOTUud29ya2Vycy5kZXYvbWNwIn0=)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your Claude Desktop MCP config (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,90 +41,60 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/openclaw-intel-mcp
 ```
 
-## Tools (6)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `get_ai_market_report` | Latest AI agent market intelligence report with ROI signals |
-| `get_report_by_id` | Get a specific market report by ID |
-| `list_reports` | List available reports with titles, dates, and content tier |
-| `get_market_stats` | Real-time ecosystem stats: Pro users, report count, data freshness |
-| `purchase_api_key` | Machine-readable payment instructions for Pro API key |
-| `validate_api_key` | Check API key validity and remaining daily quota |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `get_ai_market_report` | Get a market intelligence report on any AI topic (Free) | "Give me a market report on AI coding assistants" |
+| `get_report_by_id` | Retrieve a specific report by its ID (Pro) | "Pull up report ID intel-2026-03-15" |
+| `list_reports` | Browse all available reports with titles and dates (Free) | "What market reports are available?" |
+| `get_market_stats` | Live ecosystem stats: users, report count, data freshness (Free) | "Show me the current AI market stats" |
+| `purchase_api_key` | Get instructions for purchasing a Pro API key | "How do I upgrade to Pro?" |
+| `validate_api_key` | Check if your API key is valid and see remaining quota (Free) | "Check my API key status" |
 
-## Examples
+## Copy-Paste Examples
 
-### Get Market Report
-```json
-// Input
-{"topic": "AI coding assistants", "depth": "detailed"}
+### Example 1: Get a market overview
 
-// Output
-{
-  "topic": "AI Coding Assistants",
-  "market_size": "$5.2B (2024)",
-  "growth_rate": "42% CAGR",
-  "key_players": ["GitHub Copilot", "Cursor", "Claude Code", "Windsurf"],
-  "trends": ["MCP adoption", "Agent-first development", "Multi-model routing"],
-  "analysis": "The market is shifting from simple code completion to autonomous agents..."
-}
-```
+Just say to your AI: "Get me an AI market report on the agent framework ecosystem, with detailed depth"
 
-### Competitor Analysis
-```json
-// Input
-{"company": "Anthropic", "competitors": ["OpenAI", "Google"]}
+You will receive a structured report covering market size, growth rate, key players, investment signals, and emerging trends -- all formatted and ready to use.
 
-// Output
-{
-  "company": "Anthropic",
-  "strengths": ["Safety focus", "Claude quality", "MCP ecosystem"],
-  "competitors": [
-    {"name": "OpenAI", "threat_level": "high", "differentiator": "GPT ecosystem"},
-    {"name": "Google", "threat_level": "medium", "differentiator": "Search integration"}
-  ]
-}
-```
+### Example 2: Check what reports exist
 
-## Rate Limits
+Just say to your AI: "List all available market intelligence reports"
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 10/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+You will see a table of reports with titles, dates, and whether they require Free or Pro access.
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+### Example 3: Get live ecosystem stats
 
-## Part of OpenClaw MCP Ecosystem
+Just say to your AI: "What are the current AI market statistics?"
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+Returns real-time numbers: total Pro users, number of reports, and how recently the data was updated.
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+## Plans
 
-## Transport
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 10/day |
+| Pro | $29/mo | 50,000/month |
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+## FAQ
 
-```
-Endpoint: https://openclaw-intel-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
+**Q: Do I need to install anything on my computer?**
+A: No. This is a remote MCP server hosted on Cloudflare Workers. You just add the URL to your MCP client config and it works immediately.
 
-## Keywords
+**Q: What kind of data is in the market reports?**
+A: Reports include market size estimates, growth rates, key players, competitive positioning, funding signals, technology trends, and forward-looking analysis. Data is refreshed regularly from multiple sources.
 
-`market intelligence`, `AI trends`, `GitHub stats`, `competitor analysis`, `reports`
+**Q: What is the difference between Free and Pro?**
+A: Free gives you 10 calls per day and access to the latest market report, stats, and report listing. Pro unlocks access to the full report archive via `get_report_by_id` and higher rate limits.
+
+## Links
+
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
+- [Smithery listing](https://smithery.ai/server/@openclaw-ai/openclaw-intel-mcp)
 
 ## License
 

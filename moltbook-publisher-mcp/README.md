@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-5%2Fday%2Ftool-green)](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp)
 
-> Publish and optimize articles for note.com, Zenn, and Qiita — translate, SEO-optimize, and cross-post Japanese tech content
+> EN: Publish to note.com, Zenn, and Qiita -- translate, SEO-optimize, and cross-post Japanese tech content from your AI assistant.
+> 繁中: 在 note.com、Zenn、Qiita 上發布文章 -- 翻譯、SEO 優化、跨平台發文，全部在 AI 助手內完成。
+> 日本語: note.com・Zenn・Qiitaへの記事公開 -- 翻訳、SEO最適化、クロスポストをAIアシスタントから直接実行。
 
-Create and publish Japanese tech content directly from Claude Desktop or Cursor. Translate English to natural Japanese, analyze SEO, generate article outlines, format for note.com/Zenn/Qiita, and cross-post across platforms. 8 tools for developers and content creators targeting the Japanese tech audience. Works with any MCP-compatible client.
+## What is this? Why do I need it?
 
-## Features
-
-- **Japanese translation** — high-quality EN↔JA translation for content localization
-- **SEO analysis** — keyword density, readability score, and optimization suggestions
-- **Content generation** — blog posts, social media, and marketing copy
-- **Markdown formatting** — clean output ready for publishing
-- **Multi-platform** — optimized for blogs, social media, and documentation
-- **AI-powered** — leverages LLM for natural, engaging content
+- **Publishing content on Japanese platforms is a pain.** Each platform (note.com, Zenn, Qiita) has its own formatting rules, and writing in natural-sounding Japanese is difficult if it is not your first language.
+- **This server handles the entire publishing workflow.** Convert Markdown to platform-compatible HTML, translate English to natural Japanese, optimize for SEO, and format for cross-posting -- all through simple prompts to your AI assistant.
+- **It saves hours of manual work for content creators and developers.** Instead of switching between translation tools, SEO checkers, and formatters, you do everything in one place inside Claude Desktop or Cursor.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=moltbook-publisher&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=moltbook-publisher&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vbW9sdGJvb2stcHVibGlzaGVyLW1jcC55YWdhbWk4MDk1LndvcmtlcnMuZGV2L21jcCJ9)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your Claude Desktop MCP config (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,87 +41,62 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/moltbook-publisher-mcp
 ```
 
-## Tools (8)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `convert_markdown_to_html` | Convert Markdown to platform-compatible HTML (note.com, Zenn, Qiita) |
-| `optimize_for_seo` | SEO optimization for Japanese articles — title, meta, keywords, readability |
-| `translate_en_to_jp` | Natural English to Japanese translation (not machine — native-sounding) |
-| `generate_article_outline` | Generate structured article outlines with H2/H3, key points, word count |
-| `get_trending_topics` | Find currently trending topics in the Japanese tech/AI community |
-| `cross_post_format` | Format articles for cross-posting across multiple Japanese platforms |
-| `analyze_article_performance` | Analyze article metrics and suggest improvements |
-| `purchase_pro_key` | Get Pro API key for higher rate limits |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `convert_markdown_to_html` | Convert Markdown to platform-compatible HTML (Free) | "Convert this Markdown article to HTML for Zenn" |
+| `optimize_for_seo` | Analyze and improve SEO for Japanese articles (Free) | "Check the SEO of this article about AI agents" |
+| `translate_en_to_jp` | Translate English to natural-sounding Japanese (Free) | "Translate this blog post into Japanese" |
+| `generate_article_outline` | Create a structured outline with headings and key points (Free) | "Generate an article outline about MCP servers for beginners" |
+| `get_trending_topics` | Find what is trending in Japanese tech communities (Pro) | "What topics are trending on Zenn and Qiita right now?" |
+| `cross_post_format` | Format one article for multiple Japanese platforms at once (Pro) | "Format this article for both note.com and Qiita" |
+| `analyze_article_performance` | Get performance metrics and improvement suggestions (Pro) | "Analyze the performance of this published article" |
+| `purchase_pro_key` | Get instructions for purchasing a Pro API key | "How do I get a Pro key for MoltBook?" |
 
-## Examples
+## Copy-Paste Examples
 
-### Translate to Japanese
-```json
-// Input
-{"text": "Build amazing AI agents with MCP servers", "target_lang": "ja"}
+### Example 1: Translate and publish a blog post
 
-// Output
-{"translated": "MCPサーバーで素晴らしいAIエージェントを構築しよう", "source_lang": "en", "confidence": 0.95}
-```
+Just say to your AI: "Translate this English blog post about building AI agents into natural Japanese, then convert it to HTML formatted for note.com"
 
-### SEO Analysis
-```json
-// Input
-{"content": "How to use AI for productivity", "keywords": ["AI", "productivity", "tools"]}
+Your AI will first translate the content into native-sounding Japanese, then convert the Markdown into platform-compatible HTML ready to paste into note.com's editor.
 
-// Output
-{"seo_score": 72, "keyword_density": {"AI": 2.1, "productivity": 1.8}, "suggestions": ["Add more headers", "Include internal links", "Extend to 1500+ words"]}
-```
+### Example 2: SEO-check before publishing
 
-### Generate Content
-```json
-// Input
-{"topic": "MCP servers for AI agents", "format": "blog", "length": "medium"}
+Just say to your AI: "Analyze the SEO of this article about MCPサーバー and suggest improvements for better ranking on Japanese search engines"
 
-// Output
-{"title": "Why Every AI Agent Needs MCP Servers in 2025", "content": "...", "word_count": 850, "reading_time": "4 min"}
-```
+You will get a score, keyword density analysis, and specific suggestions like adding headers, improving meta descriptions, or adjusting word count.
 
-## Rate Limits
+### Example 3: Generate an article from scratch
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 5/day/tool | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+Just say to your AI: "Create an article outline about how to use MCP servers with Claude Desktop, targeting Japanese developers on Qiita"
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+Returns a structured outline with H2/H3 headings, key points for each section, and a recommended word count.
 
-## Part of OpenClaw MCP Ecosystem
+## Plans
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 5/day |
+| Pro | $29/mo | 50,000/month |
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+## FAQ
 
-## Transport
+**Q: Do I need to install anything on my computer?**
+A: No. This is a remote MCP server hosted on Cloudflare Workers. Just add the URL to your MCP client config and start using it immediately.
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
+**Q: How good is the English-to-Japanese translation?**
+A: The translation aims for natural, native-sounding Japanese rather than literal machine translation. It is suitable for blog posts, technical articles, and marketing content targeting Japanese readers.
 
-```
-Endpoint: https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
+**Q: Which platforms are supported for cross-posting?**
+A: note.com, Zenn, and Qiita. The `cross_post_format` tool adjusts formatting, front matter, and HTML structure for each platform's requirements.
 
-## Keywords
+## Links
 
-`Japanese`, `content`, `publishing`, `SEO`, `translation`, `note.com`, `Zenn`, `Qiita`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
+- [Smithery listing](https://smithery.ai/server/@openclaw-ai/moltbook-publisher-mcp)
 
 ## License
 

@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-30%2Fday-green)](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp)
 
-> 5 time/date tools — timezone conversion, cron parsing, duration formatting
+> EN: Convert timestamps, handle timezone math, parse cron expressions, and calculate date differences through your AI assistant.
+> 繁中: 透過 AI 助手轉換時間戳記、處理時區計算、解析 cron 表達式、計算日期差異。
+> 日本語: AIアシスタントでタイムスタンプ変換、タイムゾーン計算、cron式解析、日付差分計算ができます。
 
-Convert timestamps between formats, handle timezone math, parse cron expressions, calculate time differences, and format durations. Supports IANA timezones.
+## What is this? Why do I need it?
 
-## Features
-
-- **Timezone conversion** — convert between 400+ IANA timezones instantly
-- **Cron parsing** — human-readable explanations of cron expressions with next run times
-- **Duration formatting** — convert seconds/milliseconds to human-readable durations
-- **Date arithmetic** — calculate differences between dates in multiple units
-- **ISO 8601 support** — full support for standard datetime formats
-- **Developer-focused** — perfect for debugging timestamps and scheduling
+- **Working with dates and timezones is one of the most error-prone tasks in programming.** Is `1710000000` March 9 or March 10? Depends on the timezone. This server converts between Unix timestamps, ISO 8601, and human-readable formats instantly, so you always know exactly what time a timestamp represents.
+- **Timezone math is confusing and easy to get wrong.** When your server is in UTC, your users are in Tokyo, and your logs say 14:30 -- what time is that locally? The timezone converter handles 400+ IANA timezones and shows you the offset so there is no ambiguity.
+- **Cron expressions look like random numbers until you learn them.** Instead of memorizing that `*/15 9-17 * * 1-5` means "every 15 minutes during business hours on weekdays," the parser gives you a plain-English explanation and the next 5 scheduled run times.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=timestamp-converter&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=timestamp-converter&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vdGltZXN0YW1wLWNvbnZlcnRlci1tY3AueWFnYW1pODA5NS53b3JrZXJzLmRldi9tY3AifQ==)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your MCP config file (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,84 +41,52 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/timestamp-converter-mcp
 ```
 
-## Tools (5)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `convert_timestamp` | Convert between unix epoch, ISO 8601, human-readable, and relative time |
-| `timezone_convert` | Convert datetime between timezones with show_all option for 7 common zones |
-| `parse_cron` | Parse cron expressions — human-readable description + next 5 run times |
-| `time_diff` | Calculate difference between two datetimes in multiple units |
-| `format_duration` | Format seconds into human-readable duration strings |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `convert_timestamp` | Convert between Unix epoch, ISO 8601, human-readable, and relative time | "Convert Unix timestamp 1710000000 to a human-readable date" |
+| `timezone_convert` | Convert a datetime between any two IANA timezones | "What time is 2024-03-15 14:30 UTC in Tokyo and New York?" |
+| `parse_cron` | Explain a cron expression in plain English and show next run times | "What does this cron do: */15 9-17 * * 1-5" |
+| `time_diff` | Calculate the difference between two dates in multiple units | "How many days between January 1 and March 15, 2024?" |
+| `format_duration` | Convert seconds or milliseconds to human-readable duration | "Format 90061 seconds as a readable duration" |
 
-## Examples
+## Copy-Paste Examples
 
-### Convert Timestamp
-```json
-// Input
-{"timestamp": "2024-01-15T10:30:00Z", "from_tz": "UTC", "to_tz": "Asia/Tokyo"}
+### Example 1: Debug a timestamp from your logs
 
-// Output
-{"original": "2024-01-15T10:30:00Z", "converted": "2024-01-15T19:30:00+09:00", "timezone": "Asia/Tokyo", "offset": "+09:00"}
-```
+Just say to your AI: "Convert this Unix timestamp to a human-readable date in my timezone (Asia/Taipei): 1710000000"
 
-### Parse Cron Expression
-```json
-// Input
-{"expression": "*/15 * * * *"}
+### Example 2: Figure out meeting times across timezones
 
-// Output
-{"description": "Every 15 minutes", "next_runs": ["2024-01-15T11:00:00Z", "2024-01-15T11:15:00Z", "2024-01-15T11:30:00Z"]}
-```
+Just say to your AI: "I have a meeting at 2024-03-20 10:00 AM in San Francisco. What time is that in Tokyo, London, and New York?"
 
-### Calculate Date Difference
-```json
-// Input
-{"start": "2024-01-01", "end": "2024-12-31"}
+### Example 3: Understand a cron schedule
 
-// Output
-{"days": 365, "weeks": 52, "months": 11, "years": 0, "human": "11 months, 30 days"}
-```
+Just say to your AI: "Explain this cron expression and tell me the next 5 run times: 0 2 * * 0"
 
-## Rate Limits
+## Plans
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 30/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 30/day |
+| Pro | $29/mo | 50,000/month |
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## FAQ
 
-## Part of OpenClaw MCP Ecosystem
+**Q: Do I need to install anything?**
+A: No. This runs on Cloudflare Workers. Add the URL to your MCP config and start converting timestamps immediately. No API key needed for the free tier.
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+**Q: Which timezones are supported?**
+A: All 400+ IANA timezones (like `America/New_York`, `Asia/Tokyo`, `Europe/London`). These are the standard timezone identifiers used by every major programming language and operating system.
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Does it handle daylight saving time correctly?**
+A: Yes. The server uses IANA timezone data which includes all DST transition rules. When you convert across timezones, DST offsets are applied automatically based on the specific date.
 
-## Transport
+## Links
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
-
-```
-Endpoint: https://timestamp-converter-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
-
-## Keywords
-
-`timestamp`, `timezone`, `cron`, `date`, `time`, `convert`, `UTC`, `epoch`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
 
 ## License
 

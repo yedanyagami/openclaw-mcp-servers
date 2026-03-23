@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-10%2Fday free, 100 Pro-green)](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp)
 
-> 6 prompt engineering tools — enhance, analyze, convert, generate, 30+ templates
+> EN: Score, improve, and generate AI prompts -- a writing coach for human-to-AI communication.
+> 繁中: 評分、改善、產生 AI 提示詞 -- 人類與 AI 溝通的寫作教練。
+> 日本語: AIプロンプトの採点、改善、生成 -- 人間とAIのコミュニケーションのための文章コーチ。
 
-Optimize prompts for AI models. Enhance basic prompts, analyze quality scores, convert between formats, generate system prompts, and browse 30+ curated templates.
+## What is this? Why do I need it?
 
-## Features
-
-- **Prompt scoring** — rate prompt quality 0-100 with specific improvement suggestions
-- **One-click enhance** — transform vague prompts into detailed, effective instructions
-- **Format conversion** — switch between plain text, XML, markdown, and JSON prompt formats
-- **System prompt generator** — create role-specific system prompts for any use case
-- **30+ templates** — production-ready prompt templates organized by category
-- **Before/after scores** — see exactly how much your prompt improved
+- **Better prompts get dramatically better AI results.** The difference between "write about AI" and a well-structured prompt can be a 10x improvement in output quality. This server analyzes your prompts, scores them 0-100, and tells you exactly what to improve -- like having a prompt engineering expert on call.
+- **Writing system prompts from scratch is time-consuming.** Whether you need a customer support agent, code reviewer, or creative writer, the system prompt generator creates production-ready prompts tailored to your specific role and task in seconds.
+- **Prompt formats vary between AI tools and frameworks.** Some use XML tags, some use markdown headers, some use JSON. The format converter switches between plain text, XML, markdown, and JSON so you can reuse your prompts across different AI platforms.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=prompt-enhancer&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=prompt-enhancer&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vcHJvbXB0LWVuaGFuY2VyLW1jcC55YWdhbWk4MDk1LndvcmtlcnMuZGV2L21jcCJ9)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your MCP config file (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,90 +41,53 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/prompt-enhancer-mcp
 ```
 
-## Tools (6)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `enhance_prompt` | Optimize a basic prompt with clearer instructions and better structure |
-| `analyze_prompt` | Score prompt quality (0-100): clarity, specificity, issues, improvements |
-| `convert_prompt_format` | Convert prompts between plain, XML, markdown, and JSON formats |
-| `generate_system_prompt` | Generate high-quality system prompts for any role and task |
-| `prompt_template_library` | Browse 30+ production-ready templates by category |
-| `purchase_pro_key` | Get Pro API key for higher rate limits |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `enhance_prompt` (Free) | Rewrite a vague prompt into a clear, detailed, effective one | "Enhance this prompt: Write a blog post about AI" |
+| `analyze_prompt` (Free) | Score prompt quality 0-100 with specific improvement suggestions | "Analyze and score this prompt: Tell me about dogs" |
+| `convert_prompt_format` (Free) | Convert prompts between plain text, XML, markdown, and JSON | "Convert this prompt to XML format for Claude" |
+| `generate_system_prompt` (Free) | Generate a role-specific system prompt for any use case | "Generate a system prompt for a senior code reviewer" |
+| `prompt_template_library` (Pro) | Browse 30+ production-ready prompt templates by category | "Show me all prompt templates for content writing" |
+| `purchase_pro_key` | Get a Pro API key for higher rate limits and template access | "How do I upgrade to Pro?" |
 
-## Examples
+## Copy-Paste Examples
 
-### Enhance a Prompt
-```json
-// Input
-{"prompt": "Write a blog post about AI", "style": "structured"}
+### Example 1: Improve a weak prompt
 
-// Output
-{
-  "enhanced": "Write a comprehensive 1500-word blog post about artificial intelligence...",
-  "improvements": ["Added specific word count", "Defined target audience", "Structured with sections", "Added tone guidance"],
-  "score_before": 25,
-  "score_after": 82
-}
-```
+Just say to your AI: "Analyze this prompt and then enhance it: Write something about machine learning for my blog"
 
-### Analyze Prompt Quality
-```json
-// Input
-{"prompt": "Tell me about dogs"}
+### Example 2: Generate a system prompt for a new AI agent
 
-// Output
-{"score": 18, "clarity": 30, "specificity": 10, "issues": ["Too vague", "No context", "No format specified"], "suggestions": ["Specify breed or topic", "Add desired length", "Define target audience"]}
-```
+Just say to your AI: "Generate a system prompt for a professional customer support agent that handles refund requests with a friendly but firm tone"
 
-### Generate System Prompt
-```json
-// Input
-{"role": "customer support agent", "task": "Handle refund requests", "tone": "professional"}
+### Example 3: Convert a prompt for a different AI tool
 
-// Output
-{"system_prompt": "You are a professional customer support agent specialized in handling refund requests...", "tokens": 156}
-```
+Just say to your AI: "Convert this plain text prompt to XML format so I can use it with Claude: You are a helpful coding assistant. Always explain your reasoning step by step. Use examples when possible."
 
-## Rate Limits
+## Plans
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 10/day free, 100 Pro | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 10/day (4 tools) |
+| Pro | $29/mo | 50,000/month (all 6 tools) |
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## FAQ
 
-## Part of OpenClaw MCP Ecosystem
+**Q: Do I need to install anything?**
+A: No. This runs on Cloudflare Workers. Add the URL to your MCP config and start improving your prompts. The free tier works immediately with no API key.
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+**Q: What makes a prompt score high vs. low?**
+A: The analyzer evaluates clarity (is it unambiguous?), specificity (does it define scope, format, length?), structure (does it have context and constraints?), and completeness (does it cover edge cases?). A score of 80+ means the prompt is production-quality.
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Which 4 tools are free and which require Pro?**
+A: `enhance_prompt`, `analyze_prompt`, `convert_prompt_format`, and `generate_system_prompt` are completely free (10 calls/day). The `prompt_template_library` with 30+ curated templates requires a Pro key. `purchase_pro_key` helps you upgrade.
 
-## Transport
+## Links
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
-
-```
-Endpoint: https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
-
-## Keywords
-
-`prompt`, `engineering`, `enhance`, `optimize`, `template`, `system prompt`, `AI`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
 
 ## License
 

@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-20%2Fday-green)](https://regex-engine-mcp.yagami8095.workers.dev/mcp)
 
-> 5 regex tools + 15 built-in patterns for AI agents
+> EN: Build, test, and understand regular expressions using plain language through your AI assistant.
+> 繁中: 用自然語言透過 AI 助手來建立、測試和理解正規表達式。
+> 日本語: AIアシスタントを通じて自然言語で正規表現の作成、テスト、理解ができます。
 
-Test, explain, build, replace, and extract with regular expressions. Includes 15 pre-built patterns for emails, URLs, IPs, dates, and more.
+## What is this? Why do I need it?
 
-## Features
-
-- **Natural language to regex** — describe what you want, get a working pattern
-- **Human-readable explanations** — understand any regex in plain English
-- **Full match details** — groups, indices, named captures, and flags
-- **Find & replace** — regex-powered search and replace with back-references
-- **Data extraction** — pull structured data from text using capture groups
-- **All standard flags** — global, case-insensitive, multiline, dotAll, unicode
+- **Regular expressions are powerful but notoriously hard to write.** Most developers Google regex patterns every time they need one. This server lets you describe what you want in plain English -- like "match US phone numbers" -- and it builds a working regex for you.
+- **Reading someone else's regex feels like decoding hieroglyphics.** The explain tool breaks down any regex into a step-by-step, human-readable explanation. No more guessing what `^(?:[a-z0-9]+(?:\.[a-z0-9]+)*)@` actually means.
+- **Testing regex in a separate tool breaks your workflow.** Instead of switching to regex101.com, you can test patterns, extract matches, and do find-and-replace directly inside your AI assistant while you work.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=regex-engine&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=regex-engine&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vcmVnZXgtZW5naW5lLW1jcC55YWdhbWk4MDk1LndvcmtlcnMuZGV2L21jcCJ9)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your MCP config file (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,84 +41,52 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/regex-engine-mcp
 ```
 
-## Tools (5)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `regex_test` | Test a regex against input text — returns matches, groups, indices |
-| `regex_explain` | Get a human-readable explanation of what a regex pattern does |
-| `regex_build` | Build a regex from a natural language description |
-| `regex_replace` | Find and replace using regex patterns with capture groups |
-| `regex_extract` | Extract all matches from text using a regex pattern |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `regex_test` | Test a regex pattern against text and return all matches with positions | "Test if this string contains a valid email address" |
+| `regex_explain` | Explain any regex pattern in plain English, step by step | "Explain what this regex does: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" |
+| `regex_build` | Build a regex from a natural language description | "Build a regex that matches dates in YYYY-MM-DD format" |
+| `regex_replace` | Find and replace using regex with capture group support | "Replace all dates from MM/DD/YYYY to YYYY-MM-DD in this text" |
+| `regex_extract` | Extract all matching substrings from text | "Extract all URLs from this paragraph" |
 
-## Examples
+## Copy-Paste Examples
 
-### Test a Pattern
-```json
-// Input
-{"pattern": "\\d{3}-\\d{4}", "test_string": "Call 555-1234 today", "flags": "g"}
+### Example 1: Build a regex from a description
 
-// Output
-{"matches": ["555-1234"], "count": 1, "groups": [], "indices": [[5, 13]]}
-```
+Just say to your AI: "Build me a regex that matches email addresses and test it against this text: Contact us at hello@example.com or support@company.co.uk for help."
 
-### Explain a Pattern
-```json
-// Input
-{"pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"}
+### Example 2: Understand a regex you found in code
 
-// Output
-{"explanation": "Email validation pattern: starts with alphanumeric/special chars, followed by @, domain name, dot, and 2+ letter TLD"}
-```
+Just say to your AI: "Explain this regex I found in our codebase: (?:(?:\r\n)?[ \t])*(?:(?:[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)"
 
-### Build from Description
-```json
-// Input
-{"description": "Match US phone numbers like (555) 123-4567 or 555-123-4567"}
+### Example 3: Extract data from unstructured text
 
-// Output
-{"pattern": "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}", "flags": "g", "explanation": "Matches US phone formats with optional parentheses"}
-```
+Just say to your AI: "Extract all phone numbers from this text: Call us at (555) 123-4567 or 800-555-0199. International: +44 20 7946 0958"
 
-## Rate Limits
+## Plans
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 20/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 20/day |
+| Pro | $29/mo | 50,000/month |
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## FAQ
 
-## Part of OpenClaw MCP Ecosystem
+**Q: Do I need to install anything?**
+A: No. This runs on Cloudflare Workers. Add the URL to your AI client's MCP config and you are ready. No dependencies, no API keys, no setup.
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+**Q: Which regex flavor does it use?**
+A: JavaScript regex (ECMAScript). This covers 99% of what web developers and general programmers need, including named capture groups, lookaheads, and all standard flags (g, i, m, s, u).
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Can it handle complex patterns like recursive matching?**
+A: It handles everything JavaScript regex supports. For truly complex patterns (like balanced parentheses), the build tool will generate the best possible approximation and explain any limitations.
 
-## Transport
+## Links
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
-
-```
-Endpoint: https://regex-engine-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
-
-## Keywords
-
-`regex`, `regular expression`, `pattern`, `match`, `replace`, `extract`, `validate`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
 
 ## License
 

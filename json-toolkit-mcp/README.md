@@ -5,28 +5,25 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com)
 [![Free Tier](https://img.shields.io/badge/Free-20%2Fday-green)](https://json-toolkit-mcp.yagami8095.workers.dev/mcp)
 
-> 6 free JSON tools for AI agents on Cloudflare Workers
+> EN: Format, validate, diff, query, and transform JSON without leaving your AI assistant.
+> 繁中: 不用離開 AI 助手就能格式化、驗證、比較、查詢和轉換 JSON。
+> 日本語: AIアシスタントから離れずにJSONのフォーマット、検証、比較、クエリ、変換ができます。
 
-A utility MCP server for AI agents that work with JSON data daily. Format, validate, diff, query, transform, and generate schemas — all in one server.
+## What is this? Why do I need it?
 
-## Features
-
-- **Zero config** — works out of the box with Streamable HTTP, no API key needed
-- **6 essential tools** — format, validate, diff, query, transform, schema generation
-- **JSONPath queries** — `$.users[*].name`, dot notation, wildcards, array slicing
-- **Detailed error info** — line number, column, and context for validation errors
-- **Schema generation** — auto-generate JSON Schema from sample data
-- **Production-ready** — runs on Cloudflare Workers with global edge deployment
+- **JSON is everywhere in programming.** API responses, config files, databases -- they all use JSON. But raw JSON is hard to read, and one missing comma breaks everything. This server formats messy JSON instantly and tells you exactly where errors are (line and column number).
+- **Comparing two JSON files by hand is painful.** When your config changed and something broke, you need to know what is different. The diff tool shows you exactly which keys were added, removed, or changed -- no manual scanning required.
+- **You need data from deeply nested JSON but do not want to write code.** The query tool lets you use simple path syntax like `$.users[*].name` to pull out exactly the data you need. And the schema generator creates a JSON Schema from any sample data automatically.
 
 ## Quick Install
 
 ### Cursor (One Click)
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=json-toolkit&config=e30=)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=json-toolkit&config=eyJ0eXBlIjogImh0dHAiLCAidXJsIjogImh0dHBzOi8vanNvbi10b29sa2l0LW1jcC55YWdhbWk4MDk1LndvcmtlcnMuZGV2L21jcCJ9)
 
-### Claude Desktop / Any MCP Client
+### Claude Desktop
 
-Add to your MCP config:
+Add to your MCP config file (`claude_desktop_config.json`):
 
 ```json
 {
@@ -44,88 +41,53 @@ Add to your MCP config:
 npx @smithery/cli install @openclaw-ai/json-toolkit-mcp
 ```
 
-## Tools (6)
+## Tools
 
-| Tool | Description |
-|------|-------------|
-| `json_format` | Pretty-print or minify JSON with configurable indent |
-| `json_validate` | Validate JSON with detailed error info (line, column, context) |
-| `json_diff` | Compare two JSON objects — shows added, removed, changed paths |
-| `json_query` | Query JSON with JSONPath-like syntax ($, dot notation, wildcards) |
-| `json_transform` | Flatten, unflatten, pick, omit, rename keys in JSON |
-| `json_schema_generate` | Generate JSON Schema from a sample JSON object |
+| Tool | What it does | Example prompt |
+|------|-------------|----------------|
+| `json_format` | Pretty-print or minify JSON with configurable indentation | "Format this JSON with 2-space indent: {\"name\":\"Alice\",\"age\":30}" |
+| `json_validate` | Check if JSON is valid and show the exact error location | "Is this valid JSON? {key: value}" |
+| `json_diff` | Compare two JSON objects and list all differences | "What changed between these two JSON configs?" |
+| `json_query` | Search inside JSON using path syntax like `$.users[0].name` | "Get all the email addresses from this JSON array" |
+| `json_transform` | Flatten, unflatten, pick, omit, or rename keys | "Flatten this nested JSON into a single level" |
+| `json_schema_generate` | Auto-generate a JSON Schema from sample data | "Generate a JSON Schema from this API response" |
 
-## Examples
+## Copy-Paste Examples
 
-### Format JSON
-```json
-// Input
-{"json": "{\"name\":\"Alice\",\"scores\":[98,87,95]}", "indent": 2}
+### Example 1: Fix and format a messy API response
 
-// Output
-{
-  "name": "Alice",
-  "scores": [98, 87, 95]
-}
-```
+Just say to your AI: "Format this JSON and check if it is valid: {\"users\":[{\"name\":\"Alice\",\"scores\":[98,87,95]},{\"name\":\"Bob\",\"scores\":[72,88]}]}"
 
-### Validate JSON
-```json
-// Input
-{"json": "{\"key\": value}"}
+### Example 2: Find what changed between two config versions
 
-// Output
-{"valid": false, "error": "Unexpected token 'v' at line 1 col 9", "line": 1, "column": 9}
-```
+Just say to your AI: "Diff these two JSON objects and tell me what changed: A = {\"debug\": true, \"port\": 3000, \"host\": \"localhost\"} B = {\"debug\": false, \"port\": 8080, \"host\": \"localhost\"}"
 
-### Diff Two JSON Objects
-```json
-// Input
-{"json_a": "{\"x\": 1, \"y\": 2}", "json_b": "{\"x\": 1, \"z\": 3}"}
+### Example 3: Pull specific data from nested JSON
 
-// Output
-{"added": ["z"], "removed": ["y"], "changed": [], "unchanged": ["x"]}
-```
+Just say to your AI: "Query $.users[*].email from this JSON and list all the email addresses"
 
-## Rate Limits
+## Plans
 
-| Tier | Limit | Price |
-|------|-------|-------|
-| Free | 20/day | $0 |
-| Pro | 1000/day | $9 one-time |
-| x402 | Pay-per-call | $0.05 USDC |
+| Plan | Cost | Calls |
+|------|------|-------|
+| Free | $0 | 20/day |
+| Pro | $29/mo | 50,000/month |
 
-Get a free 7-day Pro trial: [Start Trial](https://product-store.yagami8095.workers.dev/auth/login)
+## FAQ
 
-## Part of OpenClaw MCP Ecosystem
+**Q: Do I need to install anything?**
+A: No. This is a cloud server running on Cloudflare Workers. You just add the URL to your AI client's MCP config and start using it immediately. No npm install, no Docker, no API keys.
 
-This server is one of **9 MCP servers** with **49 tools** total. All run on Cloudflare Workers with Streamable HTTP transport.
+**Q: What is the maximum JSON size it can handle?**
+A: The server handles JSON payloads up to 1MB on the free tier. This covers the vast majority of API responses and config files. For larger files, consider the Pro plan.
 
-| Server | Tools | Description |
-|--------|-------|-------------|
-| [JSON Toolkit](https://json-toolkit-mcp.yagami8095.workers.dev/mcp) | 6 | Format, validate, diff, query, transform JSON |
-| [Regex Engine](https://regex-engine-mcp.yagami8095.workers.dev/mcp) | 5 | Test, explain, build, replace, extract with regex |
-| [Color Palette](https://color-palette-mcp.yagami8095.workers.dev/mcp) | 5 | Palettes, WCAG contrast, CSS gradients |
-| [Timestamp Converter](https://timestamp-converter-mcp.yagami8095.workers.dev/mcp) | 5 | Timezone math, cron parsing, duration formatting |
-| [Prompt Enhancer](https://prompt-enhancer-mcp.yagami8095.workers.dev/mcp) | 6 | Optimize prompts, 30+ templates, quality scoring |
-| [Market Intelligence](https://openclaw-intel-mcp.yagami8095.workers.dev/mcp) | 6 | AI market trends, reports, competitor analysis |
-| [Fortune & Tarot](https://openclaw-fortune-mcp.yagami8095.workers.dev/mcp) | 3 | Daily zodiac horoscopes + tarot readings |
-| [Content Publisher](https://moltbook-publisher-mcp.yagami8095.workers.dev/mcp) | 8 | Japanese content tools, SEO, translation |
-| [AI Tool Compare](https://agentforge-compare-mcp.yagami8095.workers.dev/mcp) | 5 | Compare Claude Code, Cursor, Copilot, Devin |
+**Q: Does it support JSONPath or jq syntax?**
+A: The query tool uses JSONPath-like syntax (`$`, dot notation, wildcards, array slicing). It is not full jq, but it covers the most common query patterns developers need.
 
-## Transport
+## Links
 
-This server uses **Streamable HTTP** transport (MCP 2025-03-26 spec). No WebSocket, no stdio — just a single HTTPS endpoint. Works with any MCP client that supports HTTP transport.
-
-```
-Endpoint: https://json-toolkit-mcp.yagami8095.workers.dev/mcp
-Transport: Streamable HTTP (POST)
-Auth: None required (free tier) | X-API-Key header (Pro tier)
-```
-
-## Keywords
-
-`json`, `format`, `validate`, `diff`, `query`, `transform`, `schema`, `utility`
+- [Main repo](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers)
+- [All 9 servers](https://github.com/yedanyagamiai-cmd/openclaw-mcp-servers#available-mcp-servers)
 
 ## License
 
