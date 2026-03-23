@@ -116,6 +116,26 @@ async function intelSweep(env) {
 
   await env.ARMY_KV.put('intel:last-sweep', JSON.stringify(sweepReport), { expirationTtl: 7200 });
 
+  // Feed UnifiedCortex with observations
+  try {
+    if (env.CORTEX) {
+      for (const [source, result] of Object.entries(sources)) {
+        if (result.status === 'fulfilled' && result.value > 0) {
+          await env.CORTEX.fetch(new Request('http://internal/cortex/observe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              source: 'intel',
+              type: source,
+              content: `${source}: ${result.value} items collected`,
+              score: Math.min(result.value / 10, 1.0),
+            }),
+          }));
+        }
+      }
+    }
+  } catch { /* Cortex may not be available */ }
+
   // Telegram notification if significant intel found
   if (totalItems > 0 && env.TELEGRAM_BOT_TOKEN) {
     const msg = `OODA OBSERVE | ${totalItems} intel items collected in ${duration}ms\nGH:${sweepReport.sources.github} HN:${sweepReport.sources.hacker_news} npm:${sweepReport.sources.npm} HF:${sweepReport.sources.huggingface} SM:${sweepReport.sources.smithery}\nMCP: ${ownHealth.up}/${ownHealth.total} up`;

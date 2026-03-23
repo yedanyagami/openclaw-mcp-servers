@@ -11,10 +11,18 @@ class_name = "OODAAgent"
 name = "AGI_BRAIN"
 class_name = "AGIBrain"
 
+[[durable_objects.bindings]]
+name = "UNIFIED_CORTEX"
+class_name = "UnifiedCortex"
+
 # DO migrations
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["OODAAgent", "AGIBrain"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["UnifiedCortex"]
 
 # Workers AI via AI Gateway
 [ai]
@@ -49,3 +57,8 @@ service = "yedan-intel-ops"
 [[queues.producers]]
 binding = "TASK_QUEUE"
 queue = "openclaw-task-queue"
+
+# VM Brain endpoints for DO-VM bridge
+[vars]
+RENDAN_URL = "http://161.33.7.159:18790"
+GOLEM_URL = "http://64.110.96.233:18791"

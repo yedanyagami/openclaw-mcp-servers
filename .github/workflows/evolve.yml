@@ -1,0 +1,95 @@
+name: AGI Evolution Cycle
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+  workflow_dispatch:
+    inputs:
+      force_evolve:
+        description: 'Force evolution cycle'
+        type: boolean
+        default: false
+
+jobs:
+  collect-agi-scores:
+    runs-on: ubuntu-latest
+    outputs:
+      rendan_score: ${{ steps.scores.outputs.rendan }}
+      golem_score: ${{ steps.scores.outputs.golem }}
+    steps:
+      - name: Collect AGI scores from VMs
+        id: scores
+        run: |
+          # Read scores from fleet-gateway unified metrics
+          METRICS=$(curl -s -H "Authorization: Bearer ${{ secrets.FLEET_GATEWAY_TOKEN }}" \
+            "https://fleet-gateway.yagami8095.workers.dev/v1/metrics/unified" 2>/dev/null || echo '{}')
+
+          RENDAN=$(echo "$METRICS" | jq -r '.brains.rendan.agi_score // 0')
+          GOLEM=$(echo "$METRICS" | jq -r '.brains.golem.agi_score // 0')
+
+          echo "rendan=$RENDAN" >> $GITHUB_OUTPUT
+          echo "golem=$GOLEM" >> $GITHUB_OUTPUT
+          echo "rendan AGI: $RENDAN, GOLEM AGI: $GOLEM"
+
+  trigger-evolution:
+    needs: collect-agi-scores
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Evolution Workflow
+        run: |
+          RESULT=$(curl -s -X POST "https://openclaw-workflows.yagami8095.workers.dev/v1/evolve" \
+            -H "Content-Type: application/json" \
+            -d '{"task": "daily autonomous evolution cycle"}' 2>/dev/null || echo '{"error": "failed"}')
+          echo "Evolution result: $RESULT"
+
+      - name: Trigger Skill Evolution
+        run: |
+          RESULT=$(curl -s -X POST "https://openclaw-workflows.yagami8095.workers.dev/v1/skill-evolution" \
+            -H "Content-Type: application/json" \
+            -d '{"focus": "all"}' 2>/dev/null || echo '{"error": "failed"}')
+          echo "Skill evolution result: $RESULT"
+
+      - name: Feed Cortex observation
+        run: |
+          curl -s -X POST "https://openclaw-do.yagami8095.workers.dev/cortex/observe" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"source\": \"github-actions\",
+              \"type\": \"evolution\",
+              \"content\": \"Daily evolution cycle. rendan=${{ needs.collect-agi-scores.outputs.rendan_score }}, GOLEM=${{ needs.collect-agi-scores.outputs.golem_score }}\",
+              \"score\": 0.8
+            }" || true
+
+  health-verify:
+    needs: trigger-evolution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all endpoints post-evolution
+        run: |
+          ENDPOINTS=(
+            "fleet-gateway"
+            "yedan-orchestrator"
+            "yedan-cloud-executor"
+            "yedan-intel-ops"
+            "yedan-health-commander"
+            "openclaw-do"
+            "openclaw-workflows"
+            "yedan-graph-rag"
+            "zilliz-bridge"
+          )
+
+          FAILED=0
+          for ep in "${ENDPOINTS[@]}"; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://${ep}.yagami8095.workers.dev/health" 2>/dev/null || echo "000")
+            if [ "$CODE" = "000" ]; then
+              echo "FAIL: ${ep} unreachable"
+              FAILED=$((FAILED + 1))
+            else
+              echo "OK: ${ep} (HTTP $CODE)"
+            fi
+          done
+
+          if [ "$FAILED" -gt 2 ]; then
+            echo "::warning::$FAILED endpoints failed health check"
+          fi
+          echo "Health check complete: $FAILED failures"

@@ -7,9 +7,9 @@ BUNSHIN_URL = "https://openclaw-mcp-servers.onrender.com"
 EXECUTOR_NAME = "CloudBrain2"
 EXECUTOR_VERSION = "1.0.0"
 
-# Cron triggers - Cloud Brain #2 heartbeat
+# Cron triggers - Cloud Brain #2 heartbeat (overclocked)
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["*/1 * * * *"]
 
 [[kv_namespaces]]
 binding = "KV"

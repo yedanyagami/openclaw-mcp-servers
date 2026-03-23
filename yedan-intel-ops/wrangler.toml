@@ -5,9 +5,9 @@ compatibility_date = "2024-12-01"
 [vars]
 BUNSHIN_URL = "https://openclaw-mcp-servers.onrender.com"
 
-# OODA OBSERVE — Intel sweep every 15 minutes
+# OODA OBSERVE — Intel sweep every 3 minutes (overclocked)
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["*/3 * * * *"]
 
 [[kv_namespaces]]
 binding = "KV"
@@ -30,6 +30,10 @@ service = "yedan-graph-rag"
 [[services]]
 binding = "FLEET_GATEWAY"
 service = "fleet-gateway"
+
+[[services]]
+binding = "CORTEX"
+service = "openclaw-do"
 
 # Browser Rendering (edge headless Chrome for web intelligence)
 browser = { binding = "BROWSER" }

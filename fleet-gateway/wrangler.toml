@@ -3,11 +3,14 @@ main = "worker.js"
 compatibility_date = "2024-12-01"
 
 [vars]
-FLEET_VERSION = "2.0.0"
+FLEET_VERSION = "2.1.0"
+# AB_EMBED_COHERE disabled — Vectorize index is 768d, Cohere models output 1024d minimum
+# To enable: recreate Vectorize index at 1024d, then uncomment
+# AB_EMBED_COHERE = "true"
 
-# Cron: auto-save fleet state to memory every 15 minutes
+# Cron: auto-save fleet state to memory every 5 minutes (overclocked)
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["*/5 * * * *"]
 
 # Workers AI binding via AI Gateway (caching, fallback, cost tracking)
 [ai]

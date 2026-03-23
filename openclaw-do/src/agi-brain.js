@@ -168,6 +168,72 @@ export class AGIBrain extends DurableObject {
       return Response.json({ ok: true });
     }
 
-    return Response.json({ error: 'Not found', routes: ['/init', '/record', '/recommend', '/metrics', '/learn'] }, { status: 404 });
+    // Sync metrics from VM brains (rendan + GOLEM)
+    if (url.pathname === '/sync-vm' && request.method === 'POST') {
+      const results = { synced: [] };
+
+      // Fetch rendan metrics
+      try {
+        const rendanUrl = this.env.RENDAN_URL || 'http://161.33.7.159:18790';
+        const rendanToken = this.env.RENDAN_API_TOKEN || '';
+        const resp = await fetch(`${rendanUrl}/v1/metrics`, {
+          headers: { 'Authorization': `Bearer ${rendanToken}` },
+          signal: AbortSignal.timeout(10000),
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.totalTasks) {
+            await this.recordOutcome('general', 'rendan', data.successRate > 0.9, data.avgLatencyMs || 5000);
+            results.synced.push({ brain: 'rendan', tasks: data.totalTasks, success: data.successRate });
+          }
+        }
+      } catch (e) {
+        results.rendan_error = e.message;
+      }
+
+      // Fetch GOLEM metrics
+      try {
+        const golemUrl = this.env.GOLEM_URL || 'http://64.110.96.233:18791';
+        const golemToken = this.env.GOLEM_BRAIN_TOKEN || 'golem-brain-internal-2026';
+        const resp = await fetch(`${golemUrl}/v1/metrics`, {
+          headers: { 'Authorization': `Bearer ${golemToken}` },
+          signal: AbortSignal.timeout(10000),
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.totalTasks) {
+            await this.recordOutcome('general', 'golem', data.successRate > 0.9, data.avgLatencyMs || 5000);
+            results.synced.push({ brain: 'golem', tasks: data.totalTasks, success: data.successRate });
+          }
+        }
+      } catch (e) {
+        results.golem_error = e.message;
+      }
+
+      // Fetch AGI scores from both
+      for (const [name, url_base, token] of [
+        ['rendan', this.env.RENDAN_URL || 'http://161.33.7.159:18790', this.env.RENDAN_API_TOKEN || ''],
+        ['golem', this.env.GOLEM_URL || 'http://64.110.96.233:18791', this.env.GOLEM_BRAIN_TOKEN || 'golem-brain-internal-2026'],
+      ]) {
+        try {
+          const resp = await fetch(`${url_base}/v1/agi-score`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+            signal: AbortSignal.timeout(10000),
+          });
+          if (resp.ok) {
+            const score = await resp.json();
+            this.ctx.storage.sql.exec(
+              `INSERT OR REPLACE INTO brain_metrics (brain, metric, value, updated_at) VALUES (?, 'agi_score', ?, datetime('now'))`,
+              name, score.total || 0
+            );
+            results.synced.push({ brain: name, agi_score: score.total });
+          }
+        } catch (e) { /* non-fatal */ }
+      }
+
+      return Response.json(results);
+    }
+
+    return Response.json({ error: 'Not found', routes: ['/init', '/record', '/recommend', '/metrics', '/learn', '/sync-vm'] }, { status: 404 });
   }
 }

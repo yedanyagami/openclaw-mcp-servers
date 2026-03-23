@@ -25,6 +25,14 @@ on:
       - 'yedan-cloud-executor/**'
       - 'yedan-intel-ops/**'
       - 'yedan-health-commander/**'
+      - 'yedan-content-engine/**'
+      - 'yedan-revenue-sentinel/**'
+      - 'openclaw-do/**'
+      - 'openclaw-workflows/**'
+      - 'openclaw-browser/**'
+      - 'antigravity-lb/**'
+      - 'groq-lb/**'
+      - 'google-policy-monitor/**'
   workflow_dispatch:
 
 jobs:
@@ -62,7 +70,15 @@ jobs:
             {"dir":"yedan-orchestrator","name":"yedan-orchestrator"},
             {"dir":"yedan-cloud-executor","name":"yedan-cloud-executor"},
             {"dir":"yedan-intel-ops","name":"yedan-intel-ops"},
-            {"dir":"yedan-health-commander","name":"yedan-health-commander"}
+            {"dir":"yedan-health-commander","name":"yedan-health-commander"},
+            {"dir":"yedan-content-engine","name":"yedan-content-engine"},
+            {"dir":"yedan-revenue-sentinel","name":"yedan-revenue-sentinel"},
+            {"dir":"openclaw-do","name":"openclaw-do"},
+            {"dir":"openclaw-workflows","name":"openclaw-workflows"},
+            {"dir":"openclaw-browser","name":"openclaw-browser"},
+            {"dir":"antigravity-lb","name":"antigravity-lb"},
+            {"dir":"groq-lb","name":"groq-lb"},
+            {"dir":"google-policy-monitor","name":"google-policy-monitor"}
           ]'
 
           # For workflow_dispatch, deploy all
