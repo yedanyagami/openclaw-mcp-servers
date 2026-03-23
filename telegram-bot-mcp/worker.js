@@ -223,7 +223,7 @@ async function setCommands({ bot_token, commands, scope = 'all' }, proKey) {
     return toolResult({
       error: 'set_commands requires a Pro key',
       upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288',
-      message: 'Get Pro ($9/mo) for bot command registration, AlertStack escalation, and 1000 calls/day',
+      message: 'Get Pro ($29/mo) for bot command registration, AlertStack escalation, and 1000 calls/day',
       ecosystem: ECOSYSTEM,
     });
   }
@@ -401,7 +401,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 </table>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-telegram-bot":{"type":"streamable-http","url":"https://telegram-bot-mcp.yagami8095.workers.dev/mcp"}}</pre>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo</a>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo</a>
 </body></html>`;
 
 async function handleMcp(request, env) {

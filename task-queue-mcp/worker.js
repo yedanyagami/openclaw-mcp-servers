@@ -381,7 +381,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 </table>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-task-queue":{"type":"streamable-http","url":"https://task-queue-mcp.yagami8095.workers.dev/mcp"}}</pre>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo (unlimited tasks)</a>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo (unlimited tasks)</a>
 </body></html>`;
 
 async function handleMcp(request, env) {

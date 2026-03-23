@@ -313,7 +313,7 @@ async function screenshotPage({ url, full_page = true, width = 1280, wait_for_se
 // ============================================================
 async function interactWithPage({ url, actions = [], session_id = null }, proKey) {
   if (!proKey) {
-    return toolResult({ error: 'interact_with_page requires a Pro key', upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288', message: 'Get Pro ($9/mo) for page interaction, SessionPersist, and batch scraping', ecosystem: ECOSYSTEM });
+    return toolResult({ error: 'interact_with_page requires a Pro key', upgrade: 'https://buy.stripe.com/4gw5na5U19SP9TW288', message: 'Get Pro ($29/mo) for page interaction, SessionPersist, and batch scraping', ecosystem: ECOSYSTEM });
   }
   if (!url) return toolError('url is required');
   if (!actions || actions.length === 0) return toolError('actions array is required');
@@ -477,7 +477,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 </table>
 <h3>Add to Claude Desktop / Cursor / VS Code</h3>
 <pre>{"openclaw-web-scraper":{"type":"streamable-http","url":"https://web-scraper-mcp.yagami8095.workers.dev/mcp"}}</pre>
-<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $9/mo</a>
+<a class="cta" href="https://buy.stripe.com/4gw5na5U19SP9TW288">Get Pro — $29/mo</a>
 </body></html>`;
 
 async function handleMcp(request, env) {
