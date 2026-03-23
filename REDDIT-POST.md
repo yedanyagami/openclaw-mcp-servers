@@ -66,6 +66,10 @@ Store: https://product-store.yagami8095.workers.dev
 
 Works with Claude Code, Cursor, Windsurf, Cline, and any MCP-compatible client.
 
+## 🌍 Trilingual docs
+
+Full documentation in English, 繁體中文, and 日本語. Every server README, product page, and guide is available in all three languages.
+
 **What tools would you want to see added?** I'm looking for the utilities you reach for most often when coding with AI assistants.
 
 ---

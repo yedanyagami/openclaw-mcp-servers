@@ -63,4 +63,8 @@ For context: Composio charges $29/mo for generic API connectors. Arcade.dev char
 - Store: https://product-store.yagami8095.workers.dev
 - All 9 server URLs in the README
 
+## Multilingual support:
+
+Full documentation in English, 繁體中文 (Traditional Chinese), and 日本語 (Japanese). Every server has localized READMEs, and the product store has trilingual product pages.
+
 MIT licensed. Happy to answer questions about building MCP servers on Cloudflare Workers, Streamable HTTP transport, or the economics of running AI tools at $0 infra cost.
